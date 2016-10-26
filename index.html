@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My first NeXt topology!</title>
+    <link rel="stylesheet" href="./bower_components/next-bower/css/next.css">
+    <link rel="stylesheet" href="./app/css/main.css">
+    <script type="text/javascript" src="./bower_components/next-bower/js/next.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <!-- SIDENAV DIV -->
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="#">Info about EID</a>
+      <a href="#">More info</a>
+    </div>
+
+    <div id="main">
+      <h2>LISP UI</h2>
+      <p>This is the virtual representation of EIDs</p>
+      <div id="topology-container"></div>
+      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+    </div>
+
+    <script type="text/javascript" src="app/data.js"></script>
+    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="app/main.js"></script>
+</body>
+</html>
