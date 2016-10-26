@@ -4,17 +4,22 @@
     <title>My first NeXt topology!</title>
     <link rel="stylesheet" href="./bower_components/next-bower/css/next.css">
     <link rel="stylesheet" href="./app/css/main.css">
+
+    <!-- INCLUDE NEXT UI, ANGULAR AND BOOTSTRAP -->
     <script type="text/javascript" src="./bower_components/next-bower/js/next.js"></script>
+    <script type="text/javascript" src="./bower_components/angular/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+
 
 </head>
-<body>
+<body ng-app>
 
     <!-- SIDENAV DIV -->
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <a href="#">Info about EID</a>
-      <a href="#">More info</a>
+      <a href="#">MORE</a>
     </div>
 
     <div id="main">
@@ -27,5 +32,7 @@
     <script type="text/javascript" src="app/data.js"></script>
     <script type="text/javascript" src="app/app.js"></script>
     <script type="text/javascript" src="app/main.js"></script>
+    <script type="text/javascript" src="app/controllers.js"></script>
+
 </body>
 </html>
