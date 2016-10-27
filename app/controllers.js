@@ -1,4 +1,5 @@
-angular.module('lisp.overlay.controllers', ['ui.bootstrap'])
-    .controller('angularTestController', ['$scope', function($scope) {
-
-    }
+// Define the controllers module: all the controllers should be added here as a dependency
+angular.module('app.controllers', [
+	])
+    .controller('mainController', ['$scope', function($scope) {
+    }])
