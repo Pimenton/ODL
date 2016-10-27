@@ -12,7 +12,7 @@ body {
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #111;
+    background-color: #110044;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -38,6 +38,11 @@ body {
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+}
+
+.card {
+    background: #ffffff;
+    color: #000000;
 }
 
 #main {
