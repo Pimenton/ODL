@@ -1,0 +1,18 @@
+<div ng-switch on="state">
+	<div ng-switch-when="eid">
+		EID adress: {{eid.adress}}
+		<ul class="list-group">
+			<div ng-repeat="rloc in eid.rlocs">
+				<li class="list-group-item">{{rloc.adress}}</li>
+			</div>
+		</ul>
+
+	</div>
+	<div ng-switch-when="rloc">
+
+	</div>
+	<div ng-switch-default>
+		"default"
+	</div>
+		
+</div>

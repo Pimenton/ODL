@@ -10,29 +10,37 @@
     <script type="text/javascript" src="./bower_components/angular/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+  
+    <script type="text/javascript" src="app/controllers.js"></script>
+    <script type="text/javascript" src="app/directives.js"></script>
+    <script type="text/javascript" src="app/directives/sideMenuDirective.js"></script>
 
 
 </head>
-<body ng-app>
+<body ng-app="lispOverlayApp">
+   
 
     <!-- SIDENAV DIV -->
-    <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <a href="#">Info about EID</a>
-      <a href="#">MORE</a>
-    </div>
+    <div ng-controller="sideNavigationController">
 
-    <div id="main">
-      <h2>LISP UI</h2>
-      <p>This is the virtual representation of EIDs</p>
-      <div id="topology-container"></div>
-      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+      <side-menu id="mySidenav" class="sidenav"></side-menu>
+
+<!--       <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Info about EID</a>
+        <a href="#">MORE</a>
+      </div>
+ -->
+
+      <div id="main">
+        <div id="topology-container"></div>
+      </div>
+
     </div>
 
     <script type="text/javascript" src="app/data.js"></script>
     <script type="text/javascript" src="app/app.js"></script>
     <script type="text/javascript" src="app/main.js"></script>
-    <script type="text/javascript" src="app/controllers.js"></script>
 
 </body>
 </html>

@@ -1,5 +1,8 @@
 (function(nx){
 
+    // Tying angular components together
+    var myAppModule = angular.module('lispOverlayApp', ['ui.bootstrap', 'app.directives', 'app.controllers']);
+
     // instantiate NeXt app
     var app = new nx.ui.Application();
 /*
