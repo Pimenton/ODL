@@ -1,4 +1,4 @@
-(function(nx){
+(function(nx, global){
 
     // Tying angular components together
     var myAppModule = angular.module('lispOverlayApp', ['ui.bootstrap', 'app.directives', 'app.controllers']);
@@ -145,35 +145,57 @@
         }
     }
 */
-    // initialize a topology
-    var topo = new nx.graphic.Topology({
-        // set the topology view's with and height
-        width: 650,
-        height: 700,
-        // node config
-        nodeConfig: {
-            // label display name from of node's model, could change to 'model.name' to show name
-            label: 'model.name'
+    nx.define('MyTopology', nx.ui.Component, {
+        properties: {
+            //defines the ICON depending on the node's name
+            icon: {
+                value: function() {
+                    return function(vertex) {
+                        var name = vertex.get("name");
+                        //console.log(name);
+                        if (name.startsWith("EID")) {
+                            return 'cloud'
+                        } else {
+                            return 'unknown'
+                        }
+                    }
+                }
+            }
         },
-        // link config
-        linkConfig: {
-            // multiple link type is curve, could change to 'parallel' to use parallel link
-            linkType: 'curve'
-        },
-        // show node's icon, could change to false to show dot
-        showIcon: true,
-        // identified with name
-        identityKey: 'name',
+       view: {
+           content: {
+               type: 'nx.graphic.Topology',
+               props: {
+                 width: 1000,
+                 height: 720,
+                 // node config
+                 nodeConfig: {
+                     // label display name from of node's model, could change to 'model.name' to show name
+                     label: 'model.name',
+                     iconType: '{#icon}'
+                 },
+                 // link config
+                 linkConfig: {
+                     // multiple link type is curve, could change to 'parallel' to use parallel link
+                     linkType: 'curve'
+                 },
+                 // show node's icon, could change to false to show dot
+                 showIcon: true,
+                 // if you want to identify a node by its name
+                 //identityKey: 'name',
 
-        // auto layout the topology
-        autoLayout: false,
-        dataProcessor: 'force'
+                 // auto layout the topology
+                 autoLayout: false,
+                 dataProcessor: 'force',
+                 data: topoData
+               }
+           }
+       }
     });
 
-    //set converted data to topology
-    topo.data(topoData);
     //attach topology to document
-    topo.attach(app);
+    var comp = new MyTopology();
+    comp.attach(app);
 
     // app must run inside a specific container. In our case this is the one with id="topology-container"
     app.container(document.getElementById("topology-container"));
