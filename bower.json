@@ -1,0 +1,25 @@
+{
+  "name": "ODL",
+  "homepage": "https://github.com/Pimenton/ODL",
+  "authors": [
+    "guillem <guillem.cordoba@gmail.com>"
+  ],
+  "description": "Lisp Overlay WebApp",
+  "main": "index.html",
+  "keywords": [
+    "lisp"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-material": "^1.1.1",
+    "next-bower": "NeXt#^0.9.1"
+  }
+}

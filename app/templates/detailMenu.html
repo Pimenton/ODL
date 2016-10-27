@@ -1,18 +1,21 @@
 <div ng-switch on="state">
 	<div ng-switch-when="eid">
 		EID adress: {{eid.adress}}
-		<ul class="list-group">
-			<div ng-repeat="rloc in eid.rlocs">
-				<li class="list-group-item">{{rloc.adress}}</li>
-			</div>
-		</ul>
+		Action: {{eid.action}}
+    	<md-content>
+      		<md-list>
+            	<md-list-item class="md-2-line" ng-repeat="rloc in eid.rlocs" ng-click="null">
 
+					{{rloc.adress}}
+					<md-button class="md-warn md-raised md-secondary">Del</md-button>
+				</md-list-item>
+			</md-list>
+		</md-content>
 	</div>
 	<div ng-switch-when="rloc">
 
 	</div>
 	<div ng-switch-default>
-		"default"
 	</div>
 		
 </div>

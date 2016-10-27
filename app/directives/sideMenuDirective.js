@@ -1,7 +1,5 @@
 angular.module('app.directive.sideMenuDirective', [])
  .controller('sideNavigationController', ['$scope', function($scope) {
- 	$scope.templateUrl = "app/templates/eidDetails.html";
-
  	$scope.showEidDetails = function($eid) {
  		openNav();
  		$scope.eid = $eid;
@@ -15,7 +13,23 @@ angular.module('app.directive.sideMenuDirective', [])
 	eid = {
 		adress: "180.188.99.1",
 		action: "discard",
+		rlocs2: [1,1,1,1,1],
 		rlocs: [
+			{
+				adress: "11.11.11.11"
+			},
+			{
+				adress: "11.11.11.11"
+			},
+			{
+				adress: "11.11.11.11"
+			},
+			{
+				adress: "11.11.11.11"
+			},
+			{
+				adress: "11.11.11.11"
+			},
 			{
 				adress: "11.11.11.11"
 			},
