@@ -17,9 +17,42 @@
       beforeSend: function(xhr) {
               xhr.setRequestHeader("Authorization", "Basic " + btoa("admin:admin"));
           },
-          success: function (topologyData) {
-              data = topologyData;
-              }
+          success: function (topologyData) {{
+            "id": 0,
+            "name": "EID 0",
+            "adress": "10.0.0.0",
+            "action": "discard",
+            "rlocs2": [1,1,1,1,1],
+        		"rlocs": [
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.11"
+        			},
+        			{
+        				"adress": "11.11.11.12"
+        			},
+        			{
+        				"adress": "11.11.11.13"
+        			},
+        			{
+        				"adress": "11.11.11.14"
+        			}
+        		]
+        }
     });
 
 
@@ -160,10 +193,47 @@
                         }
                     }
                 }
+            },
+            eid: {
+                "id": 0,
+                "name": "EID 0",
+                "adress": "10.0.0.0",
+                "action": "discard",
+                "rlocs2": [1,1,1,1,1],
+            		"rlocs": [
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.11"
+            			},
+            			{
+            				"adress": "11.11.11.12"
+            			},
+            			{
+            				"adress": "11.11.11.13"
+            			},
+            			{
+            				"adress": "11.11.11.14"
+            			}
+            		]
             }
         },
        view: {
-           content: {
+           content: [
+             {
                type: 'nx.graphic.Topology',
                props: {
                  width: 1000,
@@ -180,6 +250,9 @@
                      // multiple link type is curve, could change to 'parallel' to use parallel link
                      linkType: 'curve'
                  },
+                 tooltipManagerConfig: {
+                        nodeTooltipContentClass: 'EIDTooltip'
+                 },
                  // show node's icon, could change to false to show dot
                  showIcon: true,
                  // if you want to identify a node by its name
@@ -189,8 +262,35 @@
                  autoLayout: false,
                  dataProcessor: 'force',
                  data: topoData
-               }
-           }
+               },
+               events: {
+                   selectNode: '{#showEidInfo}'
+               },
+             },
+            {
+                tag: 'p',
+                content: [
+                    {
+                        tag: 'span',
+                        content: 'Selected: '
+                    },
+                    {
+                        tag: 'span',
+                        content: '{#eid}'
+                    }
+                ]
+            }
+          ]
+       },
+       methods: {
+          showEidInfo: function (sender, node) {
+              this.eid(node.label());
+              //$scope.openSideMenu();
+              //showEidDetails(eid);
+          },
+          attach: function(args) {
+              this.inherited(args);
+          }
        }
     });
 
