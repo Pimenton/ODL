@@ -47,6 +47,16 @@ body {
 
 #main {
     transition: margin-right .5s;
+    text-align: center;
+}
+
+#topology-container {
+    border-style: groove;
+    height: 720px;
+    width: 1000px;
+    display: inline-block;
+    margin: 0 auto;
+    margin: 120px 30px 30px 30px;
 }
 
 @media screen and (max-height: 450px) {

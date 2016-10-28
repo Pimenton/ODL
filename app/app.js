@@ -168,6 +168,7 @@
                props: {
                  width: 1000,
                  height: 720,
+                 adaptative: true,
                  // node config
                  nodeConfig: {
                      // label display name from of node's model, could change to 'model.name' to show name
@@ -195,9 +196,9 @@
 
     //attach topology to document
     var comp = new MyTopology();
-    comp.attach(app);
-
     // app must run inside a specific container. In our case this is the one with id="topology-container"
     app.container(document.getElementById("topology-container"));
+
+    comp.attach(app);
 
 })(nx);
