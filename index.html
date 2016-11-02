@@ -4,6 +4,7 @@
     <title>My first NeXt topology!</title>
     <link rel="stylesheet" href="./bower_components/next-bower/css/next.css">
     <link rel="stylesheet" href="./app/css/main.css">
+    <link rel="stylesheet" href="./app/css/iconfont.css">
     <link rel="stylesheet" href="./bower_components/angular-material/angular-material.css">
 
     <!-- INCLUDE NEXT UI AND ANGULAR -->
@@ -23,17 +24,9 @@
     <div ng-controller="navigationController">
 
       <md-sidenav md-component-id="right" class="md-sidenav-right">
-        <ng-include src="'app/templates/detailMenu.html'"/>
+        <ng-include src="'./app/templates/detailMenu.html'"/>
       </md-sidenav>
 
-<!--       
-      <side-menu id="mySidenav" class="sidenav"></side-menu>
-<div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Info about EID</a>
-        <a href="#">MORE</a>
-      </div>
- -->
 
       <div id="main">
 
@@ -43,13 +36,12 @@
 
     </div>
 
-    <script type="text/javascript" src="app/controllers/navigationController.js"></script>
-    <script type="text/javascript" src="app/controllers.js"></script>
-    <script type="text/javascript" src="app/directives.js"></script>
+    <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
+    <script type="text/javascript" src="./app/controllers.js"></script>
+    <script type="text/javascript" src="./app/directives.js"></script>
 
-
-    <script type="text/javascript" src="app/data.js"></script>
-    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="./app/data.js"></script>
+    <script type="text/javascript" src="./app/app.js"></script>
 
 </body>
 </html>
