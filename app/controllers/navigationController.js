@@ -10,6 +10,7 @@
  	
  	$scope.showEidDetails = function($eid) {
  		$scope.openSideMenu();
+ 		// CALL LISP MODULE
  		$scope.eid = $eid;
 	 	$scope.state = "eid";
  	};
@@ -22,7 +23,6 @@
 	eid = {
 		adress: "180.188.99.1",
 		action: "discard",
-		rlocs2: [1,1,1,1,1],
 		rlocs: [
 			{
 				adress: "11.11.11.11"
