@@ -7,6 +7,6 @@ angular.module('lisp.communication', [])
 
   // Declaring controller of the module, where all the logic can go
   .controller('LispCommunicationController', function($scope) {
-
+  		
 
   })
