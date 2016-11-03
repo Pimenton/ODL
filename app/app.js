@@ -17,36 +17,36 @@
               eid = {
                   "id": 0,
                   "name": "EID 0",
-                  "adress": "10.0.0.0",
+                  "address": "10.0.0.0",
                   "action": "discard",
                   "rlocs2": [1,1,1,1,1],
                   "rlocs": [
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.11"
+                      "address": "11.11.11.11"
                     },
                     {
-                      "adress": "11.11.11.12"
+                      "address": "11.11.11.12"
                     },
                     {
-                      "adress": "11.11.11.13"
+                      "address": "11.11.11.13"
                     },
                     {
-                      "adress": "11.11.11.14"
+                      "address": "11.11.11.14"
                     }
                   ]
               };
@@ -70,36 +70,36 @@
               eid: {
                   "id": 0,
                   "name": "EID 0",
-                  "adress": "10.0.0.0",
+                  "address": "10.0.0.0",
                   "action": "discard",
                   "rlocs2": [1,1,1,1,1],
               		"rlocs": [
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.12"
+              				"address": "11.11.11.12"
               			},
               			{
-              				"adress": "11.11.11.13"
+              				"address": "11.11.11.13"
               			},
               			{
-              				"adress": "11.11.11.14"
+              				"address": "11.11.11.14"
               			}
               		]
               }
@@ -109,9 +109,7 @@
                {
                  type: 'nx.graphic.Topology',
                  props: {
-                   width: 1000,
-                   height: 720,
-                   adaptative: true,
+                   adaptive: true,
                    // node config
                    nodeConfig: {
                        // label display name from of node's model, could change to 'model.name' to show name
@@ -140,26 +138,13 @@
                      clickNode: '{#showEidInfo}'
                  },
                },
-              {
-                  tag: 'p',
-                  content: [
-                      {
-                          tag: 'span',
-                          content: 'Selected: '
-                      },
-                      {
-                          tag: 'span',
-                          content: '{#eid}'
-                      }
-                  ]
-              }
             ]
          },
          methods: {
             showEidInfo: function (sender, node) {
-                //this.eid(node.model(adress));
+                //this.eid(node.model(address));
                 //$scope.openSideMenu();
-                $scope.showEidDetails(node.model()._data.adress);
+                $scope.showEidDetails(node.model()._data.address);
             },
             attach: function(args) {
                 this.inherited(args);
@@ -169,7 +154,6 @@
 
       //attach topology to document
       var comp = new MyTopology();
-      var comp2 = new MyTopology();
 
       // app must run inside a specific container. In our case this is the one with id="topology-container"
       app.container(document.getElementById("topology-container"));
