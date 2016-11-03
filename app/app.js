@@ -303,9 +303,15 @@
 
     //attach topology to document
     var comp = new MyTopology();
+    var comp2 = new MyTopology();
+
     // app must run inside a specific container. In our case this is the one with id="topology-container"
     app.container(document.getElementById("topology-container"));
 
     comp.attach(app);
+
+
+//    comp.detach();
+//    comp2.attach(app);
 
 })(nx);
