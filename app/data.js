@@ -309,15 +309,6 @@ nx.define('EIDTooltip', nx.ui.Component, {
                     tag: 'span',
                     content: '{#node.model.adress}'
                 }]
-            }, {
-              tag: 'p',
-              content: [{
-                  tag: 'label',
-                  content: 'RLOCS: '
-              }, {
-                  tag: 'span',
-                  content: '{#node.model.rlocs[0]}'
-              }]
             }]
         }
     });
