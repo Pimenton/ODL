@@ -266,7 +266,7 @@
                  //identityKey: 'name',
 
                  // auto layout the topology
-                 autoLayout: false,
+                 autoLayout: true,
                  dataProcessor: 'force',
                  data: topoData
                },

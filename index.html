@@ -21,21 +21,47 @@
 <body ng-app="lispOverlayApp">
 
 
-    <div ng-controller="navigationController" layout-fill>
+    <div ng-controller="navigationController" layout="column">
+      <section layout="row">
 
-      <md-sidenav md-component-id="right" class="md-sidenav-right">
-        <ng-include src="'./app/templates/detailMenu.html'"/>
+      <div id="main" layout="column" flex="">
+
+        <md-toolbar layout="row">
+
+            <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
+            </ng-include>
+
+            <div layout-align="center center" layout="row">
+                <md-switch ng-model="view.state" aria-label="View Switch">
+                    Switch views
+                </md-switch>
+            </div>
+            
+            <span flex></span>
+
+            <md-button class="md-icon-button" ng-click="openSideMenu()" layout-align=" center">
+                <i class="material-icons">&#xE5D2;</i>
+            </md-button>
+
+        </md-toolbar>
+
+        <div ng-switch on="view.state">
+            <div ng-switch-when="true">
+                hola
+            </div>
+            <div ng-switch-default>
+                <div id="topology-container"></div>
+            </div>
+        </div>
+      
+      </div>
+
+      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4">
+        <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
       </md-sidenav>
 
 
-      <div id="main" layout layout-padding>
-
-        <ng-include src="'./app/templates/searchForm.html'" flex="30"/>
-
-        <div id="topology-container"></div>
-
-      </div>
-
+    </section>
     </div>
 
     <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
