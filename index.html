@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="./bower_components/next-bower/css/next.css">
     <link rel="stylesheet" href="./app/css/main.css">
     <link rel="stylesheet" href="./app/css/iconfont.css">
+    <link rel="stylesheet" href="./app/css/searchform.css">
     <link rel="stylesheet" href="./bower_components/angular-material/angular-material.css">
 
     <!-- INCLUDE NEXT UI AND ANGULAR -->
@@ -20,15 +21,16 @@
 <body ng-app="lispOverlayApp">
 
 
-    <!-- SIDENAV DIV -->
-    <div ng-controller="navigationController">
+    <div ng-controller="navigationController" layout-fill>
 
       <md-sidenav md-component-id="right" class="md-sidenav-right">
         <ng-include src="'./app/templates/detailMenu.html'"/>
       </md-sidenav>
 
 
-      <div id="main">
+      <div id="main" layout layout-padding>
+
+        <ng-include src="'./app/templates/searchForm.html'" flex="30"/>
 
         <div id="topology-container"></div>
 
@@ -37,6 +39,7 @@
     </div>
 
     <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
+    <script type="text/javascript" src="./app/controllers/searchFormController.js"></script>
     <script type="text/javascript" src="./app/controllers.js"></script>
     <script type="text/javascript" src="./app/directives.js"></script>
 
