@@ -62,3 +62,10 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+
+.detail {
+}
+
+.detail md-input-container {
+    margin-bottom: 0px;
+}
