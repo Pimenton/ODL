@@ -12,7 +12,7 @@
 	<div ng-switch-when="eid">
 		<div layout="column" layout-padding>
 			<div class="detail">
-			Adress: {{eid.adress}}
+			Address: {{eid.address}}
 			</div>
 			<div class="detail">
 			Action: {{eid.action}}
@@ -21,7 +21,7 @@
 	    	<md-content flex="50" layout-align=" center" style="width: 95%; position: absolute;">
 	      		<md-list>
 	            	<md-list-item class="md-2-line" ng-repeat="rloc in eid.rlocs" ng-click="null">
-						{{rloc.adress}}
+						{{rloc.address}}
 						<md-button class="md-warn md-icon-button md-raised md-secondary">
 							<i class="material-icons">&#xE872;</i>
 						</md-button>
@@ -34,7 +34,7 @@
 	<div ng-switch-when="rloc">
 		<div layout="column" layout-padding>
 			<div class="detail">
-				Adress: {{rloc.adress}}
+				Address: {{rloc.address}}
 			</div>
 			<div class="detail">
 			    <md-input-container>
@@ -52,7 +52,7 @@
 	    	<md-content flex="40" layout-align=" center" style="width: 95%; position: absolute;">
 	      		<md-list>
 	            	<md-list-item class="md-2-line" ng-repeat="eid in rloc.eids" ng-click="null">
-						{{eid.adress}}
+						{{eid.address}}
 						<md-button class="md-warn md-icon-button md-raised md-secondary">
 							<i class="material-icons">&#xE872;</i>
 						</md-button>

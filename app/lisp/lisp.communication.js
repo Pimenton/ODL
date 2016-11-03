@@ -4,39 +4,140 @@ angular.module('lisp.communication', [])
   .factory('lispService', function() {
     var serviceInstance = {};
 
-    serviceInstance.getEIDInfo = function(eidAddress){
+    serviceInstance.getAllEids = function() {
+    	return [
+    	{
+                  "address": "10.0.0.0",
+                  "rlocs": [
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.12"
+              			},
+              			{
+              				"address": "11.11.11.13"
+              			},
+              			{
+              				"address": "11.11.11.14"
+              			}
+              		]
+        },
+    	{
+                  "address": "10.0.0.1",
+                  "rlocs": [
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.12"
+              			},
+              			{
+              				"address": "11.11.11.13"
+              			},
+              			{
+              				"address": "11.11.11.14"
+              			}
+              		]
+        },
+    	{
+                  "address": "10.0.0.2",
+                  "rlocs": [
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.11"
+              			},
+              			{
+              				"address": "11.11.11.12"
+              			},
+              			{
+              				"address": "11.11.11.13"
+              			},
+              			{
+              				"address": "11.11.11.14"
+              			}
+              		]
+        },
+    	];
+    };
+
+    serviceInstance.getEidInfo = function(eidaddresss){
     	return  {
                   "id": 0,
                   "name": "EID 0",
-                  "adress": "10.0.0.0",
+                  "address": "10.0.0.0",
                   "action": "discard",
                   "rlocs": [
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.11"
+              				"address": "11.11.11.11"
               			},
               			{
-              				"adress": "11.11.11.12"
+              				"address": "11.11.11.12"
               			},
               			{
-              				"adress": "11.11.11.13"
+              				"address": "11.11.11.13"
               			},
               			{
-              				"adress": "11.11.11.14"
+              				"address": "11.11.11.14"
               			}
               		]
               };

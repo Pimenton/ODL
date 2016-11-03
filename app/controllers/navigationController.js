@@ -4,6 +4,7 @@
  	$scope.openSideMenu = function() {
  		$mdSidenav('right').open();
  	};
+ 	
  	$scope.closeSideMenu = function() {
  		$mdSidenav('right')
  			.close()
@@ -13,15 +14,15 @@
  	};
  	
  	$scope.showEidDetails = function($eid) {
- 		$scope.$apply(function() {
+ 		$timeout(function() {
  			$scope.openSideMenu();
  			// CALL LISP MODULE
- 			$scope.eid = lispService.getEIDInfo($eid);
+ 			$scope.eid = lispService.getEidInfo($eid);
 	 		$scope.detailMenuState = "eid";
 	 	});
  	};
  	$scope.showRlocDetails = function($rloc) {
-		$scope.$apply(function() {
+		$timeout(function() {
 	 		$scope.openSideMenu();
  			$scope.rloc = $rloc;
  	 		$scope.detailMenuState = "rloc";
@@ -29,70 +30,70 @@
  	};
 
 	eids = {
-		adress: "180.188.99.1",
+		address: "180.188.99.1",
 		action: "discard",
 		rlocs: [
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.12"
+				address: "11.11.11.12"
 			},
 			{
-				adress: "11.11.11.13"
+				address: "11.11.11.13"
 			},
 			{
-				adress: "11.11.11.14"
+				address: "11.11.11.14"
 			}
 		]
 	};
 
 	rloc = {
-		adress: "1.1.1.1",
+		address: "1.1.1.1",
 		priority: 2,
 		weight: 10,
 		eids: [
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.11"
+				address: "11.11.11.11"
 			},
 			{
-				adress: "11.11.11.12"
+				address: "11.11.11.12"
 			},
 			{
-				adress: "11.11.11.13"
+				address: "11.11.11.13"
 			},
 			{
-				adress: "11.11.11.14"
+				address: "11.11.11.14"
 			}
 		]
 	};
