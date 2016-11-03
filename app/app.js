@@ -1,7 +1,7 @@
 (function(nx){
 
     // Tying angular components together
-    var lispAppModule = angular.module('lispOverlayApp', ['ngMaterial', 'app.directives', 'app.controllers']);
+    var lispAppModule = angular.module('lispOverlayApp', ['ngMaterial', 'app.directives', 'app.controllers', 'lisp.communication']);
 
     // Define app theme
     lispAppModule.config(function($mdThemingProvider) {
@@ -14,6 +14,42 @@
 
       // instantiate NeXt app
       var app = new nx.ui.Application();
+              eid = {
+                  "id": 0,
+                  "name": "EID 0",
+                  "adress": "10.0.0.0",
+                  "action": "discard",
+                  "rlocs2": [1,1,1,1,1],
+                  "rlocs": [
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.11"
+                    },
+                    {
+                      "adress": "11.11.11.12"
+                    },
+                    {
+                      "adress": "11.11.11.13"
+                    },
+                    {
+                      "adress": "11.11.11.14"
+                    }
+                  ]
+              };
 
       nx.define('MyTopology', nx.ui.Component, {
           properties: {
@@ -101,7 +137,7 @@
                    data: topoData
                  },
                  events: {
-                     selectNode: '{#showEidInfo}'
+                     clickNode: '{#showEidInfo}'
                  },
                },
               {
@@ -121,9 +157,9 @@
          },
          methods: {
             showEidInfo: function (sender, node) {
-                this.eid(node.model(adress));
+                //this.eid(node.model(adress));
                 //$scope.openSideMenu();
-                $scope.showEidDetails(eid);
+                $scope.showEidDetails(node.model()._data.adress);
             },
             attach: function(args) {
                 this.inherited(args);

@@ -1,5 +1,5 @@
  angular.module('navigationController', [])
-.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', function($scope, $mdSidenav, $timeout) {
+.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', function($scope, $mdSidenav, $timeout, lispService) {
  	
  	$scope.openSideMenu = function() {
  		$mdSidenav('right').open();
@@ -13,18 +13,22 @@
  	};
  	
  	$scope.showEidDetails = function($eid) {
- 		$scope.openSideMenu();
- 		// CALL LISP MODULE
- 		$scope.eid = $eid;
-	 	$scope.detailMenuState = "eid";
+ 		$scope.$apply(function() {
+ 			$scope.openSideMenu();
+ 			// CALL LISP MODULE
+ 			$scope.eid = lispService.getEIDInfo($eid);
+	 		$scope.detailMenuState = "eid";
+	 	});
  	};
  	$scope.showRlocDetails = function($rloc) {
- 		$scope.openSideMenu();
- 		$scope.rloc = $rloc;
- 	 	$scope.detailMenuState = "rloc";
+		$scope.$apply(function() {
+	 		$scope.openSideMenu();
+ 			$scope.rloc = $rloc;
+ 	 		$scope.detailMenuState = "rloc";
+ 	 	});
  	};
 
-	eid = {
+	eids = {
 		adress: "180.188.99.1",
 		action: "discard",
 		rlocs: [
