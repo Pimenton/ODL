@@ -1,16 +1,21 @@
-var listOfRlocs;
-$.getJSON('exampl.json', function (jsonStr) {
-	var eids = jsonStr["mapping-database"]["virtual-network-identifier"][0]["mapping"];
-	for (var i = 0; i<Object.keys(eids).length - 1; i++) {
+var listOfRlocs = {};
+var EidRLOC = {};
+
+$.getJSON('exampl.json', function (jsonObj) {
+	//jsonObj has JSON response 
+	var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
+	for (var i = 0; i<eids.length; i++) {
 		var eidInfo = eids[i]["eid"];
 		var mappingRecord = eids[i]["mapping-record"];
 		var rlocs = mappingRecord["LocatorRecord"];
-
-		for (var i = rlocsrlocsrlocs.length - 1; i >= 0; i--) {
-			rlocs[i]
+		var listEidRloc = [];
+		for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
+			addRlocToRlocList(rlocs[rlocIt]);
+			listEidRloc.push(rlocs[rlocIt]["locator-id"]);
 		}
-		var typeIP = eids[i]["eid-uri"].split(":")[0]
+		EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
 
+		var typeIP = eids[i]["eid-uri"].split(":")[0];
 	}
 	//var count = obj.count;
 	//items.push("<ul>");
@@ -20,3 +25,8 @@ $.getJSON('exampl.json', function (jsonStr) {
 	//items.push("</ul>");
 	//$("#ajaxphp-result").html = items.join("");
 });
+
+function addRlocToRlocList(rloc){
+	//check if rloc exists on listOfRlocs
+	listOfRlocs[rloc["locator-id"]] = rloc;
+}
