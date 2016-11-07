@@ -14,9 +14,10 @@
         .accentPalette('light-green');
     });
 
-    
 
-    lispAppModule.controller('nextUIController', ['$scope', function($scope) {
+    lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
+
+      var eids = lispService.getAllEIDs();
 
       // instantiate NeXt app
       var app = new nx.ui.Application();

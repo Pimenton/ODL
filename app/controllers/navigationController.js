@@ -21,6 +21,7 @@
 	 		$scope.detailMenuState = "eid";
 	 	});
  	};
+
  	$scope.showRlocDetails = function($rloc) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
@@ -29,85 +30,15 @@
  	 	});
  	};
 
-	eids = {
-		address: "180.188.99.1",
-		action: "discard",
-		rlocs: [
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.12"
-			},
-			{
-				address: "11.11.11.13"
-			},
-			{
-				address: "11.11.11.14"
-			}
-		]
-	};
-
-	rloc = {
-		address: "1.1.1.1",
-		priority: 2,
-		weight: 10,
-		eids: [
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.12"
-			},
-			{
-				address: "11.11.11.13"
-			},
-			{
-				address: "11.11.11.14"
-			}
-		]
-	};
-
-	lispService.getAllEids().then(
+	lispService.initialize().then(
 		// success
-		function(response) {
-			console.log(response);
+		function() {
+
 		}, 
 		// failure
 		function(error) {
 			console.log(error);
 		}
 	);
-	//$timeout(function () { $scope.showRlocDetails(rloc); }, false);
 
  }])

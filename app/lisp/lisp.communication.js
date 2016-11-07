@@ -4,8 +4,11 @@ angular.module('lisp.communication', [])
   .factory('lispService', ['$http', '$q', function($http, $q) {
     var serviceInstance = {};
 
+    // Info of all rlocs
     var listOfRlocs = {};
+    // Donat un RLOC, té tot els EIDs que estan connectats
     var RLOCEid = {};
+    // Donat un EID, té tots els RLOCs als que està connectat
     var EidRLOC = {};
 
     serviceInstance.getJSON = function(jsonObj) {
@@ -79,9 +82,9 @@ angular.module('lisp.communication', [])
       }
     };
 
-
-    serviceInstance.getAllEids = function() {
-		  var deferred = $q.defer();
+    // First function to call: gets all the lisp database content and stores it in the service
+    serviceInstance.initialize = function() {
+      var deferred = $q.defer();
       var auth64 = btoa('admin:admin');
 
       $http({
@@ -89,14 +92,13 @@ angular.module('lisp.communication', [])
             method: "GET",
             withCredentials: true,
             headers: {
-                'Authorization': 'Basic '+auth64
+                'Authorization': 'Basic '+ auth64
             }
         })
-
       .success(function(data) { 
 
         serviceInstance.getJSON(data);
-        deferred.resolve(EidRLOC);
+        deferred.resolve();
 
       }).error(function(msg, code) {
 
@@ -107,6 +109,13 @@ angular.module('lisp.communication', [])
       });
 
       return deferred.promise;
+
+    };
+
+    // Returns all EID contained in the service
+    serviceInstance.getAllEIDs = function() {
+
+      return EidRLOC;
 
     };
 
