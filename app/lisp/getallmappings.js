@@ -24,11 +24,34 @@ function addRlocToRlocList(rloc){
 	listOfRlocs[rloc["locator-id"]] = rloc;
 }
 
-function getEIDRLOC()
+function getRLOCsFromEID(eidUri)
 {
-	var keys = Object.keys(listOfRlocs);
-	for (var i = 0; i<keys.count; i++) 
-	{
-		alert("entro");
-	}
+	return EidRLOC[eidUri];
+}
+
+function getInfoOfRLOC(RLOC_ID)
+{
+	return listOfRlocs[RLOC_ID];
+}
+
+function getIPType()
+{
+	return eidUri.split(":")[0];
+}
+
+function getAddressType(eidUri)
+{
+	return "ietf-lisp-address-types:" + getIPType(eidUri) + "-afi";
+}
+
+function getIP(eidUri)
+{
+	return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
+}
+
+function getMappingEID(eidUri)
+{
+	var addresType = getAddressType(eidUri);
+	var idType = getIPType(eidUri);
+	var ip = getIP(eidUri);
 }
