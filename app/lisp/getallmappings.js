@@ -26,7 +26,6 @@ function addRlocToRlocList(rloc){
 	//check if rloc exists on listOfRlocs
 	listOfRlocs[rloc["locator-id"]] = rloc;
 }
-<<<<<<< Updated upstream
 
 function getRLOCsFromEID(eidUri)
 {
@@ -59,7 +58,7 @@ function getMappingEID(eidUri)
 	var idType = getIPType(eidUri);
 	var ip = getIP(eidUri);
 }
-=======
+
 function addRlocToRLOCEid(rloc,eid){
 	//check if rloc exists on listOfRlocs
     RLOCEid[rloc["locator-id"]].push(eid);
@@ -72,4 +71,4 @@ function getEIDRLOC()
 		alert("entro");
 	}
 }
->>>>>>> Stashed changes
+
