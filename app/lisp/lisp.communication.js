@@ -114,49 +114,12 @@ angular.module('lisp.communication', [])
 
     // Returns all EID contained in the service
     serviceInstance.getAllEIDs = function() {
-
       return EidRLOC;
-
     };
 
     serviceInstance.getEidInfo = function(eidaddresss){
-    	return  {
-                  "id": 0,
-                  "name": "EID 0",
-                  "address": "10.0.0.0",
-                  "action": "discard",
-                  "rlocs": [
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.12"
-              			},
-              			{
-              				"address": "11.11.11.13"
-              			},
-              			{
-              				"address": "11.11.11.14"
-              			}
-              		]
-              };
-
-    }
+    	return EidRLOC[eidaddresss];
+    };
 
     return serviceInstance;
   }])

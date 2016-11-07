@@ -40,14 +40,19 @@
 
         </md-toolbar>
            
-        <div ng-controller="nextUIController" id="topology-container"></div>
-
+        <div ng-switch="finishedLoading">
+            <div ng-switch-when="false">
+                <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+            </div>
+            <div ng-switch-default>
+                <div ng-controller="nextUIController" id="topology-container"></div>
+            </div>
+        </div>
       </div>
 
       <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4">
         <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
       </md-sidenav>
-
 
       </section>
     </div>
