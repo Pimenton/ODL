@@ -18,9 +18,9 @@ angular.module('lisp.communication', [])
         var rlocs = mappingRecord["LocatorRecord"];
         var listEidRloc = [];
         for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
-          addRlocToRlocList(rlocs[rlocIt]);
+          serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
           listEidRloc.push(rlocs[rlocIt]["locator-id"]);
-                addRlocToRLOCEid(rlocs[rlocIt],eid_uri);
+                serviceInstance.addRlocToRLOCEid(rlocs[rlocIt],eid_uri);
         }
         EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
 
@@ -67,7 +67,7 @@ angular.module('lisp.communication', [])
 
     serviceInstance.addRlocToRLOCEid = function (rloc,eid){
       //check if rloc exists on listOfRlocs
-        RLOCEid[rloc["locator-id"]].push(eid);
+        //RLOCEid[rloc["locator-id"]].push(eid);
     };
 
     serviceInstance.getEIDRLOC = function ()
@@ -94,8 +94,10 @@ angular.module('lisp.communication', [])
         })
 
       .success(function(data) { 
+
         serviceInstance.getJSON(data);
         deferred.resolve(EidRLOC);
+
       }).error(function(msg, code) {
 
         deferred.reject(msg);

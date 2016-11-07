@@ -14,6 +14,8 @@
         .accentPalette('light-green');
     });
 
+    
+
     lispAppModule.controller('nextUIController', ['$scope', function($scope) {
 
       // instantiate NeXt app
@@ -165,8 +167,5 @@
       comp.attach(app);
     }]);
 
-
-//    comp.detach();
-//    comp2.attach(app);
 
 })(nx);

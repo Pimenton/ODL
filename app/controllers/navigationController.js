@@ -97,6 +97,17 @@
 			}
 		]
 	};
-	$timeout(function () { $scope.showRlocDetails(rloc); }, false);
+
+	lispService.getAllEids().then(
+		// success
+		function(response) {
+			console.log(response);
+		}, 
+		// failure
+		function(error) {
+			console.log(error);
+		}
+	);
+	//$timeout(function () { $scope.showRlocDetails(rloc); }, false);
 
  }])
