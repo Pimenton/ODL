@@ -3,8 +3,12 @@
     // Tying angular components together
     var lispAppModule = angular.module('lispOverlayApp', ['ngMaterial', 'app.directives', 'app.controllers', 'lisp.communication']);
 
-    // Define app theme
-    lispAppModule.config(function($mdThemingProvider) {
+    lispAppModule.config(function($httpProvider, $mdThemingProvider) {
+      
+      //Enable cross domain calls
+      $httpProvider.defaults.useXDomain = true;
+
+      // Define app theme
       $mdThemingProvider.theme('default')
         .primaryPalette('indigo')
         .accentPalette('light-green');
