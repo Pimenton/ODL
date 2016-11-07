@@ -26,7 +26,7 @@ function addRlocToRlocList(rloc){
 
 function getEIDRLOC()
 {
-	var keys = Object.keys(driversCounter);
+	var keys = Object.keys(listOfRlocs);
 	for (var i = 0; i<keys.count; i++) 
 	{
 		alert("entro");
