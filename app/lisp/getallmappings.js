@@ -17,16 +17,18 @@ $.getJSON('exampl.json', function (jsonObj) {
 
 		var typeIP = eids[i]["eid-uri"].split(":")[0];
 	}
-	//var count = obj.count;
-	//items.push("<ul>");
-	//$.each(obj, function( key, val ) {
-	//	items.push("<li id='" + key + "'>" + val + "</li>");
-	//});
-	//items.push("</ul>");
-	//$("#ajaxphp-result").html = items.join("");
 });
 
 function addRlocToRlocList(rloc){
 	//check if rloc exists on listOfRlocs
 	listOfRlocs[rloc["locator-id"]] = rloc;
+}
+
+function getEIDRLOC()
+{
+	var keys = Object.keys(driversCounter);
+	for (var i = 0; i<keys.count; i++) 
+	{
+		alert("entro");
+	}
 }
