@@ -1,17 +1,20 @@
 var listOfRlocs = {};
+var RLOCEid = {};
 var EidRLOC = {};
 
 $.getJSON('exampl.json', function (jsonObj) {
 	//jsonObj has JSON response 
 	var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
 	for (var i = 0; i<eids.length; i++) {
-		var eidInfo = eids[i]["eid"];
+		var eidInfo = eids[i]["mapping-record"]["eid"];
+        var eid_uri =eids[i]["eid"];
 		var mappingRecord = eids[i]["mapping-record"];
 		var rlocs = mappingRecord["LocatorRecord"];
 		var listEidRloc = [];
 		for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
 			addRlocToRlocList(rlocs[rlocIt]);
 			listEidRloc.push(rlocs[rlocIt]["locator-id"]);
+            addRlocToRLOCEid(rlocs[rlocIt],eid_uri);
 		}
 		EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
 
@@ -23,6 +26,7 @@ function addRlocToRlocList(rloc){
 	//check if rloc exists on listOfRlocs
 	listOfRlocs[rloc["locator-id"]] = rloc;
 }
+<<<<<<< Updated upstream
 
 function getRLOCsFromEID(eidUri)
 {
@@ -55,3 +59,17 @@ function getMappingEID(eidUri)
 	var idType = getIPType(eidUri);
 	var ip = getIP(eidUri);
 }
+=======
+function addRlocToRLOCEid(rloc,eid){
+	//check if rloc exists on listOfRlocs
+    RLOCEid[rloc["locator-id"]].push(eid);
+}
+function getEIDRLOC()
+{
+	var keys = Object.keys(listOfRlocs);
+	for (var i = 0; i<keys.count; i++) 
+	{
+		alert("entro");
+	}
+}
+>>>>>>> Stashed changes
