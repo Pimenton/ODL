@@ -18,7 +18,6 @@
     lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
 
       var eids = lispService.getAllEIDs();
-      console.log(eids);
 
       // instantiate NeXt app
       var app = new nx.ui.Application();

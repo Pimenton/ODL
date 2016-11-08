@@ -8,62 +8,74 @@
 		</h2>
 	</div>
 </md-toolbar>
-<div ng-switch on="detailMenuState">
-	<div ng-switch-when="eid">
-		<div layout="column" layout-padding>
-			<div class="detail">
-			Address: {{eid.address}}
+<div ng-switch="finishedLoadingDetail">
+    <div ng-switch-when="false">
+        <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+    </div>
+    <div ng-switch-default>
+
+		<div ng-switch on="detailMenuState">
+			<div ng-switch-when="eid">
+				<div layout="column" layout-padding>
+					<div class="detail">
+					Address: {{eid.address}}
+					</div>
+					<!--<div class="detail">
+					Action: {{eid.action}}
+			    	</div>-->
+			   		<md-subheader class="md-no-sticky">RLOCs associated</md-subheader>
+			    	<md-content flex="50" layout-align=" center" style="width: 95%; position: absolute;">
+			      		<md-list>
+			            	<md-list-item class="md-2-line" ng-repeat="rloc in eid.rlocs" ng-click="null">
+								{{rloc}}
+								<md-button class="md-warn md-icon-button md-raised md-secondary">
+									<i class="material-icons">&#xE872;</i>
+								</md-button>
+								<md-divider ng-if="!$last"></md-divider>
+							</md-list-item>
+						</md-list>
+					</md-content>
+				</div>
 			</div>
-			<div class="detail">
-			Action: {{eid.action}}
-	    	</div>
-	   		<md-subheader class="md-no-sticky">RLOCs associated</md-subheader>
-	    	<md-content flex="50" layout-align=" center" style="width: 95%; position: absolute;">
-	      		<md-list>
-	            	<md-list-item class="md-2-line" ng-repeat="rloc in eid.rlocs" ng-click="null">
-						{{rloc.address}}
-						<md-button class="md-warn md-icon-button md-raised md-secondary">
-							<i class="material-icons">&#xE872;</i>
-						</md-button>
-						<md-divider ng-if="!$last"></md-divider>
-					</md-list-item>
-				</md-list>
-			</md-content>
+			<div ng-switch-when="rloc">
+				<div layout="column" layout-padding>
+					<div class="detail">
+						Locator-id: {{rloc["locator-id"]}}
+					</div>
+					<div class="detail">
+						Address: {{rloc.rloc.ipv4}}
+					</div>
+					<div class="detail">
+					    <md-input-container>
+		        			<label>Priority</label>
+		        			<input ng-model="rloc.priority">
+		      			</md-input-container>
+					</div>
+					<div class="detail">
+					    <md-input-container>
+		        			<label>Weight</label>
+		        			<input ng-model="rloc.weight">
+		      			</md-input-container>
+			    	</div>
+			   		<md-subheader class="md-no-sticky">EIDs to which it belongs</md-subheader>
+			    	<md-content flex="40" layout-align=" center" style="width: 95%; position: absolute;">
+			      		<md-list>
+			            	<md-list-item class="md-2-line" ng-repeat="eid in rloc.eids" ng-click="null">
+								{{eid.address}}
+								<md-button class="md-warn md-icon-button md-raised md-secondary">
+									<i class="material-icons">&#xE872;</i>
+								</md-button>
+								<md-divider ng-if="!$last"></md-divider>
+							</md-list-item>
+						</md-list>
+					</md-content>
+				</div>
+			</div>
+			<div ng-switch-default>
+			default
+			</div>
+				
 		</div>
-	</div>
-	<div ng-switch-when="rloc">
-		<div layout="column" layout-padding>
-			<div class="detail">
-				Address: {{rloc.address}}
-			</div>
-			<div class="detail">
-			    <md-input-container>
-        			<label>Priority</label>
-        			<input ng-model="rloc.priority">
-      			</md-input-container>
-			</div>
-			<div class="detail">
-			    <md-input-container>
-        			<label>Weight</label>
-        			<input ng-model="rloc.weight">
-      			</md-input-container>
-	    	</div>
-	   		<md-subheader class="md-no-sticky">EIDs to which it belongs</md-subheader>
-	    	<md-content flex="40" layout-align=" center" style="width: 95%; position: absolute;">
-	      		<md-list>
-	            	<md-list-item class="md-2-line" ng-repeat="eid in rloc.eids" ng-click="null">
-						{{eid.address}}
-						<md-button class="md-warn md-icon-button md-raised md-secondary">
-							<i class="material-icons">&#xE872;</i>
-						</md-button>
-						<md-divider ng-if="!$last"></md-divider>
-					</md-list-item>
-				</md-list>
-			</md-content>
-		</div>
-	</div>
-	<div ng-switch-default>
-	default
-	</div>
-		
+
+    </div>
 </div>

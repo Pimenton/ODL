@@ -13,35 +13,37 @@ angular.module('navigationController', [])
  			});
  	};
  	
- 	$scope.showEidDetails = function(eid) {
+ 	$scope.showEidDetails = function(eidaddress) {
  		$timeout(function() {
  			$scope.openSideMenu();
  			// Call lisp module to get the eid information
- 			// $scope.eid = lispService.getEidInfo(eid);
- 			$scope.eid = lispService.getEidInfo("ipv4:1.1.1.1");
-	 		$scope.detailMenuState = "eid";
+ 			$scope.eid = lispService.getEidInfo(eidaddress);
+ 			$scope.detailMenuState = "eid";
 	 	});
  	};
 
- 	$scope.showRlocDetails = function(rloc) {
+ 	$scope.showRlocDetails = function(rlocid) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
- 			$scope.rloc = rloc;
+ 			$scope.rloc = lispService.getRlocInfo(rlocid);
  	 		$scope.detailMenuState = "rloc";
  	 	});
  	};
 
+ 	$scope.showTopology = false;
  	$scope.finishedLoading = false;
+ 	$scope.finishedLoadingDetail = true;
 
 	lispService.initialize().then(
 		// success
 		function() {
 			$scope.finishedLoading = true;
-			console.log("Api call succeded");
+			$scope.showTopology = true;
 		}, 
 		// failure
 		function(error) {
-			console.log(error);
+			$scope.finishedLoading = true;
+
 		}
 	);
 

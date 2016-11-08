@@ -20,10 +20,9 @@
 </head>
 <body ng-app="lispOverlayApp">
 
-    <div ng-controller="navigationController" layout="column">
-      <section layout="row">
+    <div ng-controller="navigationController" layout="row" layout-fill flex="">
 
-      <div id="main" layout="column" flex="">
+      <div id="main" layout="column" flex="" >
 
         <md-toolbar layout="row" md-whiteframe="2">
 
@@ -40,9 +39,16 @@
 
         </md-toolbar>
            
-        <div ng-switch="finishedLoading">
+        <div ng-switch="showTopology">
             <div ng-switch-when="false">
-                <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+                <div ng-switch="finishedLoading">
+                    <div ng-switch-when="false">
+                        <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+                    </div>
+                    <div ng-switch-default>
+                        Connection error
+                    </div>
+                </div>
             </div>
             <div ng-switch-default>
                 <div ng-controller="nextUIController" id="topology-container"></div>
@@ -54,7 +60,6 @@
         <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
       </md-sidenav>
 
-      </section>
     </div>
 
     <script type="text/javascript" src="./app/lisp/lisp.communication.js"></script>

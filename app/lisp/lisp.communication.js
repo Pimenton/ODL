@@ -117,8 +117,25 @@ angular.module('lisp.communication', [])
       return EidRLOC;
     };
 
+    // Returns all RLOCs contained in the service
+    serviceInstance.getAllRLOCs = function() {
+      return listOfRlocs;
+    };
+
     serviceInstance.getEidInfo = function(eidaddresss){
-    	return EidRLOC[eidaddresss];
+      
+      var ret = {rlocs: EidRLOC[eidaddresss]};
+      ret.address = eidaddresss;
+      
+      return ret;
+    };
+
+    serviceInstance.getRlocInfo = function(locatorid){
+      
+      var ret = serviceInstance.getInfoOfRLOC(locatorid);
+      ret.eids = RLOCEid[locatorid];
+
+      return ret;
     };
 
     return serviceInstance;
