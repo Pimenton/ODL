@@ -17,8 +17,10 @@
 
     lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
 
-    //  var eids = lispService.getAllEIDs();
-    //  console.log(eids);
+    var id = 0;
+    var rlocIDs = [];
+    rlocIDs.name = [];
+    rlocIDs.id = [];
 
       // instantiate NeXt app
       var app = new nx.ui.Application();
@@ -38,7 +40,7 @@
                    nodeConfig: {
                        // label display name from of node's model, could change to 'model.name' to show name
                        label: 'model.name',
-                       iconType: 'cloud'
+                       iconType: '{#icon}'
                    },
                    // link config
                    linkConfig: {
@@ -66,7 +68,21 @@
             ]
          },
          properties: {
-            topologyData: {}
+            topologyData: {},
+            //defines the ICON depending on the node's name
+            icon: {
+                value: function() {
+                    return function(vertex) {
+                        var name = vertex.get("name");
+                        //console.log(name);
+                        if (name.startsWith("EID")) {
+                            return 'cloud'
+                        } else {
+                            return 'server'
+                        }
+                    }
+                }
+            }
          },
          methods: {
             init: function(options) {
@@ -87,46 +103,76 @@
                 for (var i = 0; i < length; i++) {
                   var name;
                   var ipAddress;
+                  var type;
                   var action;
+                  var rlocs = [];
 
-                  name = "EID " + i;
+                  name = "EID " + id;
                   ipAddress = Object.keys(eids)[i];
+                  type = "EID";
                   action = "discard";
+                  rlocs = eids[Object.keys(eids)[i]];
 
                   // push node into nodes list
-                topoData.nodes.push(
+                  topoData.nodes.push(
                     {
-                        'id': i,
+                        'id': id,
                         'name': name,
                         'address': ipAddress,
-                        'action': action
+                        'type': type,
+                        'action': action,
+                        'rlocs': rlocs
 
                     })
+                    id++;
+
+                  //Add RLOC as a new Node in case it doesn't exist
+                  for (var j = 0; j < rlocs.length; j++) {
+                    if(rlocIDs.name.indexOf(rlocs[j]) == -1) {
+                      var nameRLOC;
+                      var ipAddressRLOC;
+                      var typeRLOC;
+
+                      nameRLOC = rlocs[j];
+                      ipAddressRLOC = "0.0.0.0";
+                      typeRLOC = "RLOC";
+
+                      topoData.nodes.push(
+                        {
+                            'id': id,
+                            'name': nameRLOC,
+                            'address': ipAddressRLOC,
+                            'type': typeRLOC
+                        })
+                      id++;
+                      rlocIDs.name.push(nameRLOC);
+                      rlocIDs.id.push(id-1);
+                    }
+                  }
                 }
-                //add Central node
-                topoData.nodes.push(
-                    {
-                        'id': length,
-                        'name': "cloud",
-                        'address': "-",
-                        'action': "-"
-
-                    })
 
                 // convert links from original format
-                for (var i = 0; i < length; i++) {
-                    var sourceID;
-                    var targetID;
+                for (var i = 0; i < id; i++) {
+                  if(topoData.nodes[i].type == "EID") {
+                    var rlocs2 = [];
+                    rlocs2 = topoData.nodes[i].rlocs;
+                    for (var j = 0; j < rlocIDs.name.length; j++) {
+                      if(rlocs2.indexOf(rlocIDs.name[j]) >= 0) {
+                      var sourceID;
+                      var targetID;
 
-                    sourceID = i;
-                    targetID = length;
+                      sourceID = topoData.nodes[i].id;
+                      targetID = rlocIDs.id[j];
 
-                    // push link into links list
-                    topoData.links.push(
-                        {
-                            'source': sourceID,
-                            'target': targetID
-                        })
+                      // push link into links list
+                      topoData.links.push(
+                          {
+                              'source': sourceID,
+                              'target': targetID
+                          })
+                      }
+                    }
+                  }
                 }
 
                 this.topologyData(topoData);
