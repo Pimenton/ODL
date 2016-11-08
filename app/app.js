@@ -4,7 +4,7 @@
     var lispAppModule = angular.module('lispOverlayApp', ['ngMaterial', 'app.directives', 'app.controllers', 'lisp.communication']);
 
     lispAppModule.config(function($httpProvider, $mdThemingProvider) {
-      
+
       //Enable cross domain calls
       $httpProvider.defaults.useXDomain = true;
 
@@ -17,104 +17,20 @@
 
     lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
 
-      var eids = lispService.getAllEIDs();
-      console.log(eids);
+    //  var eids = lispService.getAllEIDs();
+    //  console.log(eids);
 
       // instantiate NeXt app
       var app = new nx.ui.Application();
-              eid = {
-                  "id": 0,
-                  "name": "EID 0",
-                  "address": "10.0.0.0",
-                  "action": "discard",
-                  "rlocs2": [1,1,1,1,1],
-                  "rlocs": [
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.11"
-                    },
-                    {
-                      "address": "11.11.11.12"
-                    },
-                    {
-                      "address": "11.11.11.13"
-                    },
-                    {
-                      "address": "11.11.11.14"
-                    }
-                  ]
-              };
 
       nx.define('MyTopology', nx.ui.Component, {
-          properties: {
-              //defines the ICON depending on the node's name
-              icon: {
-                  value: function() {
-                      return function(vertex) {
-                          var name = vertex.get("name");
-                          //console.log(name);
-                          if (name.startsWith("EID")) {
-                              return 'cloud'
-                          } else {
-                              return 'unknown'
-                          }
-                      }
-                  }
-              },
-              eid: {
-                  "id": 0,
-                  "name": "EID 0",
-                  "address": "10.0.0.0",
-                  "action": "discard",
-                  "rlocs2": [1,1,1,1,1],
-              		"rlocs": [
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.11"
-              			},
-              			{
-              				"address": "11.11.11.12"
-              			},
-              			{
-              				"address": "11.11.11.13"
-              			},
-              			{
-              				"address": "11.11.11.14"
-              			}
-              		]
-              }
-          },
          view: {
+             props: {
+                 'class': "topology-via-api"
+             },
              content: [
                {
+                 name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
                    adaptive: true,
@@ -122,7 +38,7 @@
                    nodeConfig: {
                        // label display name from of node's model, could change to 'model.name' to show name
                        label: 'model.name',
-                       iconType: '{#icon}'
+                       iconType: 'cloud'
                    },
                    // link config
                    linkConfig: {
@@ -139,16 +55,82 @@
 
                    // auto layout the topology
                    autoLayout: true,
+                   //identityKey: 'id',
                    dataProcessor: 'force',
-                   data: topoData
+                   data: '{#topologyData}'
                  },
                  events: {
-                     clickNode: '{#showEidInfo}'
+                     selectNode: '{#showEidInfo}'
                  },
                },
             ]
          },
+         properties: {
+            topologyData: {}
+         },
          methods: {
+            init: function(options) {
+                this.inherited(options);
+                this.loadRemoteData();
+            },
+            loadRemoteData: function() {
+                var eids = lispService.getAllEIDs();
+                var length = Object.keys(eids).length;
+                console.log(eids);
+                console.log(length);
+
+                //transform JSON data to NEXTUI format
+                topoData.nodes = [];
+                topoData.links = [];
+
+                // convert nodes from original format
+                for (var i = 0; i < length; i++) {
+                  var name;
+                  var ipAddress;
+                  var action;
+
+                  name = "EID " + i;
+                  ipAddress = Object.keys(eids)[i];
+                  action = "discard";
+
+                  // push node into nodes list
+                topoData.nodes.push(
+                    {
+                        'id': i,
+                        'name': name,
+                        'address': ipAddress,
+                        'action': action
+
+                    })
+                }
+                //add Central node
+                topoData.nodes.push(
+                    {
+                        'id': length,
+                        'name': "cloud",
+                        'address': "-",
+                        'action': "-"
+
+                    })
+
+                // convert links from original format
+                for (var i = 0; i < length; i++) {
+                    var sourceID;
+                    var targetID;
+
+                    sourceID = i;
+                    targetID = length;
+
+                    // push link into links list
+                    topoData.links.push(
+                        {
+                            'source': sourceID,
+                            'target': targetID
+                        })
+                }
+
+                this.topologyData(topoData);
+            },
             showEidInfo: function (sender, node) {
                 //this.eid(node.model(address));
                 //$scope.openSideMenu();
