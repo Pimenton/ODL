@@ -10,7 +10,7 @@
 			// Search by EID address (cuts the type of address at the beginning of the string)
 			if (key.substr(5).startsWith(query))
 				results.push({
-					address: key, 
+					id: key, 
 					rlocs: value,
 					type: "eid"
 				});
@@ -64,7 +64,7 @@
 	$scope.selectedItemChange = function(item) {
 		if (!item) return;
 
-		if (item.type == "eid") $scope.showEidDetails(item.address);
+		if (item.type == "eid") $scope.showEidDetails(item.id);
 		else $scope.showRlocDetails(item.id);
 	};
 
