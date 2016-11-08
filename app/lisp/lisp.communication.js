@@ -7,7 +7,7 @@ angular.module('lisp.communication', [])
     // Info of all rlocs
     var listOfRlocs = {};
     // Donat un RLOC, té tot els EIDs que estan connectats
-    var RLOCEid = {};
+    var RLOCLinktedToEID = {};
     // Donat un EID, té tots els RLOCs als que està connectat
     var EidRLOC = {};
 
@@ -23,7 +23,7 @@ angular.module('lisp.communication', [])
         for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
           serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
           listEidRloc.push(rlocs[rlocIt]["locator-id"]);
-                serviceInstance.addRlocToRLOCEid(rlocs[rlocIt],eid_uri);
+          serviceInstance.addRLOCToListRLOCLinktedToEID(rlocs[rlocIt],eid_uri);
         }
         EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
 
@@ -68,9 +68,18 @@ angular.module('lisp.communication', [])
       var ip = serviceInstance.getIP(eidUri);
     };
 
-    serviceInstance.addRlocToRLOCEid = function (rloc,eid){
+    serviceInstance.addRLOCToListRLOCLinktedToEID = function (rloc,eid){
       //check if rloc exists on listOfRlocs
-        //RLOCEid[rloc["locator-id"]].push(eid);
+      if (RLOCLinktedToEID[rloc["locator-id"]] === undefined)
+      {
+        var aux = [];
+      }
+      else
+      {
+        var aux = RLOCLinktedToEID[rloc["locator-id"]];
+      }
+      aux.push(eid);
+      RLOCLinktedToEID[rloc["locator-id"]] = aux;
     };
 
     serviceInstance.getEIDRLOC = function ()
