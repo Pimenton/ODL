@@ -109,13 +109,13 @@
                   var action;
                   var rlocs = [];
 
-                  name = "EID " + id;
+                  name = "EID " + i;
                   ipAddress = Object.keys(eids)[i];
                   type = "EID";
                   action = "discard";
                   rlocs = eids[Object.keys(eids)[i]];
 
-                  // push node into nodes listthis
+                  // push node into nodes list
                   topoData.nodes.push(
                     {
                         'id': id,
