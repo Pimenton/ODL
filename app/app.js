@@ -17,10 +17,10 @@
 
     lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
 
-    var id = 0;
-    var rlocIDs = [];
-    rlocIDs.name = [];
-    rlocIDs.id = [];
+    var id = 0; //to accumulate the value of assigned ids
+    var rlocIDs = []; //to accumulate rlocs data
+    rlocIDs.name = []; //rlocs names
+    rlocIDs.id = []; //rlocs ids
 
       // instantiate NeXt app
       var app = new nx.ui.Application();
@@ -62,7 +62,8 @@
                    data: '{#topologyData}'
                  },
                  events: {
-                     selectNode: '{#showEidInfo}'
+                     enterNode: '{#showNodeInfo}',
+                     topologyGenerated: '{#horizontal}'
                  },
                },
             ]
@@ -78,7 +79,7 @@
                         if (name.startsWith("EID")) {
                             return 'cloud'
                         } else {
-                            return 'server'
+                            return 'router'
                         }
                     }
                 }
@@ -88,12 +89,13 @@
             init: function(options) {
                 this.inherited(options);
                 this.loadRemoteData();
+                //this.horizontal();
             },
             loadRemoteData: function() {
                 var eids = lispService.getAllEIDs();
                 var length = Object.keys(eids).length;
-                console.log(eids);
-                console.log(length);
+                //console.log(eids);
+                //console.log(length);
 
                 //transform JSON data to NEXTUI format
                 topoData.nodes = [];
@@ -113,7 +115,7 @@
                   action = "discard";
                   rlocs = eids[Object.keys(eids)[i]];
 
-                  // push node into nodes list
+                  // push node into nodes listthis
                   topoData.nodes.push(
                     {
                         'id': id,
@@ -177,13 +179,26 @@
 
                 this.topologyData(topoData);
             },
-            showEidInfo: function (sender, node) {
-                //this.eid(node.model(address));
-                //$scope.openSideMenu();
-                $scope.showEidDetails(node.model()._data.address);
+            showNodeInfo: function (sender, node) {
+                //node.openNodeTooltip();
+                if(node.model()._data.type == "EID") {
+                  $scope.showEidDetails(node.model()._data.address);
+                }
+                else {
+                  //$scope.showRlocDetails(node.model().name);
+                }
             },
             attach: function(args) {
                 this.inherited(args);
+            },
+            horizontal: function(sender, node) {
+              var layout = sender.getLayout('hierarchicalLayout');
+              layout.direction('horizontal');
+              layout.sortOrder(['EID', 'RLOC']);
+              layout.levelBy(function(node2, model) {
+                return model._data.type;
+              });
+              sender.activateLayout('hierarchicalLayout');
             }
          }
       });
