@@ -185,7 +185,7 @@
                   $scope.showEidDetails(node.model()._data.address);
                 }
                 else {
-                  //$scope.showRlocDetails(node.model().name);
+                  $scope.showRlocDetails(node.model()._data.name);
                 }
             },
             attach: function(args) {
