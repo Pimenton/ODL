@@ -142,7 +142,7 @@ angular.module('lisp.communication', [])
     serviceInstance.getRlocInfo = function(locatorid){
       
       var ret = serviceInstance.getInfoOfRLOC(locatorid);
-      ret.eids = RLOCEid[locatorid];
+      //ret.eids = RLOCEid[locatorid];
 
       return ret;
     };
