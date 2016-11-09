@@ -47,9 +47,9 @@
                        // multiple link type is curve, could change to 'parallel' to use parallel link
                        linkType: 'curve'
                    },
-                   tooltipManagerConfig: {
+              /*     tooltipManagerConfig: {
                           nodeTooltipContentClass: 'EIDTooltip'
-                   },
+                   },*/
                    // show node's icon, could change to false to show dot
                    showIcon: true,
                    // if you want to identify a node by its name
@@ -193,7 +193,7 @@
             },
             horizontal: function(sender, node) {
               var layout = sender.getLayout('hierarchicalLayout');
-              layout.direction('horizontal');
+              layout.direction('vertical');
               layout.sortOrder(['EID', 'RLOC']);
               layout.levelBy(function(node2, model) {
                 return model._data.type;
