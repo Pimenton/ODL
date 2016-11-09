@@ -136,7 +136,8 @@
                       var typeRLOC;
 
                       nameRLOC = rlocs[j];
-                      ipAddressRLOC = "0.0.0.0";
+                      ipAddressRLOC = lispService.getRlocInfo(nameRLOC);
+                      ipAddressRLOC = ipAddressRLOC.rloc.ipv4;
                       typeRLOC = "RLOC";
 
                       topoData.nodes.push(
