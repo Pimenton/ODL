@@ -39,7 +39,7 @@
 
         </md-toolbar>
            
-        <div ng-switch="showTopology">
+        <div ng-switch="showTopology" flex layout>
             <div ng-switch-when="false">
                 <div ng-switch="finishedLoading">
                     <div ng-switch-when="false">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div ng-switch-default>
+            <div ng-switch-default layout-fill>
                 <div ng-controller="nextUIController" id="topology-container"></div>
             </div>
         </div>
