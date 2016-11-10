@@ -1,178 +1,217 @@
 (function(nx){
 
-    // instantiate NeXt app
-    var app = new nx.ui.Application();
-/*
-  //  $.getJSON("http://127.0.0.1:8181/restconf/operational/network-topology:network-topology/",function(data) {topologyData = data});
+    // Tying angular components together
+    var lispAppModule = angular.module('lispOverlayApp', ['ngMaterial', 'app.directives', 'app.controllers', 'lisp.communication']);
 
-  // Get data from OpenDaylight
-    var data;
-    $.ajax({
-      type: "GET",
-      url: "http://localhost:8181/restconf/operational/network-topology:network-topology",
-      dataType: "json",
-      beforeSend: function(xhr) {
-              xhr.setRequestHeader("Authorization", "Basic " + btoa("admin:admin"));
-          },
-          success: function (topologyData) {
-              data = topologyData;
-              }
+    lispAppModule.config(function($httpProvider, $mdThemingProvider) {
+
+      //Enable cross domain calls
+      $httpProvider.defaults.useXDomain = true;
+
+      // Define app theme
+      $mdThemingProvider.theme('default')
+        .primaryPalette('indigo')
+        .accentPalette('light-green');
     });
 
 
-    // create empty topology data json object
-    var topoData = {};
+    lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
 
-    // add nodes object array
-    topoData.nodes = [];
-    var nodeInfoTableData = [];
+    var id = 0; //to accumulate the value of assigned ids
+    var rlocIDs = []; //to accumulate rlocs data
+    rlocIDs.name = []; //rlocs names
+    rlocIDs.id = []; //rlocs ids
 
-    // convert nodes from original format
-    for (i = 0; i < data.topology[0].node.length; i++) {
-        var name;
-        var ipAddress;
-        var l;
-        l = 1;
-        var prefix = "";
-        if (data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes'].name != undefined) {
-            name = data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes'].name;
-        }
-        else if (data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes']['router-id'] != undefined) {
-            name = data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes']['router-id'][0];
+      // instantiate NeXt app
+      var app = new nx.ui.Application();
 
-        }
-        else {
-            name = "UnKnown " + l;
-            l++;
-        }
+      nx.define('MyTopology', nx.ui.Component, {
+         view: {
+             props: {
+                 'class': "topology-via-api"
+             },
+             content: [
+               {
+                 name: 'topology',
+                 type: 'nx.graphic.Topology',
+                 props: {
+                   adaptive: true,
+                   // node config
+                   nodeConfig: {
+                       // label display name from of node's model, could change to 'model.name' to show name
+                       label: 'model.name',
+                       iconType: '{#icon}'
+                   },
+                   // link config
+                   linkConfig: {
+                       // multiple link type is curve, could change to 'parallel' to use parallel link
+                       linkType: 'curve'
+                   },
+              /*     tooltipManagerConfig: {
+                          nodeTooltipContentClass: 'EIDTooltip'
+                   },*/
+                   // show node's icon, could change to false to show dot
+                   showIcon: true,
+                   // if you want to identify a node by its name
+                   //identityKey: 'name',
 
-        if (data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes']['router-id'] != undefined) {
-            ipAddress = data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes']['router-id'][0];
-        }
-        else {
-            ipAddress = "UnKnown";
-        }
-        if (data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes'].prefix != undefined) {
-            for (x = 0; x < data.topology[0].node[style="float:right;"i]['l3-unicast-igp-topology:igp-node-attributes'].prefix.length; x++) {
-                prefix = prefix + data.topology[0].node[i]['l3-unicast-igp-topology:igp-node-attributes'].prefix[x].prefix + ", ";
-            }
-        }
-        else {
-            prefix = "N/A";
-        }
-
-        // push node into nodes list
-        topoData.nodes.push(
-            {
-
-                'name': name,
-                'node-id': data.topology[0].node[i]['node-id'],
-                'ipaddress': ipAddress,
-                'prefix': prefix
-            })
-        var nodeInfo = {
-            'name': name,
-            'node-id': data.topology[0].node[i]['node-id'],
-            'ipaddress': ipAddress,
-            'prefix': prefix
-        }
-
-        nodeInfoTableData.add(nodeInfo);
-
-    }
-
-    // add links object array
-    topoData.links = [];
-
-    // convert links from original format
-    for (i = 0; i < data.topology[0].link.length; i++) {
-        var sourceNodeID = data.topology[0].link[i].source['source-node'];
-        var destinationNodeID = data.topology[0].link[i].destination['dest-node'];
-        var metric = data.topology[0].link[i]['l3-unicast-igp-topology:igp-link-attributes'].metric
-
-        for (x = 0; x < topoData.nodes.length; x++) {
-            if (sourceNodeID == topoData.nodes[x]['node-id']) {
-                var source = topoData.nodes[x].name;
-                for (y = 0; y < topoData.nodes.length; y++) {
-                    if (destinationNodeID == topoData.nodes[y]['node-id']) {
-                        var target = topoData.nodes[y].name;
-                        var linksArrayLength = topoData.links.length
-
-                        if (linksArrayLength > 0) {
-                            var count = 0;
-                            var index;
-                            for (z = 0; z < topoData.links.length; z++) {
-
-                                if (source == topoData.links[z].target && target == topoData.links[z].source) {
-                                    count++;
-                                    index = z;
-
-                                }
-
-                            }
-                            if (count == 0) {
-
-                                // push link into links array
-                                topoData.links.push(
-                                    {
-                                        'source': source,
-                                        'target': target,
-                                        'metric': metric
-                                    })
-                            }
-                            else {
-                                existingMetric = topoData.links[index].metric;
-                                metric = existingMetric + "/" + metric;
-                                topoData.links[index].metric = metric;
-                            }
-                        }
-                        else {
-                            topoData.links.push(
-                                {
-                                    'source': source,
-                                    'target': target,
-                                    'metric': metric
-                                })
+                   // auto layout the topology
+                   autoLayout: true,
+                   //identityKey: 'id',
+                   dataProcessor: 'force',
+                   data: '{#topologyData}'
+                 },
+                 events: {
+                     enterNode: '{#showNodeInfo}',
+                     topologyGenerated: '{#horizontal}'
+                 },
+               },
+            ]
+         },
+         properties: {
+            topologyData: {},
+            //defines the ICON depending on the node's name
+            icon: {
+                value: function() {
+                    return function(vertex) {
+                        var name = vertex.get("name");
+                        //console.log(name);
+                        if (name.startsWith("EID")) {
+                            return 'cloud'
+                        } else {
+                            return 'router'
                         }
                     }
-
                 }
             }
+         },
+         methods: {
+            init: function(options) {
+                this.inherited(options);
+                this.loadRemoteData();
+                //this.horizontal();
+            },
+            loadRemoteData: function() {
+                var eids = lispService.getAllEIDs();
+                var length = Object.keys(eids).length;
+                //console.log(eids);
+                //console.log(length);
 
-        }
-    }
-*/
-    // initialize a topology
-    var topo = new nx.graphic.Topology({
-        // set the topology view's with and height
-        width: 650,
-        height: 700,
-        // node config
-        nodeConfig: {
-            // label display name from of node's model, could change to 'model.name' to show name
-            label: 'model.name'
-        },
-        // link config
-        linkConfig: {
-            // multiple link type is curve, could change to 'parallel' to use parallel link
-            linkType: 'curve'
-        },
-        // show node's icon, could change to false to show dot
-        showIcon: true,
-        // identified with name
-        identityKey: 'name',
+                //transform JSON data to NEXTUI format
+                topoData.nodes = [];
+                topoData.links = [];
 
-        // auto layout the topology
-        autoLayout: false,
-        dataProcessor: 'force'
-    });
+                // convert nodes from original format
+                for (var i = 0; i < length; i++) {
+                  var name;
+                  var ipAddress;
+                  var type;
+                  var action;
+                  var rlocs = [];
 
-    //set converted data to topology
-    topo.data(topoData);
-    //attach topology to document
-    topo.attach(app);
+                  name = "EID " + i;
+                  ipAddress = Object.keys(eids)[i];
+                  type = "EID";
+                  action = "discard";
+                  rlocs = eids[Object.keys(eids)[i]];
 
-    // app must run inside a specific container. In our case this is the one with id="topology-container"
-    app.container(document.getElementById("topology-container"));
+                  // push node into nodes list
+                  topoData.nodes.push(
+                    {
+                        'id': id,
+                        'name': name,
+                        'address': ipAddress,
+                        'type': type,
+                        'action': action,
+                        'rlocs': rlocs
+
+                    })
+                    id++;
+
+                  //Add RLOC as a new Node in case it doesn't exist
+                  for (var j = 0; j < rlocs.length; j++) {
+                    if(rlocIDs.name.indexOf(rlocs[j]) == -1) {
+                      var nameRLOC;
+                      var ipAddressRLOC;
+                      var typeRLOC;
+
+                      nameRLOC = rlocs[j];
+                      ipAddressRLOC = lispService.getRlocInfo(nameRLOC);
+                      ipAddressRLOC = ipAddressRLOC.rloc.ipv4;
+                      typeRLOC = "RLOC";
+
+                      topoData.nodes.push(
+                        {
+                            'id': id,
+                            'name': nameRLOC,
+                            'address': ipAddressRLOC,
+                            'type': typeRLOC
+                        })
+                      id++;
+                      rlocIDs.name.push(nameRLOC);
+                      rlocIDs.id.push(id-1);
+                    }
+                  }
+                }
+
+                // convert links from original format
+                for (var i = 0; i < id; i++) {
+                  if(topoData.nodes[i].type == "EID") {
+                    var rlocs2 = [];
+                    rlocs2 = topoData.nodes[i].rlocs;
+                    for (var j = 0; j < rlocIDs.name.length; j++) {
+                      if(rlocs2.indexOf(rlocIDs.name[j]) >= 0) {
+                      var sourceID;
+                      var targetID;
+
+                      sourceID = topoData.nodes[i].id;
+                      targetID = rlocIDs.id[j];
+
+                      // push link into links list
+                      topoData.links.push(
+                          {
+                              'source': sourceID,
+                              'target': targetID
+                          })
+                      }
+                    }
+                  }
+                }
+
+                this.topologyData(topoData);
+            },
+            showNodeInfo: function (sender, node) {
+                //node.openNodeTooltip();
+                if(node.model()._data.type == "EID") {
+                  $scope.showEidDetails(node.model()._data.address);
+                }
+                else {
+                  $scope.showRlocDetails(node.model()._data.name);
+                }
+            },
+            attach: function(args) {
+                this.inherited(args);
+            },
+            horizontal: function(sender, node) {
+              var layout = sender.getLayout('hierarchicalLayout');
+              layout.direction('vertical');
+              layout.sortOrder(['EID', 'RLOC']);
+              layout.levelBy(function(node2, model) {
+                return model._data.type;
+              });
+              sender.activateLayout('hierarchicalLayout');
+            }
+         }
+      });
+
+      //attach topology to document
+      var comp = new MyTopology();
+
+      // app must run inside a specific container. In our case this is the one with id="topology-container"
+      app.container(document.getElementById("topology-container"));
+
+      comp.attach(app);
+    }]);
+
 
 })(nx);

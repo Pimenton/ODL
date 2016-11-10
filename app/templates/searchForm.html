@@ -1,0 +1,44 @@
+<form ng-submit="$event.preventDefault()" ng-controller="searchFormController">
+  <md-autocomplete
+      md-selected-item="selectedItem"
+      md-item-text="item.id"
+      md-search-text="searchText"
+      md-search-text-change=""
+      md-selected-item-change="selectedItemChange(item)"
+      md-items="item in querySearch(searchText)"
+      md-min-length="1"
+      placeholder="Search RLOC or EID"
+      md-menu-class="autocomplete-custom-template">
+    <md-item-template>
+      <div layout="column">
+        <div ng-switch="item.type">
+          <div ng-switch-when="eid">
+            <span class="item-title">
+              <i class="material-icons md-dark md-18" layout-align="center start">&#xE2BD;</i>
+              <span> {{item.id}} </span>
+            </span>
+            <span class="item-metadata" layout="row">
+              <span class="item-metastat">
+                Number of RLOCs: <strong>{{item.rlocs.length}}</strong>
+              </span>
+            </span>
+          </div>
+          <div ng-switch-default>
+            <span class="item-title">
+              <i class="material-icons md-dark md-18" layout-align="center start">&#xE328;</i>
+              <span> {{item.id}} </span>
+            </span>
+            <span class="item-metadata" layout="row">
+              <span class="item-metastat">
+                Address: <strong>{{item.address}}</strong>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </md-item-template>
+    <md-not-found>
+      No matches found.
+    </md-not-found>
+  </md-autocomplete>
+</form>

@@ -1,31 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My first NeXt topology!</title>
+    <title>Lisp Overlay WebApp</title>
     <link rel="stylesheet" href="./bower_components/next-bower/css/next.css">
     <link rel="stylesheet" href="./app/css/main.css">
+    <link rel="stylesheet" href="./app/css/iconfont.css">
+    <link rel="stylesheet" href="./app/css/searchform.css">
+    <link rel="stylesheet" href="./bower_components/angular-material/angular-material.css">
+
+    <!-- INCLUDE NEXT UI AND ANGULAR -->
     <script type="text/javascript" src="./bower_components/next-bower/js/next.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="./bower_components/angular/angular.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="./bower_components/angular-aria/angular-aria.js"></script>
+    <script src="./bower_components/angular-animate/angular-animate.js"></script>
+    <script src="./bower_components/angular-material/angular-material.js"></script>
 
 </head>
-<body>
+<body ng-app="lispOverlayApp">
 
-    <!-- SIDENAV DIV -->
-    <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <a href="#">Info about EID</a>
-      <a href="#">More info</a>
+    <div ng-controller="navigationController" layout="row" layout-fill flex="">
+
+      <div id="main" layout="column" flex="" >
+
+        <md-toolbar layout="row" md-whiteframe="2">
+
+            <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
+            </ng-include>
+
+            <div layout-align="center center" layout="row">
+                <md-switch ng-model="view.state" aria-label="View Switch">
+                    Switch views
+                </md-switch>
+            </div>
+            
+            <span flex></span>
+
+        </md-toolbar>
+           
+        <div ng-switch="showTopology">
+            <div ng-switch-when="false">
+                <div ng-switch="finishedLoading">
+                    <div ng-switch-when="false">
+                        <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+                    </div>
+                    <div ng-switch-default>
+                        Connection error
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-default>
+                <div ng-controller="nextUIController" id="topology-container"></div>
+            </div>
+        </div>
+      </div>
+
+      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4">
+        <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
+      </md-sidenav>
+
     </div>
 
-    <div id="main">
-      <h2>LISP UI</h2>
-      <p>This is the virtual representation of EIDs</p>
-      <div id="topology-container"></div>
-      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-    </div>
+    <script type="text/javascript" src="./app/lisp/lisp.communication.js"></script>
+    <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
+    <script type="text/javascript" src="./app/controllers/searchFormController.js"></script>
+    <script type="text/javascript" src="./app/controllers.js"></script>
+    <script type="text/javascript" src="./app/directives.js"></script>
 
-    <script type="text/javascript" src="app/data.js"></script>
-    <script type="text/javascript" src="app/app.js"></script>
-    <script type="text/javascript" src="app/main.js"></script>
+    <script type="text/javascript" src="./app/data.js"></script>
+    <script type="text/javascript" src="./app/app.js"></script>
+
 </body>
 </html>
