@@ -63,6 +63,7 @@
                  },
                  events: {
                      enterNode: '{#showNodeInfo}',
+                     leaveNode: '{#removePath}',
                      topologyGenerated: '{#horizontal}'
                  },
                },
@@ -155,24 +156,28 @@
                 }
 
                 // convert links from original format
+                var id_link = 0;
+
                 for (var i = 0; i < id; i++) {
                   if(topoData.nodes[i].type == "EID") {
                     var rlocs2 = [];
                     rlocs2 = topoData.nodes[i].rlocs;
                     for (var j = 0; j < rlocIDs.name.length; j++) {
-                      if(rlocs2.indexOf(rlocIDs.name[j]) >= 0) {
-                      var sourceID;
-                      var targetID;
+                        if(rlocs2.indexOf(rlocIDs.name[j]) >= 0) {
+                        var sourceID;
+                        var targetID;
 
-                      sourceID = topoData.nodes[i].id;
-                      targetID = rlocIDs.id[j];
+                        sourceID = topoData.nodes[i].id;
+                        targetID = rlocIDs.id[j];
 
-                      // push link into links list
-                      topoData.links.push(
-                          {
-                              'source': sourceID,
-                              'target': targetID
-                          })
+                        // push link into links list
+                        topoData.links.push(
+                            {
+                                'source': sourceID,
+                                'target': targetID,
+                                id: id_link
+                            })
+                        id_link++;
                       }
                     }
                   }
@@ -181,13 +186,41 @@
                 this.topologyData(topoData);
             },
             showNodeInfo: function (sender, node) {
-                //node.openNodeTooltip();
+                //SHOW NODE DETAILS ON THE SIDE BAR
                 if(node.model()._data.type == "EID") {
                   $scope.showEidDetails(node.model()._data.address);
                 }
-                else {
+                else if (node.model()._data.type == "RLOC") {
                   $scope.showRlocDetails(node.model()._data.name);
                 }
+
+                //draw paths with all the links from node
+                var pathLayer = sender.getLayer("paths");
+                var links = topoData.links;
+                //get links that are connected to node
+                var links_id = links.filter(function(links){
+                  //if its an EID it compares with the SOURCE
+                  if(node.model()._data.type == "EID") {
+                    return links.source == node.model()._data.id;
+                  }
+                  //if its an RLOC it compares with the TARGET
+                  else if(node.model()._data.type == "RLOC") {
+                    return links.target == node.model()._data.id;
+                  }
+                });
+                //for each link we draw its path
+                for (var i = 0; i < links_id.length; i++) {
+                    var link = [sender.getLink(links_id[i].id)];
+                    var path1 = new nx.graphic.Topology.Path({
+                              links: link,
+                              arrow: 'end'
+                          });
+                    pathLayer.addPath(path1);
+                }
+            },
+            removePath: function (sender, events) {
+              var pathLayer = sender.getLayer("paths");
+              pathLayer.clear();
             },
             attach: function(args) {
                 this.inherited(args);
