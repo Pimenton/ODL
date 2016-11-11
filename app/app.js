@@ -35,6 +35,7 @@
                  name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
+                   padding: 235,
                    adaptive: true,
                    // node config
                    nodeConfig: {
@@ -90,13 +91,10 @@
             init: function(options) {
                 this.inherited(options);
                 this.loadRemoteData();
-                //this.horizontal();
             },
             loadRemoteData: function() {
                 var eids = lispService.getAllEIDs();
                 var length = Object.keys(eids).length;
-                //console.log(eids);
-                //console.log(length);
 
                 //transform JSON data to NEXTUI format
                 topoData.nodes = [];
