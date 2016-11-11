@@ -213,7 +213,7 @@
                     var link = [sender.getLink(links_id[i].id)];
                     var path1 = new nx.graphic.Topology.Path({
                               links: link,
-                              arrow: 'end'
+                              arrow: 'cap'
                           });
                     pathLayer.addPath(path1);
                 }
