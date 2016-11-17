@@ -16,6 +16,19 @@
 				});
 		});
 
+// TODO: fix when lispService function is implemented
+/*
+		var xtrids = lispService.getAllXtrids();
+		angular.forEach(xtrids, function(value, key) {
+			// Search by XTR-ID address (cuts the type of address at the beginning of the string)
+			if (key.substr(5).startsWith(query))
+				results.push({
+					id: key, 
+					rlocs: value,
+					type: "xtr-id"
+				});
+		});
+*/
 		var rlocs = lispService.getAllRLOCs();
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address

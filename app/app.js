@@ -35,7 +35,7 @@
                  name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
-                   padding: 235,
+                   //padding: 235,
                    adaptive: true,
                    // node config
                    nodeConfig: {

@@ -1,6 +1,8 @@
 angular.module('navigationController', [])
 .controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', function($scope, $mdSidenav, $timeout, lispService) {
  	
+ 	// SIDE MENU
+
  	$scope.openSideMenu = function() {
  		$mdSidenav('right').open();
  	};
@@ -13,6 +15,7 @@ angular.module('navigationController', [])
  			});
  	};
  	
+ 	// Show selected node details
  	$scope.showEidDetails = function(eidaddress) {
  		$timeout(function() {
  			$scope.openSideMenu();
@@ -20,6 +23,14 @@ angular.module('navigationController', [])
  			$scope.eid = lispService.getEidInfo(eidaddress);
  			$scope.detailMenuState = "eid";
 	 	});
+ 	};
+
+ 	$scope.showXtrDetails = function(xtrid) {
+		$timeout(function() {
+	 		$scope.openSideMenu();
+ 			$scope.xtrid = lispService.getXtridInfo(xtrid);
+ 	 		$scope.detailMenuState = "xtr-id";
+ 	 	});
  	};
 
  	$scope.showRlocDetails = function(rlocid) {
@@ -30,10 +41,25 @@ angular.module('navigationController', [])
  	 	});
  	};
 
+
+ 	// SELECT
+
+ 	$scope.getVnIds = function() {
+ 		return ["1.1.1.1","2.2.2.2"];
+ 	}
+
+ 	$scope.selectVn = function(vnId) {
+ 		// WORKS
+ 	}
+
+
+ 	// LISP INITIAL SETUP
+
  	$scope.showTopology = false;
  	$scope.finishedLoading = false;
  	$scope.finishedLoadingDetail = true;
 
+ 	// Load data from lisp service, then replace loading indicator
 	lispService.initialize().then(
 		// success
 		function() {
@@ -43,8 +69,9 @@ angular.module('navigationController', [])
 		// failure
 		function(error) {
 			$scope.finishedLoading = true;
-
 		}
 	);
+
+	$scope.showXtrDetails("");
 
 }])
