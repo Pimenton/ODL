@@ -50,11 +50,11 @@
 
         <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
 
-        <div ng-if="!showTopology && finishedLoading">
+        <div ng-if="connectionError">
             Connection error
         </div>
 
-        <div ng-if="showTopology && finishedLoading" ng-controller="nextUIController" id="topology-container" flex></div>
+        <div id="topology-container" flex></div>
 
       </div>
 
@@ -65,6 +65,7 @@
     </div>
 
     <script type="text/javascript" src="./app/lisp/lisp.communication.js"></script>
+    <script type="text/javascript" src="./app/nextService.js"></script>
     <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
     <script type="text/javascript" src="./app/controllers/searchFormController.js"></script>
     <script type="text/javascript" src="./app/controllers.js"></script>

@@ -1,5 +1,5 @@
 angular.module('navigationController', [])
-.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', function($scope, $mdSidenav, $timeout, lispService) {
+.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', 'nextService', function($scope, $mdSidenav, $timeout, lispService, nextService) {
  	
  	// SIDE MENU
 
@@ -42,21 +42,30 @@ angular.module('navigationController', [])
  	};
 
 
- 	// SELECT
+ 	// SELECT VIRTUAL NETWORK
 
  	$scope.getVnIds = function() {
  		return ["1.1.1.1","2.2.2.2"];
  	}
 
  	$scope.selectVn = function(vnId) {
- 		// WORKS
+ 		nextService.selectVn(vnId);
  	}
 
+ 	var showObjectInfo = function(object) {
+ 		if(object.type == "EID") {
+        	$scope.showEidDetails(object.address);
+        } else if (object.type == "XTR-ID") {
+            $scope.showXtridDetails(object.address);
+        } else if (object.type == "RLOC") {
+            $scope.showRlocDetails(object.name);
+        }
+ 	};
 
  	// LISP INITIAL SETUP
 
- 	$scope.showTopology = false;
  	$scope.finishedLoading = false;
+ 	$scope.connectionError = false;
  	$scope.finishedLoadingDetail = true;
 
  	// Load data from lisp service, then replace loading indicator
@@ -64,11 +73,13 @@ angular.module('navigationController', [])
 		// success
 		function() {
 			$scope.finishedLoading = true;
-			$scope.showTopology = true;
+			var topologyContainer = document.getElementById("topology-container");
+			nextService.initTopology(topologyContainer, showObjectInfo);
 		}, 
 		// failure
 		function(error) {
 			$scope.finishedLoading = true;
+			$scope.connectionError = true;
 		}
 	);
 
