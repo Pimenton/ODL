@@ -10,6 +10,34 @@ angular.module('lisp.communication', [])
     var RLOCLinktedToEID = {};
     // Donat un EID, té tots els RLOCs als que està connectat
     var EidRLOC = {};
+    // List with all vn-identifier
+    var listOfVNI = [];
+
+    serviceInstance.getAllInfo = function(jsonObj) {
+      //jsonObj has JSON response 
+      var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
+      for (var i=0; i<virtualNetworks.length; i++)
+      {
+        var vni = virtualNetworks[i]["vni"];
+        listOfVNI.push(vni);
+        var eids = virtualNetworks[i]["mapping"];
+        for (var i = 0; i<eids.length; i++) {
+          var eidInfo = eids[i]["mapping-record"]["eid"];
+          var eid_uri =eids[i]["eid"];
+          var mappingRecord = eids[i]["mapping-record"];
+          var rlocs = mappingRecord["LocatorRecord"];
+          var listEidRloc = [];
+          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
+            serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
+            listEidRloc.push(rlocs[rlocIt]["locator-id"]);
+            serviceInstance.addRLOCToListRLOCLinktedToEID(rlocs[rlocIt],eid_uri);
+          }
+          EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
+
+          var typeIP = eids[i]["eid-uri"].split(":")[0];
+        }
+      }
+    };
 
     serviceInstance.getJSON = function(jsonObj) {
       //jsonObj has JSON response 
