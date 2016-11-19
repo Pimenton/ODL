@@ -69,10 +69,6 @@ angular.module('lisp.communication', [])
       return EidRLOC[eidUri];
     };
 
-    serviceInstance.getInfoOfRLOC = function (RLOC_ID)
-    {
-      return listOfRlocs[RLOC_ID];
-    };
 
     serviceInstance.getIPType = function ()
     {
@@ -156,6 +152,41 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getEidInfo = function(eidaddresss){
     	return EidRLOC[eidaddresss];
+    };
+    
+    serviceInstance.getAllVnIds = function() {
+      return VnArray;
+    };
+    
+    serviceInstance.getEidsInVn = function(VnId) {
+      return EidArray;
+    };
+    
+     serviceInstance.getAllEids: = function() {
+      //s'haura de concretar   
+      return EidRLOC;
+    };
+    
+    serviceInstance.getEidInfo = function(eidAddress) {
+      return EidInfo;
+    };
+    
+    serviceInstance.getAllxtrids = function() {
+      return XtrArray;
+    };
+    
+     serviceInstance.getXtridInfo = function(xtridAddress) {
+         //info per definir
+      return Info;
+    };
+    
+    serviceInstance.getAllRlocs = function() {
+         
+      return Rlocs;
+    };
+    serviceInstance.getRlocInfo = function (RLOC_ID)
+    {
+      return listOfRlocs[RLOC_ID];
     };
 
     return serviceInstance;
