@@ -10,9 +10,43 @@ angular.module('lisp.communication', [])
     var RLOCLinktedToEID = {};
     // Donat un EID, té tots els RLOCs als que està connectat
     var EidRLOC = {};
+    // List with all vn-identifier
+    var listOfVNI = [];
+    // All Json info
+    var Json =[];
+
+    serviceInstance.getAllInfo = function(jsonObj) {
+      //jsonObj has JSON response 
+      var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
+      Json = virtualNetworks;
+      for (var j=0; i<virtualNetworks.length; j++)
+      {
+        var vni = virtualNetworks[j]["vni"];
+        listOfVNI.push(vni);
+        var eids = virtualNetworks[j]["mapping"];
+        for (var i = 0; i<eids.length; i++) 
+        {
+          var eidInfo = eids[i]["mapping-record"]["eid"];
+          var eid_uri =eids[i]["eid"];
+          var mappingRecord = eids[i]["mapping-record"];
+          var rlocs = mappingRecord["LocatorRecord"];
+          var listEidRloc = [];
+          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) 
+          {
+            serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
+            listEidRloc.push(rlocs[rlocIt]["locator-id"]);
+            serviceInstance.addRLOCToListRLOCLinktedToEID(rlocs[rlocIt],eid_uri);
+          }
+          EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
+
+          var typeIP = eids[i]["eid-uri"].split(":")[0];
+        }
+      }
+    };
 
     serviceInstance.getJSON = function(jsonObj) {
-      //jsonObj has JSON response
+      //jsonObj has JSON response 
+      var Json = jsonObj["mapping-database"]["virtual-network-identifier"];
       var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
       for (var i = 0; i<eids.length; i++) {
         var eidInfo = eids[i]["mapping-record"]["eid"];
@@ -41,25 +75,14 @@ angular.module('lisp.communication', [])
       return EidRLOC[eidUri];
     };
 
-    serviceInstance.getInfoOfRLOC = function (RLOC_ID)
-    {
-      return listOfRlocs[RLOC_ID];
-    };
 
-    serviceInstance.getIPType = function ()
-    {
-      return eidUri.split(":")[0];
-    };
 
     serviceInstance.getAddressType = function (eidUri)
     {
       return "ietf-lisp-address-types:" + serviceInstance.getIPType(eidUri) + "-afi";
     };
 
-    serviceInstance.getIP = function (eidUri)
-    {
-      return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
-    };
+    
 
     serviceInstance.getMappingEID = function (eidUri)
     {
@@ -68,7 +91,8 @@ angular.module('lisp.communication', [])
       var ip = serviceInstance.getIP(eidUri);
     };
 
-    serviceInstance.addRLOCToListRLOCLinktedToEID = function (rloc,eid){
+    serviceInstance.addRLOCToListRLOCLinktedToEID = function (rloc,eid)
+    {
       //check if rloc exists on listOfRlocs
       if (RLOCLinktedToEID[rloc["locator-id"]] === undefined)
       {
@@ -92,7 +116,8 @@ angular.module('lisp.communication', [])
     };
 
     // First function to call: gets all the lisp database content and stores it in the service
-    serviceInstance.initialize = function() {
+    serviceInstance.initialize = function() 
+    {
       var deferred = $q.defer();
       var auth64 = btoa('admin:admin');
 
@@ -122,61 +147,87 @@ angular.module('lisp.communication', [])
     };
 
     // Returns all EID contained in the service
-    serviceInstance.getAllEIDs = function() {
-      return EidRLOC;
+   
+    serviceInstance.getEidInfo = function(eidaddress){
+    	return EidRLOC[eidaddress];
+    };
+    
+    serviceInstance.getAllVnIds = function() {
+      return listOfVNI;
+    };
+    
+    /* Function to get EIDs in VN
+    ** Retun array with eid-uri of all EIDs in VN. 
+    ** Tip: Use getIPType and getIP functions to get info of eid-uri
+    */
+    serviceInstance.getEidsInVn = function(VnId) 
+    {
+      var eids = Json[VnId]["mapping"];
+      var EIDinVN = [];
+      for (var i=0;i<eids.length;i++)
+      {
+        EIDinVN.push(eids["eid-uri"]);
+      }
+      return EIDinVN;
+    };
+    
+    serviceInstance.getAllEids = function() 
+    {
+      var obj = new Object();
+      var EidList = {};
+      for (var i=0; i<Json.length; i++)
+      {
+          var vni = Json[i]["vni"];
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++) {
+            var eid_uri =eids[j]["eid"];
+            var xtr = eids[j]["mapping-record"]["xtr-id"];
+            obj.address = eid_uri;
+            obj.xtr_id  = xtr;
+            obj.vni = vni;
+            EidList.push(obj);
+        }
+      }
+      return EidList;
+    }
+
+    serviceInstance.getIPType = function (eidUri)
+    {
+      return eidUri.split(":")[0];
     };
 
-    // Returns all RLOCs contained in the service
-    serviceInstance.getAllRLOCs = function() {
-      return listOfRlocs;
+    serviceInstance.getIP = function (eidUri)
+    {
+      return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
     };
 
-    serviceInstance.getEidInfo = function(eidaddresss){
 
-      var ret = {rlocs: EidRLOC[eidaddresss]};
-      ret.address = eidaddresss;
-
-      return ret;
+    serviceInstance.getEidInfo = function(eidAddress) {
+      return EidInfo;
     };
+    
+    serviceInstance.getAllxtrids = function() {
+      var vni = [];
+      for (var i=0;i<Json.length;i++)
+      {
 
-    serviceInstance.getRlocInfo = function(locatorid){
+      }
 
-      var ret = serviceInstance.getInfoOfRLOC(locatorid);
-      //ret.eids = RLOCEid[locatorid];
-
-      return ret;
+      return XtrArray;
     };
-
-    serviceInstance.getXtridInfo = function(xtrid){
-
-      return {
-                address: "1.1.1.1",
-                eids: [
-                  "1.1.1.1",
-                  "1.1.1.2",
-                  "1.1.1.3",
-                  "1.1.1.4",
-                  "1.1.1.5",
-                  "1.1.1.6",
-                  "1.1.1.7",
-                  "1.1.1.8",
-                  "1.1.1.9",
-                  "1.1.1.0",
-                  "1.1.1.",
-                  "1.1.11",
-                  "1.1..1",
-                  "1.11.1",
-                  "1..1.1",
-                  "11.1.1",
-                  ".1.1.1",
-                  "11.1.1.1",
-                  "7.7.7.7"
-                ],
-                rlocs: [
-                  "2.2.2.2",
-                  "3.3.3.3"
-                ],
-            };
+    
+     serviceInstance.getXtridInfo = function(xtridAddress) {
+         //info per definir
+      return Info;
+    };
+    
+    serviceInstance.getAllRlocs = function() {
+         
+      return Rlocs;
+    };
+    serviceInstance.getRlocInfo = function (RLOC_ID)
+    {
+      return listOfRlocs[RLOC_ID];
     };
 
     return serviceInstance;
