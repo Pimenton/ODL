@@ -5,14 +5,16 @@ angular.module('nextService', [])
     //lispAppModule.controller('nextUIController', ['$scope', 'lispService', function($scope, lispService) {
     var serviceInstance = {};
 
-    serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
+    // instantiate NeXt app
+    var app = new nx.ui.Application();
+
+    serviceInstance.initTopology = function(vnId, topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
       var rlocIDs = []; //to accumulate rlocs data
       rlocIDs.name = []; //rlocs names
       rlocIDs.id = []; //rlocs ids
+      console.log(vnId);
 
-      // instantiate NeXt app
-      var app = new nx.ui.Application();
 
       nx.define('MyTopology', nx.ui.Component, {
          view: {
@@ -79,6 +81,7 @@ angular.module('nextService', [])
          methods: {
             init: function(options) {
                 this.inherited(options);
+                //console.log($scope.getVnIds());
                 this.loadRemoteData();
             },
             loadRemoteData: function() {
@@ -181,7 +184,7 @@ angular.module('nextService', [])
                 }
                 else if (node.model()._data.type == "RLOC") {
                   $scope.showRlocDetails(node.model()._data.name);
-                } */      
+                } */
 
                 //draw paths with all the links from node
                 var pathLayer = sender.getLayer("paths");
@@ -236,8 +239,8 @@ angular.module('nextService', [])
 
     };
 
-    serviceInstance.selectVirtualNetwork = function(vnId) {
-      // AITOR AQUI HAZ TU MAGIA
+    serviceInstance.selectVirtualNetwork = function(vnId, topologyContainer, showObjectInfo) {
+      serviceInstance.initTopology(vnId, topologyContainer, showObjectInfo);
     };
 
     return serviceInstance;

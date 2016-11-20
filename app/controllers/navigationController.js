@@ -1,12 +1,12 @@
 angular.module('navigationController', [])
 .controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', 'nextService', function($scope, $mdSidenav, $timeout, lispService, nextService) {
- 	
+
  	// SIDE MENU
 
  	$scope.openSideMenu = function() {
  		$mdSidenav('right').open();
  	};
- 	
+
  	$scope.closeSideMenu = function() {
  		$mdSidenav('right')
  			.close()
@@ -14,7 +14,7 @@ angular.module('navigationController', [])
  				$scope.detailMenuState = "";
  			});
  	};
- 	
+
  	// Show selected node details
  	$scope.showEidDetails = function(eidaddress) {
  		$timeout(function() {
@@ -49,7 +49,8 @@ angular.module('navigationController', [])
  	}
 
  	$scope.selectVn = function(vnId) {
- 		nextService.selectVn(vnId);
+    var topologyContainer = document.getElementById("topology-container");
+ 		nextService.selectVirtualNetwork(vnId, topologyContainer, showObjectInfo);
  	}
 
  	var showObjectInfo = function(object) {
@@ -73,9 +74,11 @@ angular.module('navigationController', [])
 		// success
 		function() {
 			$scope.finishedLoading = true;
-			var topologyContainer = document.getElementById("topology-container");
-			nextService.initTopology(topologyContainer, showObjectInfo);
-		}, 
+      //HO HE COMENTAT PERQUE NO VULL QUE ES MOSTRI CAP TOPO SI NO HI HA CAP VNID seleccioant
+      
+			//topologyContainer = document.getElementById("topology-container");
+			//nextService.initTopology(topologyContainer, showObjectInfo);
+		},
 		// failure
 		function(error) {
 			$scope.finishedLoading = true;
