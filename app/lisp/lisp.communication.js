@@ -12,7 +12,7 @@ angular.module('lisp.communication', [])
     var EidRLOC = {};
 
     serviceInstance.getJSON = function(jsonObj) {
-      //jsonObj has JSON response 
+      //jsonObj has JSON response
       var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
       for (var i = 0; i<eids.length; i++) {
         var eidInfo = eids[i]["mapping-record"]["eid"];
@@ -85,7 +85,7 @@ angular.module('lisp.communication', [])
     serviceInstance.getEIDRLOC = function ()
     {
       var keys = Object.keys(listOfRlocs);
-      for (var i = 0; i<keys.count; i++) 
+      for (var i = 0; i<keys.count; i++)
       {
         alert("entro");
       }
@@ -97,14 +97,14 @@ angular.module('lisp.communication', [])
       var auth64 = btoa('admin:admin');
 
       $http({
-            url: 'http://odl1.cba.upc.edu:8181/restconf/config/odl-mappingservice:mapping-database/',
+            url: 'http://odl2.cba.upc.edu:8181/restconf/config/odl-mappingservice:mapping-database/',
             method: "GET",
             withCredentials: true,
             headers: {
                 'Authorization': 'Basic '+ auth64
             }
         })
-      .success(function(data) { 
+      .success(function(data) {
 
         serviceInstance.getJSON(data);
         deferred.resolve();
@@ -132,15 +132,15 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getEidInfo = function(eidaddresss){
-      
+
       var ret = {rlocs: EidRLOC[eidaddresss]};
       ret.address = eidaddresss;
-      
+
       return ret;
     };
 
     serviceInstance.getRlocInfo = function(locatorid){
-      
+
       var ret = serviceInstance.getInfoOfRLOC(locatorid);
       //ret.eids = RLOCEid[locatorid];
 
@@ -148,7 +148,7 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getXtridInfo = function(xtrid){
-      
+
       return {
                 address: "1.1.1.1",
                 eids: [

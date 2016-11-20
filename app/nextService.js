@@ -13,8 +13,11 @@ angular.module('nextService', [])
       var rlocIDs = []; //to accumulate rlocs data
       rlocIDs.name = []; //rlocs names
       rlocIDs.id = []; //rlocs ids
-      console.log(vnId);
+      var xtrIDs = []; //to accumulate xtrs data
+      xtrIDs.name = []; //xtrs names
+      xtrIDs.id = []; //xtrs ids
 
+      console.log(vnId);
 
       nx.define('MyTopology', nx.ui.Component, {
          view: {
@@ -56,7 +59,8 @@ angular.module('nextService', [])
                  events: {
                      enterNode: '{#showNodeInfo}',
                      leaveNode: '{#removePath}',
-                     topologyGenerated: '{#horizontal}'
+                     topologyGenerated: '{#horizontal}',
+                     ready: '{#registerIcon}'
                  },
                },
             ]
@@ -71,8 +75,12 @@ angular.module('nextService', [])
                         //console.log(name);
                         if (name.startsWith("EID")) {
                             return 'cloud'
-                        } else {
-                            return 'router'
+                        }
+                        else if (name.startsWith("XTR")) {
+                          return 'router'
+                        }
+                        else {
+                            return 'port'
                         }
                     }
                 }
@@ -85,6 +93,7 @@ angular.module('nextService', [])
                 this.loadRemoteData();
             },
             loadRemoteData: function() {
+                //NEW: var eids = lispService.getEidsInVn(vnId);
                 var eids = lispService.getAllEIDs();
                 var length = Object.keys(eids).length;
 
@@ -98,12 +107,15 @@ angular.module('nextService', [])
                   var ipAddress;
                   var type;
                   var action;
+                  //NEW: xtrs = [];
                   var rlocs = [];
 
                   name = "EID " + i;
+                  //NEW: ipAddress = eids[i].address;
                   ipAddress = Object.keys(eids)[i];
                   type = "EID";
                   action = "discard";
+                  //NEW: xtrs = eids[i].xtr-ids;
                   rlocs = eids[Object.keys(eids)[i]];
 
                   // push node into nodes list
@@ -114,6 +126,7 @@ angular.module('nextService', [])
                         'address': ipAddress,
                         'type': type,
                         'action': action,
+                        //NEW: 'xtrs': xtrs
                         'rlocs': rlocs
 
                     })
@@ -143,6 +156,19 @@ angular.module('nextService', [])
                       rlocIDs.id.push(id-1);
                     }
                   }
+/*
+                  //TEST ADD xtrs
+                  for (var z = 0; z < 1; z++) {
+                    topoData.nodes.push(
+                      {
+                          'id': id,
+                          'name': "XTR " + id,
+                          'address': "1.1.1.1",
+                          'type': "XTR"
+                      })
+                    id++;
+                  }
+*/
                 }
 
                 // convert links from original format
@@ -220,11 +246,16 @@ angular.module('nextService', [])
             horizontal: function(sender, node) {
               var layout = sender.getLayout('hierarchicalLayout');
               layout.direction('vertical');
-              layout.sortOrder(['EID', 'RLOC']);
+              layout.sortOrder(['EID', 'XTR', 'RLOC']);
               layout.levelBy(function(node2, model) {
                 return model._data.type;
               });
               sender.activateLayout('hierarchicalLayout');
+            },
+            registerIcon: function(sender, event) {
+              var topo = this.view('topology');
+              //register icon to instance
+              topo.registerIcon("port", "./app/port.png",42,42);
             }
          }
       });
@@ -232,10 +263,14 @@ angular.module('nextService', [])
       //attach topology to document
       var comp = new MyTopology();
 
-      // app must run inside a specific container. In our case this is the one with id="topology-container"
-      app.container(topologyContainer);
-
-      comp.attach(app);
+      if(vnId == "1.1.1.1") {
+        // app must run inside a specific container. In our case this is the one with id="topology-container"
+        app.container(topologyContainer);
+        comp.attach(app);
+      }
+      else {
+        //app.dispose();
+      }
 
     };
 
