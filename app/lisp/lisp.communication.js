@@ -12,10 +12,13 @@ angular.module('lisp.communication', [])
     var EidRLOC = {};
     // List with all vn-identifier
     var listOfVNI = [];
+    // All Json info
+    var Json =[];
 
     serviceInstance.getAllInfo = function(jsonObj) {
       //jsonObj has JSON response 
       var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
+      Json = virtualNetworks;
       for (var i=0; i<virtualNetworks.length; i++)
       {
         var vni = virtualNetworks[i]["vni"];
@@ -41,6 +44,7 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getJSON = function(jsonObj) {
       //jsonObj has JSON response 
+      var Json = jsonObj["mapping-database"]["virtual-network-identifier"];
       var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
       for (var i = 0; i<eids.length; i++) {
         var eidInfo = eids[i]["mapping-record"]["eid"];
@@ -146,12 +150,9 @@ angular.module('lisp.communication', [])
     };
 
     // Returns all EID contained in the service
-    serviceInstance.getAllEIDs = function() {
-      return EidRLOC;
-    };
-
-    serviceInstance.getEidInfo = function(eidaddresss){
-    	return EidRLOC[eidaddresss];
+   
+    serviceInstance.getEidInfo = function(eidaddress){
+    	return EidRLOC[eidaddress];
     };
     
     serviceInstance.getAllVnIds = function() {
@@ -162,9 +163,25 @@ angular.module('lisp.communication', [])
       return listOfVNI;
     };
     
-     serviceInstance.getAllEids: = function() {
-      //s'haura de concretar   
-      return EidRLOC;
+    serviceInstance.getAllEids = function() {
+      var Obj = {};
+      var EidList = {};
+        for (var i=0; i<Json.length; i++)
+      {
+          var vni = Json[i]["vni"];
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++) {
+            var eid_uri =eids[j]["eid"];
+            var xtr = eids[j]["mapping-record"]["xtr-id"];
+            var obj = new Object();
+            obj.address = eid_uri;
+            obj.xtr_id  = xtr;
+            obj.vni = vni;
+            EidList.push(obj);
+        }
+      }
+      
+      return EidList;
     };
     
     serviceInstance.getEidInfo = function(eidAddress) {
