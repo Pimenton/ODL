@@ -19,15 +19,11 @@ angular.module('lisp.communication', [])
       //jsonObj has JSON response 
       var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
       Json = virtualNetworks;
-      for (var i=0; i<virtualNetworks.length; i++)
       for (var j=0; i<virtualNetworks.length; j++)
       {
-        var vni = virtualNetworks[i]["vni"];
         var vni = virtualNetworks[j]["vni"];
         listOfVNI.push(vni);
-        var eids = virtualNetworks[i]["mapping"];
         var eids = virtualNetworks[j]["mapping"];
-        for (var i = 0; i<eids.length; i++) {
         for (var i = 0; i<eids.length; i++) 
         {
           var eidInfo = eids[i]["mapping-record"]["eid"];
@@ -35,7 +31,6 @@ angular.module('lisp.communication', [])
           var mappingRecord = eids[i]["mapping-record"];
           var rlocs = mappingRecord["LocatorRecord"];
           var listEidRloc = [];
-          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
           for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) 
           {
             serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
@@ -81,20 +76,12 @@ angular.module('lisp.communication', [])
     };
 
 
-    serviceInstance.getIPType = function ()
-    {
-      return eidUri.split(":")[0];
-    };
 
     serviceInstance.getAddressType = function (eidUri)
     {
       return "ietf-lisp-address-types:" + serviceInstance.getIPType(eidUri) + "-afi";
     };
 
-    serviceInstance.getIP = function (eidUri)
-    {
-      return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
-    };
     
 
     serviceInstance.getMappingEID = function (eidUri)
@@ -104,7 +91,6 @@ angular.module('lisp.communication', [])
       var ip = serviceInstance.getIP(eidUri);
     };
 
-    serviceInstance.addRLOCToListRLOCLinktedToEID = function (rloc,eid){
     serviceInstance.addRLOCToListRLOCLinktedToEID = function (rloc,eid)
     {
       //check if rloc exists on listOfRlocs
@@ -130,7 +116,6 @@ angular.module('lisp.communication', [])
     };
 
     // First function to call: gets all the lisp database content and stores it in the service
-    serviceInstance.initialize = function() {
     serviceInstance.initialize = function() 
     {
       var deferred = $q.defer();
@@ -168,7 +153,6 @@ angular.module('lisp.communication', [])
     };
     
     serviceInstance.getAllVnIds = function() {
-      return VnArray;
       return listOfVNI;
     };
     
@@ -176,8 +160,6 @@ angular.module('lisp.communication', [])
     ** Retun array with eid-uri of all EIDs in VN. 
     ** Tip: Use getIPType and getIP functions to get info of eid-uri
     */
-    serviceInstance.getEidsInVn = function(VnId) {
-      return listOfVNI;
     serviceInstance.getEidsInVn = function(VnId) 
     {
       var eids = Json[VnId]["mapping"];
@@ -189,12 +171,10 @@ angular.module('lisp.communication', [])
       return EIDinVN;
     };
     
-    serviceInstance.getAllEids = function() {
     serviceInstance.getAllEids = function() 
     {
       var obj = new Object();
       var EidList = {};
-        for (var i=0; i<Json.length; i++)
       for (var i=0; i<Json.length; i++)
       {
           var vni = Json[i]["vni"];
@@ -208,7 +188,6 @@ angular.module('lisp.communication', [])
             EidList.push(obj);
         }
       }
-      
       return EidList;
     }
 
