@@ -1,10 +1,12 @@
- angular.module('navigationController', [])
-.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', function($scope, $mdSidenav, $timeout, lispService) {
- 	
+angular.module('navigationController', [])
+.controller('navigationController', ['$scope', '$mdSidenav', '$timeout', 'lispService', 'nextService', function($scope, $mdSidenav, $timeout, lispService, nextService) {
+
+ 	// SIDE MENU
+
  	$scope.openSideMenu = function() {
  		$mdSidenav('right').open();
  	};
- 	
+
  	$scope.closeSideMenu = function() {
  		$mdSidenav('right')
  			.close()
@@ -12,91 +14,73 @@
  				$scope.detailMenuState = "";
  			});
  	};
- 	
- 	$scope.showEidDetails = function($eid) {
+
+ 	// Show selected node details
+ 	$scope.showEidDetails = function(eidaddress) {
  		$timeout(function() {
  			$scope.openSideMenu();
- 			// CALL LISP MODULE
- 			$scope.eid = lispService.getEidInfo($eid);
-	 		$scope.detailMenuState = "eid";
+ 			// Call lisp module to get the eid information
+ 			$scope.eid = lispService.getEidInfo(eidaddress);
+ 			$scope.detailMenuState = "eid";
 	 	});
  	};
- 	$scope.showRlocDetails = function($rloc) {
+
+ 	$scope.showXtrDetails = function(xtrid) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
- 			$scope.rloc = $rloc;
+ 			$scope.xtrid = lispService.getXtridInfo(xtrid);
+ 	 		$scope.detailMenuState = "xtr-id";
+ 	 	});
+ 	};
+
+ 	$scope.showRlocDetails = function(rlocid) {
+		$timeout(function() {
+	 		$scope.openSideMenu();
+ 			$scope.rloc = lispService.getRlocInfo(rlocid);
  	 		$scope.detailMenuState = "rloc";
  	 	});
  	};
 
-	eids = {
-		address: "180.188.99.1",
-		action: "discard",
-		rlocs: [
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.12"
-			},
-			{
-				address: "11.11.11.13"
-			},
-			{
-				address: "11.11.11.14"
-			}
-		]
-	};
 
-	rloc = {
-		address: "1.1.1.1",
-		priority: 2,
-		weight: 10,
-		eids: [
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.11"
-			},
-			{
-				address: "11.11.11.12"
-			},
-			{
-				address: "11.11.11.13"
-			},
-			{
-				address: "11.11.11.14"
-			}
-		]
-	};
-	$timeout(function () { $scope.showRlocDetails(rloc); }, false);
+ 	// SELECT VIRTUAL NETWORK
 
- }])
+ 	$scope.getVnIds = function() {
+ 		return ["1.1.1.1","2.2.2.2"];
+ 	}
+
+ 	$scope.selectVn = function(vnId) {
+		nextService.selectVirtualNetwork(vnId);
+ 	}
+
+ 	var showObjectInfo = function(object) {
+ 		if(object.type == "EID") {
+        	$scope.showEidDetails(object.address);
+        } else if (object.type == "XTR-ID") {
+            $scope.showXtridDetails(object.address);
+        } else if (object.type == "RLOC") {
+            $scope.showRlocDetails(object.name);
+        }
+ 	};
+
+ 	// LISP INITIAL SETUP
+
+ 	$scope.finishedLoading = false;
+ 	$scope.connectionError = false;
+ 	$scope.finishedLoadingDetail = true;
+
+ 	// Load data from lisp service, then replace loading indicator
+	lispService.initialize().then(
+		// success
+		function() {
+			$scope.finishedLoading = true;
+			topologyContainer = document.getElementById("topology-container");
+			nextService.initTopology(topologyContainer, showObjectInfo);
+		},
+		// failure
+		function(error) {
+			$scope.finishedLoading = true;
+			$scope.connectionError = true;
+		}
+	);
+
+}])

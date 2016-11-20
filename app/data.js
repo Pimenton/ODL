@@ -1,4 +1,4 @@
-var topoData = {
+var localtopoData = {
     nodes: [
         {
             "id": 0,
@@ -290,6 +290,9 @@ var topoData = {
         }
     ]
 };
+
+// create empty topology data json object
+var topoData = {};
 
 nx.define('EIDTooltip', nx.ui.Component, {
         properties: {

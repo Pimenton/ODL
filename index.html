@@ -20,39 +20,52 @@
 </head>
 <body ng-app="lispOverlayApp">
 
-    <div ng-controller="navigationController" layout="column">
-      <section layout="row" >
+    <div ng-controller="navigationController" layout="row" layout-fill>
 
-      <div id="main" layout="column" flex="">
+      <div id="main" layout="column" layout-fill flex>
 
         <md-toolbar layout="row" md-whiteframe="2">
 
             <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
             </ng-include>
 
+            <div id="selectVnBox" layout="row" flex layout-align="start center" >
+                <label layout-align="center center">VN-id</label>
+                <md-card class="card" md-whiteframe="1" class="inCard">
+                <md-select id="selectVn" ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="md-no-underline" > 
+                  <md-option value="all">All</md-option>
+                  <md-option ng-repeat="vnid in getVnIds()" ng-value="vnid">{{vnid}}</md-option>
+                </md-select>
+                </md-card>
+            </div>
+            <span flex></span>
+
             <div layout-align="center center" layout="row">
                 <md-switch ng-model="view.state" aria-label="View Switch">
                     Switch views
                 </md-switch>
             </div>
-            
-            <span flex></span>
 
         </md-toolbar>
-           
-        <div ng-controller="nextUIController" id="topology-container"></div>
+
+        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+
+        <div ng-if="connectionError">
+            Connection error
+        </div>
+
+        <div id="topology-container" flex></div>
 
       </div>
 
-      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4">
-        <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
+      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4" >
+        <ng-include src="'./app/templates/detailMenu.html'" layout="column" layout-fill></ng-include>
       </md-sidenav>
 
-
-      </section>
     </div>
 
     <script type="text/javascript" src="./app/lisp/lisp.communication.js"></script>
+    <script type="text/javascript" src="./app/nextService.js"></script>
     <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
     <script type="text/javascript" src="./app/controllers/searchFormController.js"></script>
     <script type="text/javascript" src="./app/controllers.js"></script>

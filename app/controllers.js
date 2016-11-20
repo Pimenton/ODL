@@ -3,5 +3,3 @@ angular.module('app.controllers', [
 		'navigationController',
 		'searchFormController'
 	])
-    .controller('mainController', ['$scope', function($scope) {
-    }])
