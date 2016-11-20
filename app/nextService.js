@@ -7,8 +7,11 @@ angular.module('nextService', [])
 
     // instantiate NeXt app
     var app = new nx.ui.Application();
+    var eids;
+    var topology;
+    var topoData = {};
 
-    serviceInstance.initTopology = function(vnId, topologyContainer, nodeClickFunction) {
+    serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
       var rlocIDs = []; //to accumulate rlocs data
       rlocIDs.name = []; //rlocs names
@@ -16,8 +19,6 @@ angular.module('nextService', [])
       var xtrIDs = []; //to accumulate xtrs data
       xtrIDs.name = []; //xtrs names
       xtrIDs.id = []; //xtrs ids
-
-      console.log(vnId);
 
       nx.define('MyTopology', nx.ui.Component, {
          view: {
@@ -89,12 +90,11 @@ angular.module('nextService', [])
          methods: {
             init: function(options) {
                 this.inherited(options);
-                //console.log($scope.getVnIds());
                 this.loadRemoteData();
             },
             loadRemoteData: function() {
-                //NEW: var eids = lispService.getEidsInVn(vnId);
-                var eids = lispService.getAllEIDs();
+
+                eids = lispService.getAllEIDs();
                 var length = Object.keys(eids).length;
 
                 //transform JSON data to NEXTUI format
@@ -256,26 +256,52 @@ angular.module('nextService', [])
               var topo = this.view('topology');
               //register icon to instance
               topo.registerIcon("port", "./app/port.png",42,42);
+            },
+            hideAll: function() {
+              var topo = this.view('topology');
+              topo.eachLayer(function(layer) {
+                layer.fadeOut(true);
+              }, true);
+            },
+            showAll: function() {
+              var topo = this.view('topology');
+              topo.eachLayer(function(layer) {
+                layer.fadeIn(true);
+              }, true);
+            },
+            highlightEid: function(eidsInVn) {
+                //highlight single node or nodes
+                var topo = this.view('topology');
+                var nodeLayer = topo.getLayer('nodes');
+                nx.each(eidsInVn, function(eidInVn){
+                  var isNode = function(node) {
+                      return node.address == eidInVn;
+                  };
+                  var node = topoData.nodes.find(isNode);
+                  topo.highlightRelatedNode(topo.getNode(node.id));
+                }, true);
+
             }
          }
       });
 
       //attach topology to document
-      var comp = new MyTopology();
+      topology = new MyTopology();
 
-      if(vnId == "1.1.1.1") {
-        // app must run inside a specific container. In our case this is the one with id="topology-container"
-        app.container(topologyContainer);
-        comp.attach(app);
-      }
-      else {
-        //app.dispose();
-      }
-
+      // app must run inside a specific container. In our case this is the one with id="topology-container"
+      app.container(topologyContainer);
+      topology.attach(app);
+      
     };
 
-    serviceInstance.selectVirtualNetwork = function(vnId, topologyContainer, showObjectInfo) {
-      serviceInstance.initTopology(vnId, topologyContainer, showObjectInfo);
+    // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
+    serviceInstance.selectVirtualNetwork = function(vnId) {
+      if (vnId == "all") topology.showAll();
+      else {
+        topology.hideAll();
+        var eidsInVn = lispService.getEidsInVn(vnId);
+        topology.highlightEid(eidsInVn);
+      }
     };
 
     return serviceInstance;
