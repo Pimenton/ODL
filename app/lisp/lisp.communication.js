@@ -164,7 +164,7 @@ angular.module('lisp.communication', [])
     };
     
     serviceInstance.getAllEids = function() {
-      var Obj = {};
+      var obj = new Object();
       var EidList = {};
         for (var i=0; i<Json.length; i++)
       {
@@ -173,7 +173,6 @@ angular.module('lisp.communication', [])
           for (var j = 0; j<eids.length; j++) {
             var eid_uri =eids[j]["eid"];
             var xtr = eids[j]["mapping-record"]["xtr-id"];
-            var obj = new Object();
             obj.address = eid_uri;
             obj.xtr_id  = xtr;
             obj.vni = vni;
