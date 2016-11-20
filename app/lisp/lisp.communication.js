@@ -159,7 +159,7 @@ angular.module('lisp.communication', [])
     };
     
     serviceInstance.getEidsInVn = function(VnId) {
-      return EidArray;
+      return listOfVNI;
     };
     
      serviceInstance.getAllEids: = function() {
