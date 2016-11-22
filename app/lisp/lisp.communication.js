@@ -13,13 +13,13 @@ angular.module('lisp.communication', [])
     // List with all vn-identifier
     var listOfVNI = [];
     // All Json info
-    var Json =[];
+    var Json = [];
 
     serviceInstance.getAllInfo = function(jsonObj) {
       //jsonObj has JSON response 
       var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
       Json = virtualNetworks;
-      for (var j=0; i<virtualNetworks.length; j++)
+      for (var j=0; j<virtualNetworks.length; j++)
       {
         var vni = virtualNetworks[j]["vni"];
         listOfVNI.push(vni);
