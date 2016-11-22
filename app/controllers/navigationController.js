@@ -29,7 +29,7 @@ angular.module('navigationController', [])
 		$timeout(function() {
 	 		$scope.openSideMenu();
  			$scope.xtrid = lispService.getXtridInfo(xtrid);
- 	 		$scope.detailMenuState = "xtr-id";
+ 	 		$scope.detailMenuState = "xtrid";
  	 	});
  	};
 
@@ -45,7 +45,7 @@ angular.module('navigationController', [])
  	// SELECT VIRTUAL NETWORK
 
  	$scope.getVnIds = function() {
- 		return ["1.1.1.1","2.2.2.2"];
+ 		return lispService.getAllVnIds();
  	}
 
  	$scope.selectVn = function(vnId) {
@@ -82,5 +82,7 @@ angular.module('navigationController', [])
 			$scope.connectionError = true;
 		}
 	);
+
+	//$scope.showEi("");
 
 }])

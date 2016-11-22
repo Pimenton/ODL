@@ -94,7 +94,7 @@ angular.module('nextService', [])
             },
             loadRemoteData: function() {
 
-                eids = lispService.getAllEIDs();
+                eids = lispService.getAllEids();
                 var length = Object.keys(eids).length;
 
                 //transform JSON data to NEXTUI format
@@ -202,6 +202,15 @@ angular.module('nextService', [])
                 this.topologyData(topoData);
             },
             showNodeInfo: function (sender, node) {
+                var topo = this.view('topology');
+                var nodeBound = node.getBound();
+                var myBound = topo.stage().getContentBound();
+                console.log(myBound);
+                console.log(nodeBound);
+                var sideNavWidth = document.getElementById("sidebar").clientWidth;
+                myBound.left = nodeBound.left - (myBound.width - sideNavWidth)/2;
+                topo.zoomByBound(myBound);
+                
                 nodeClickFunction(node.model()._data);
                 /*
                 //SHOW NODE DETAILS ON THE SIDE BAR
@@ -260,27 +269,37 @@ angular.module('nextService', [])
             hideAll: function() {
               var topo = this.view('topology');
               topo.eachLayer(function(layer) {
-                layer.fadeOut(true);
+                layer.hide();
               }, true);
             },
             showAll: function() {
               var topo = this.view('topology');
               topo.eachLayer(function(layer) {
-                layer.fadeIn(true);
+                layer.show();
               }, true);
             },
-            highlightEid: function(eidsInVn) {
+            highlightEids: function(eidsInVn) {
                 //highlight single node or nodes
                 var topo = this.view('topology');
                 var nodeLayer = topo.getLayer('nodes');
+                var nodes = [];
                 nx.each(eidsInVn, function(eidInVn){
                   var isNode = function(node) {
                       return node.address == eidInVn;
                   };
                   var node = topoData.nodes.find(isNode);
                   topo.highlightRelatedNode(topo.getNode(node.id));
+                  nodes.push(node);
                 }, true);
 
+                // IF WE WANT THE GROUP LAYER TO SHOW UP
+                /*var groupsLayer = topo.getLayer('groups');
+                var group = groupsLayer.addGroup({
+                    nodes: nodes,
+                    shapeType: 'polygon',
+                    label: 'Polygon'
+                    // color: '#f00'
+                });*/
             }
          }
       });
@@ -300,7 +319,7 @@ angular.module('nextService', [])
       else {
         topology.hideAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
-        topology.highlightEid(eidsInVn);
+        topology.highlightEids(eidsInVn);
       }
     };
 
