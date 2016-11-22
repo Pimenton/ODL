@@ -19,7 +19,7 @@ angular.module('lisp.communication', [])
       //jsonObj has JSON response 
       var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
       Json = virtualNetworks;
-      for (var j=0; i<virtualNetworks.length; j++)
+      for (var j=0; j<virtualNetworks.length; j++)
       {
         var vni = virtualNetworks[j]["vni"];
         listOfVNI.push(vni);
@@ -166,7 +166,7 @@ angular.module('lisp.communication', [])
       var EIDinVN = [];
       for (var i=0;i<eids.length;i++)
       {
-        EIDinVN.push(eids["eid-uri"]);
+        EIDinVN.push(eids[i]["eid-uri"]);
       }
       return EIDinVN;
     };
@@ -180,7 +180,7 @@ angular.module('lisp.communication', [])
           var vni = Json[i]["vni"];
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++) {
-            var eid_uri =eids[j]["eid"];
+            var eid_uri = eids[j]["eid-uri"];
             var xtr = eids[j]["mapping-record"]["xtr-id"];
             obj.address = eid_uri;
             obj.xtr_id  = xtr;
@@ -188,22 +188,8 @@ angular.module('lisp.communication', [])
             EidList.push(obj);
         }
       }
-      return [{
-        address: "1"
-      },{
-        address: "1"
-      },{
-        address: "1"
-      },{
-        address: "1"
-      },{
-        address: "1"
-      },{
-        address: "1"
-      },{
-        address: "1"
-      }];
-    }
+      return EidList;
+    };
 
     serviceInstance.getIPType = function (eidUri)
     {
