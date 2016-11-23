@@ -174,7 +174,7 @@ angular.module('lisp.communication', [])
     serviceInstance.getAllEids = function() 
     {
       var obj = new Object();
-      var EidList = {};
+      var EidList = []];
       for (var i=0; i<Json.length; i++)
       {
           var vni = Json[i]["vni"];
