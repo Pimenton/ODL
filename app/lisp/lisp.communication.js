@@ -131,7 +131,7 @@ angular.module('lisp.communication', [])
         })
       .success(function(data) { 
 
-        serviceInstance.getJSON(data);
+        serviceInstance.getAllInfo(data);
         deferred.resolve();
 
       }).error(function(msg, code) {
@@ -173,13 +173,14 @@ angular.module('lisp.communication', [])
     
     serviceInstance.getAllEids = function() 
     {
-      var obj = new Object();
-      var EidList = []];
+      var EidList = [];
       for (var i=0; i<Json.length; i++)
       {
           var vni = Json[i]["vni"];
           var eids = Json[i]["mapping"];
-          for (var j = 0; j<eids.length; j++) {
+          for (var j = 0; j<eids.length; j++) 
+          {
+            var obj = new Object();
             var eid_uri = eids[j]["eid-uri"];
             var xtr = eids[j]["mapping-record"]["xtr-id"];
             obj.address = eid_uri;
