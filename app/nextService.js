@@ -95,6 +95,7 @@ angular.module('nextService', [])
             loadRemoteData: function() {
 
                 eids = lispService.getAllEids();
+                console.log(eids);
                 var length = Object.keys(eids).length;
 
                 //transform JSON data to NEXTUI format
@@ -107,16 +108,16 @@ angular.module('nextService', [])
                   var ipAddress;
                   var type;
                   var action;
-                  //NEW: xtrs = [];
-                  var rlocs = [];
+                  var xtr;
+                  var vni;
 
                   name = "EID " + i;
-                  //NEW: ipAddress = eids[i].address;
-                  ipAddress = Object.keys(eids)[i];
+                  ipAddress = eids[i].address;
                   type = "EID";
                   action = "discard";
-                  //NEW: xtrs = eids[i].xtr-ids;
-                  rlocs = eids[Object.keys(eids)[i]];
+                  xtr = eids[i].xtr_id;
+                  xtrIDs.push(xtr); //add xtr to xtrIDs list
+                  vni = eids[i].vni;
 
                   // push node into nodes list
                   topoData.nodes.push(
@@ -126,49 +127,35 @@ angular.module('nextService', [])
                         'address': ipAddress,
                         'type': type,
                         'action': action,
-                        //NEW: 'xtrs': xtrs
-                        'rlocs': rlocs
+                        'xtr': xtr,
+                        'vni': vni
 
                     })
                     id++;
+                  //If it's a new XTR
+                  if(xtrIDs.name.indexOf("XTR " + xtr) == -1) {
+                      var nameXTR;
+                      var ipAddressXTR;
+                      var typeXTR;
+                      //var rlocs = [];
 
-                  //Add RLOC as a new Node in case it doesn't exist
-                  for (var j = 0; j < rlocs.length; j++) {
-                    if(rlocIDs.name.indexOf(rlocs[j]) == -1) {
-                      var nameRLOC;
-                      var ipAddressRLOC;
-                      var typeRLOC;
+                      nameXTR = "XTR " + xtr;
+                      ipAddressXTR = "X.X.X.X";
+                      typeXTR = "XTR";
+                      //rlocs =
 
-                      nameRLOC = rlocs[j];
-                      ipAddressRLOC = lispService.getRlocInfo(nameRLOC);
-                      ipAddressRLOC = ipAddressRLOC.rloc.ipv4;
-                      typeRLOC = "RLOC";
-
+                      // push node into nodes list
                       topoData.nodes.push(
                         {
                             'id': id,
-                            'name': nameRLOC,
-                            'address': ipAddressRLOC,
-                            'type': typeRLOC
+                            'name': nameXTR,
+                            'address': ipAddressXTR,
+                            'type': typeXTR
                         })
+                      xtrIDs.name.push(nameXTR);
+                      xtrIDs.id.push(id);
                       id++;
-                      rlocIDs.name.push(nameRLOC);
-                      rlocIDs.id.push(id-1);
-                    }
                   }
-/*
-                  //TEST ADD xtrs
-                  for (var z = 0; z < 1; z++) {
-                    topoData.nodes.push(
-                      {
-                          'id': id,
-                          'name': "XTR " + id,
-                          'address': "1.1.1.1",
-                          'type': "XTR"
-                      })
-                    id++;
-                  }
-*/
                 }
 
                 // convert links from original format
@@ -176,24 +163,29 @@ angular.module('nextService', [])
 
                 for (var i = 0; i < id; i++) {
                   if(topoData.nodes[i].type == "EID") {
-                    var rlocs2 = [];
-                    rlocs2 = topoData.nodes[i].rlocs;
-                    for (var j = 0; j < rlocIDs.name.length; j++) {
-                        if(rlocs2.indexOf(rlocIDs.name[j]) >= 0) {
-                        var sourceID;
-                        var targetID;
+                    var xtr_node;
+                    var sourceID;
+                    var targetID;
 
-                        sourceID = topoData.nodes[i].id;
-                        targetID = rlocIDs.id[j];
+                    xtr_node = topoData.nodes[i].xtr;
+                    xtr_node = "XTR " + xtr_node;
 
-                        // push link into links list
-                        topoData.links.push(
-                            {
-                                'source': sourceID,
-                                'target': targetID,
-                                id: id_link
-                            })
-                        id_link++;
+                    for (var j = 0; j < xtrIDs.id.length; j++) {
+                        if(xtr_node.indexOf(xtrIDs.name[j]) >= 0) {
+                          var sourceID;
+                          var targetID;
+
+                          sourceID = topoData.nodes[i].id;
+                          targetID = xtrIDs.id[j];
+
+                          // push link into links list
+                          topoData.links.push(
+                              {
+                                  'source': sourceID,
+                                  'target': targetID,
+                                  id: id_link
+                              })
+                          id_link++;
                       }
                     }
                   }
@@ -203,15 +195,13 @@ angular.module('nextService', [])
             },
             showNodeInfo: function (sender, node) {
                 // Center node on selection
-                /*
-                var topo = this.view('topology');
+                /*var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
-
                 var sideNavWidth = document.getElementById("sidebar").clientWidth;
                 myBound.left = nodeBound.left - (myBound.width - sideNavWidth)/2;
-                topo.zoomByBound(myBound);
-                */
+                topo.zoomByBound(myBound);*/
+
                 nodeClickFunction(node.model()._data);
                 /*
                 //SHOW NODE DETAILS ON THE SIDE BAR
@@ -231,8 +221,8 @@ angular.module('nextService', [])
                   if(node.model()._data.type == "EID") {
                     return links.source == node.model()._data.id;
                   }
-                  //if its an RLOC it compares with the TARGET
-                  else if(node.model()._data.type == "RLOC") {
+                  //if its an XTR it compares with the TARGET
+                  else if(node.model()._data.type == "XTR") {
                     return links.target == node.model()._data.id;
                   }
                 });
@@ -311,7 +301,7 @@ angular.module('nextService', [])
       // app must run inside a specific container. In our case this is the one with id="topology-container"
       app.container(topologyContainer);
       topology.attach(app);
-      
+
     };
 
     // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
