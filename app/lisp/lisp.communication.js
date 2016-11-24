@@ -201,11 +201,6 @@ angular.module('lisp.communication', [])
     {
       return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
     };
-
-
-    serviceInstance.getEidInfo = function(eidAddress) {
-      return EidInfo;
-    };
     
     serviceInstance.getAllxtrids = function() {
       var vni = [];
@@ -223,9 +218,9 @@ angular.module('lisp.communication', [])
     };
     
     serviceInstance.getAllRlocs = function() {
-         
       return Rlocs;
     };
+
     serviceInstance.getRlocInfo = function (RLOC_ID)
     {
       return listOfRlocs[RLOC_ID];

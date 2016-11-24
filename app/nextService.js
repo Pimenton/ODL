@@ -202,15 +202,16 @@ angular.module('nextService', [])
                 this.topologyData(topoData);
             },
             showNodeInfo: function (sender, node) {
+                // Center node on selection
+                /*
                 var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
-                console.log(myBound);
-                console.log(nodeBound);
+
                 var sideNavWidth = document.getElementById("sidebar").clientWidth;
                 myBound.left = nodeBound.left - (myBound.width - sideNavWidth)/2;
                 topo.zoomByBound(myBound);
-                
+                */
                 nodeClickFunction(node.model()._data);
                 /*
                 //SHOW NODE DETAILS ON THE SIDE BAR
@@ -319,6 +320,7 @@ angular.module('nextService', [])
       else {
         topology.hideAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
+        console.log(eidsInVn);
         topology.highlightEids(eidsInVn);
       }
     };
