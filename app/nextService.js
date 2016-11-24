@@ -109,7 +109,6 @@ angular.module('nextService', [])
                   var type;
                   var action;
                   var xtr;
-                  var vni;
 
                   name = "EID " + i;
                   ipAddress = eids[i].address;
@@ -117,7 +116,6 @@ angular.module('nextService', [])
                   action = "discard";
                   xtr = eids[i].xtr_id;
                   xtrIDs.push(xtr); //add xtr to xtrIDs list
-                  vni = eids[i].vni;
 
                   // push node into nodes list
                   topoData.nodes.push(
@@ -127,8 +125,7 @@ angular.module('nextService', [])
                         'address': ipAddress,
                         'type': type,
                         'action': action,
-                        'xtr': xtr,
-                        'vni': vni
+                        'xtr': xtr
 
                     })
                     id++;
@@ -137,12 +134,10 @@ angular.module('nextService', [])
                       var nameXTR;
                       var ipAddressXTR;
                       var typeXTR;
-                      //var rlocs = [];
 
                       nameXTR = "XTR " + xtr;
                       ipAddressXTR = "X.X.X.X";
                       typeXTR = "XTR";
-                      //rlocs =
 
                       // push node into nodes list
                       topoData.nodes.push(
@@ -195,7 +190,7 @@ angular.module('nextService', [])
             },
             showNodeInfo: function (sender, node) {
                 // Center node on selection
-                /*var topo = this.view('topology');
+            /*    var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
                 var sideNavWidth = document.getElementById("sidebar").clientWidth;
