@@ -58,7 +58,8 @@ angular.module('nextService', [])
                    data: '{#topologyData}'
                  },
                  events: {
-                     enterNode: '{#showNodeInfo}',
+                     clickNode: '{#showNodeInfo}',
+                     enterNode: '{#hoverNode}',
                      leaveNode: '{#removePath}',
                      topologyGenerated: '{#horizontal}',
                      ready: '{#registerIcon}'
@@ -201,17 +202,24 @@ angular.module('nextService', [])
 
                 this.topologyData(topoData);
             },
+            hoverNode: function (sender, node) {
+
+            },
             showNodeInfo: function (sender, node) {
                 // Center node on selection
-                /*
+                
                 var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
 
-                var sideNavWidth = document.getElementById("sidebar").clientWidth;
+                // This doesn't work when the sidebar is hidden
+                //var sideNavWidth = document.getElementById("sidebar").clientWidth;
+                var sideNavWidth = 320;
                 myBound.left = nodeBound.left - (myBound.width - sideNavWidth)/2;
+                var toolbarHeight = document.getElementById("toolbar").clientHeight;
+                myBound.top = nodeBound.top - (myBound.height)/2;
                 topo.zoomByBound(myBound);
-                */
+                
                 nodeClickFunction(node.model()._data);
                 /*
                 //SHOW NODE DETAILS ON THE SIDE BAR
@@ -245,6 +253,9 @@ angular.module('nextService', [])
                           });
                     pathLayer.addPath(path1);
                 }
+
+                // Show tooltip
+                topo._tooltipManager.openNodeTooltip(node);
             },
             removePath: function (sender, events) {
               var pathLayer = sender.getLayer("paths");
