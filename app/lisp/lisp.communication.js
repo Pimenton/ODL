@@ -159,8 +159,8 @@ angular.module('lisp.communication', [])
             var eid_uri = eids[j]["eid-uri"];
             if(eidaddress == getIP(eid_uri)){
               EidInfo[vni].xtr_id = eids[j]["mapping-record"]["xtr-id"];
-              EidInfo[vni].address = getIP(eid_uri);
-              EidInfo[vni].address_type = getIPType(eid_uri);
+              EidInfo[vni].address = serviceInstance.getIP(eid_uri);
+              EidInfo[vni].address_type = serviceInstance.getIPType(eid_uri);
               EidInfo[vni].action = eids[j]["mapping-record"]["action"]; 
             }
           
@@ -233,7 +233,25 @@ angular.module('lisp.communication', [])
     };
     
     serviceInstance.getAllRlocs = function() {
-      return Rlocs;
+      var ListRlocs = {};
+      var RlocId;
+      var RlocIp;
+      for (var i=0; i<Json.length; i++)
+      {
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++) 
+          {
+            var rlocs = mappingRecord["LocatorRecord"];
+            for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
+              RlocId = rlocs[rlocIt]["locator-id"];
+              RlocIp = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
+              ListRlocs[RlocId].address = RlocIp;
+            
+          }
+        }
+      }
+      
+      return ListRlocs;
     };
 
     serviceInstance.getRlocInfo = function (RLOC_ID)
