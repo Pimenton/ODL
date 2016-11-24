@@ -256,7 +256,26 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getRlocInfo = function (RLOC_ID)
     {
-      return listOfRlocs[RLOC_ID];
+      var obj = new Object();
+      for (var i=0; i<Json.length; i++)
+      {
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++) 
+          {
+            var rlocs = mappingRecord["LocatorRecord"];
+            for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
+              if(RLOC_ID == rlocs[rlocIt]["locator-id"]){
+                obj.id = rlocs[rlocIt]["locator-id"];
+                obj.address = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
+                obj.weight = rlocs[rlocIt]["weight"];
+                obj.priority = rlocs[rlocIt]["priority"];
+                obj.multicastweight, = rlocs[rlocIt]["multicastWeight"];
+                xtr_id = eids[j]["mapping-record"]["xtr-id"];
+            }
+          }
+        }
+      }
+      return obj;
     };
 
     return serviceInstance;
