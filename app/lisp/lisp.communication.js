@@ -149,7 +149,24 @@ angular.module('lisp.communication', [])
     // Returns all EID contained in the service
    
     serviceInstance.getEidInfo = function(eidaddress){
-    	return EidRLOC[eidaddress];
+      var EidInfo = {};
+      for (var i=0; i<Json.length; i++)
+      {
+          var vni = Json[i]["vni"];
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++) 
+          {
+            var eid_uri = eids[j]["eid-uri"];
+            if(eidaddress == getIP(eid_uri)){
+              EidInfo[vni].xtr_id = eids[j]["mapping-record"]["xtr-id"];
+              EidInfo[vni].address = getIP(eid_uri);
+              EidInfo[vni].address_type = getIPType(eid_uri);
+              EidInfo[vni].action = eids[j]["mapping-record"]["action"]; 
+            }
+          
+        }
+      }
+      return EidInfo;
     };
     
     serviceInstance.getAllVnIds = function() {
@@ -176,7 +193,6 @@ angular.module('lisp.communication', [])
       var EidList = [];
       for (var i=0; i<Json.length; i++)
       {
-          var vni = Json[i]["vni"];
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++) 
           {
@@ -185,7 +201,6 @@ angular.module('lisp.communication', [])
             var xtr = eids[j]["mapping-record"]["xtr-id"];
             obj.address = eid_uri;
             obj.xtr_id  = xtr;
-            obj.vni = vni;
             EidList.push(obj);
         }
       }
