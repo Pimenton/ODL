@@ -16,7 +16,7 @@ angular.module('lisp.communication', [])
     var Json = [];
 
     serviceInstance.getAllInfo = function(jsonObj) {
-      //jsonObj has JSON response 
+      //jsonObj has JSON response
       var virtualNetworks = jsonObj["mapping-database"]["virtual-network-identifier"];
       Json = virtualNetworks;
       for (var j=0; j<virtualNetworks.length; j++)
@@ -24,14 +24,14 @@ angular.module('lisp.communication', [])
         var vni = virtualNetworks[j]["vni"];
         listOfVNI.push(vni);
         var eids = virtualNetworks[j]["mapping"];
-        for (var i = 0; i<eids.length; i++) 
+        for (var i = 0; i<eids.length; i++)
         {
           var eidInfo = eids[i]["mapping-record"]["eid"];
           var eid_uri =eids[i]["eid"];
           var mappingRecord = eids[i]["mapping-record"];
           var rlocs = mappingRecord["LocatorRecord"];
           var listEidRloc = [];
-          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) 
+          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
           {
             serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
             listEidRloc.push(rlocs[rlocIt]["locator-id"]);
@@ -45,7 +45,7 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getJSON = function(jsonObj) {
-      //jsonObj has JSON response 
+      //jsonObj has JSON response
       var Json = jsonObj["mapping-database"]["virtual-network-identifier"];
       var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
       for (var i = 0; i<eids.length; i++) {
@@ -82,7 +82,7 @@ angular.module('lisp.communication', [])
       return "ietf-lisp-address-types:" + serviceInstance.getIPType(eidUri) + "-afi";
     };
 
-    
+
 
     serviceInstance.getMappingEID = function (eidUri)
     {
@@ -116,7 +116,7 @@ angular.module('lisp.communication', [])
     };
 
     // First function to call: gets all the lisp database content and stores it in the service
-    serviceInstance.initialize = function() 
+    serviceInstance.initialize = function()
     {
       var deferred = $q.defer();
       var auth64 = btoa('admin:admin');
@@ -147,37 +147,37 @@ angular.module('lisp.communication', [])
     };
 
     // Returns all EID contained in the service
-   
+
     serviceInstance.getEidInfo = function(eidaddress){
       var EidInfo = {};
       for (var i=0; i<Json.length; i++)
       {
           var vni = Json[i]["vni"];
           var eids = Json[i]["mapping"];
-          for (var j = 0; j<eids.length; j++) 
+          for (var j = 0; j<eids.length; j++)
           {
             var eid_uri = eids[j]["eid-uri"];
             if(eidaddress == getIP(eid_uri)){
               EidInfo[vni].xtr_id = eids[j]["mapping-record"]["xtr-id"];
               EidInfo[vni].address = serviceInstance.getIP(eid_uri);
               EidInfo[vni].address_type = serviceInstance.getIPType(eid_uri);
-              EidInfo[vni].action = eids[j]["mapping-record"]["action"]; 
+              EidInfo[vni].action = eids[j]["mapping-record"]["action"];
             }
-          
+
         }
       }
       return EidInfo;
     };
-    
+
     serviceInstance.getAllVnIds = function() {
       return listOfVNI;
     };
-    
+
     /* Function to get EIDs in VN
-    ** Retun array with eid-uri of all EIDs in VN. 
+    ** Retun array with eid-uri of all EIDs in VN.
     ** Tip: Use getIPType and getIP functions to get info of eid-uri
     */
-    serviceInstance.getEidsInVn = function(VnId) 
+    serviceInstance.getEidsInVn = function(VnId)
     {
       var eids = Json[VnId]["mapping"];
       var EIDinVN = [];
@@ -187,14 +187,14 @@ angular.module('lisp.communication', [])
       }
       return EIDinVN;
     };
-    
-    serviceInstance.getAllEids = function() 
+
+    serviceInstance.getAllEids = function()
     {
       var EidList = [];
       for (var i=0; i<Json.length; i++)
       {
           var eids = Json[i]["mapping"];
-          for (var j = 0; j<eids.length; j++) 
+          for (var j = 0; j<eids.length; j++)
           {
             var obj = new Object();
             var eid_uri = eids[j]["eid-uri"];
@@ -216,7 +216,7 @@ angular.module('lisp.communication', [])
     {
       return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
     };
-    
+
     serviceInstance.getAllxtrids = function() {
       var vni = [];
       for (var i=0;i<Json.length;i++)
@@ -226,12 +226,12 @@ angular.module('lisp.communication', [])
 
       return XtrArray;
     };
-    
+
      serviceInstance.getXtridInfo = function(xtridAddress) {
          //info per definir
       return Info;
     };
-    
+
     serviceInstance.getAllRlocs = function() {
       var ListRlocs = {};
       var RlocId;
@@ -239,18 +239,18 @@ angular.module('lisp.communication', [])
       for (var i=0; i<Json.length; i++)
       {
           var eids = Json[i]["mapping"];
-          for (var j = 0; j<eids.length; j++) 
+          for (var j = 0; j<eids.length; j++)
           {
             var rlocs = mappingRecord["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               RlocId = rlocs[rlocIt]["locator-id"];
               RlocIp = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
               ListRlocs[RlocId].address = RlocIp;
-            
+
           }
         }
       }
-      
+
       return ListRlocs;
     };
 
@@ -260,7 +260,7 @@ angular.module('lisp.communication', [])
       for (var i=0; i<Json.length; i++)
       {
           var eids = Json[i]["mapping"];
-          for (var j = 0; j<eids.length; j++) 
+          for (var j = 0; j<eids.length; j++)
           {
             var rlocs = mappingRecord["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
@@ -269,7 +269,7 @@ angular.module('lisp.communication', [])
                 obj.address = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
                 obj.weight = rlocs[rlocIt]["weight"];
                 obj.priority = rlocs[rlocIt]["priority"];
-                obj.multicastweight, = rlocs[rlocIt]["multicastWeight"];
+                obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
                 xtr_id = eids[j]["mapping-record"]["xtr-id"];
             }
           }
