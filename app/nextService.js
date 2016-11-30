@@ -59,8 +59,6 @@ angular.module('nextService', [])
                  },
                  events: {
                      clickNode: '{#showNodeInfo}',
-                     enterNode: '{#hoverNode}',
-                     leaveNode: '{#removePath}',
                      topologyGenerated: '{#horizontal}',
                      ready: '{#registerIcon}'
                  },
@@ -189,15 +187,16 @@ angular.module('nextService', [])
 
                 this.topologyData(topoData);
             },
-            hoverNode: function (sender, node) {
-
-            },
             showNodeInfo: function (sender, node) {
                 // Center node on selection
-                
+
                 var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
+
+                //Remove previous drawn paths
+                var pathLayer = sender.getLayer("paths");
+                pathLayer.clear();
 
                 // This doesn't work when the sidebar is hidden
                 //var sideNavWidth = document.getElementById("sidebar").clientWidth;
@@ -206,7 +205,7 @@ angular.module('nextService', [])
                 var toolbarHeight = document.getElementById("toolbar").clientHeight;
                 myBound.top = nodeBound.top - (myBound.height)/2;
                 topo.zoomByBound(myBound);
-                
+
                 nodeClickFunction(node.model()._data);
                 /*
                 //SHOW NODE DETAILS ON THE SIDE BAR
@@ -243,10 +242,6 @@ angular.module('nextService', [])
 
                 // Show tooltip
                 topo._tooltipManager.openNodeTooltip(node);
-            },
-            removePath: function (sender, events) {
-              var pathLayer = sender.getLayer("paths");
-              pathLayer.clear();
             },
             attach: function(args) {
                 this.inherited(args);
