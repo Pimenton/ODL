@@ -199,6 +199,7 @@ angular.module('lisp.communication', [])
       {
           var eids = Json[i]["mapping"];
           var vni = Json[i]["vni"]
+          var vectorEIds = [];
           for (var j = 0; j<eids.length; j++)
           {
             var obj = new Object();
@@ -235,7 +236,7 @@ angular.module('lisp.communication', [])
     {
       var rlocs = Json[vni]["mapping"][eid]["mapping-record"]["LocatorRecord"]
       var rloc_iterator;
-      var rlocsOfEID;
+      var rlocsOfEID = [];
       for (rloc_iterator = 0; rloc_iterator < rlocs.length; ++rloc_iterator)
       {
         rlocsOfEID.push(rlocs[rloc_iterator]);
@@ -244,16 +245,25 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getAllxtrids = function() {
-      var vectorXTR = [];
-      for (var i=0;i<Json.length;i++)
+      var vectorXTR = {};
+      for (var i=0; i<Json.length; i++)
       {
         var eids = Json[i]["mapping"];
-        for (var j = 0; j<eids.length; j++) 
+        for (var j=0; j<eids.length; j++) 
         {
-          vectorXTR[eids[j]["xtr-id"]] = vectorXTR[eids[j]["xtr-id"]].push(getRLOCs(i,j))
+          var xtrInfo_aux = vectorXTR[eids[j]["xtr-id"]];
+          if (xtrInfo_aux == undefined)
+          {
+            xtrInfo_aux = [];
+            xtrInfo_aux.push(getRLOCs(i,j));
+            vectorXTR[eids[j]["xtr-id"]] = xtrInfo_aux;
+          }
+          else 
+          {
+            vectorXTR[eids[j]["xtr-id"]].push(getRLOCs(i,j));
+          }
         }
       }
-
       return vectorXTR;
     };
 
