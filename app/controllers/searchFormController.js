@@ -3,32 +3,33 @@
 	
 	$scope.querySearch = function(query) {
 		if (!query) return [];
+		var results = [];
 
 		var eids = lispService.getAllEids();
-		var results = [];
 		console.log(eids);
-		angular.forEach(eids, function(value, key) {
-			// Search by EID address (cuts the type of address at the beginning of the string)
-			if (key.includes(query))
+		// Search by EID address (cuts the type of address at the beginning of the string)
+		for (var i = 0; i < eids.length; i++) {
+			if (eids[i]["address"].includes(query))
 				results.push({
-					id: key, 
-					rlocs: value,
+					id: eids[i]["adress"], 
+					nrlocs: eids[i]["rlocs"].length,
+					nxtr: eids[i]["xtr_ids"].length,
 					type: "eid"
 				});
-		});
+		}
 
-		var xtrids = lispService.getAllXtrids();
+		var xtrids = lispService.getAllxtrids();
 		console.log(xtrids);
+		// Search by XTR-ID address (cuts the type of address at the beginning of the string)
 		for (var i = 0; i < xtrids.length; i++) {
 			if (xtrids[i]["xtr_id"].includes(query))
 				results.push({
-					id: key, 
+					id: xtrids[i]["xtr_id"], 
 					rlocs: value,
 					type: "xtr-id"
 				});
 		}
 		/*angular.forEach(xtrids, function(value, key) {
-			// Search by XTR-ID address (cuts the type of address at the beginning of the string)
 			if (key.includes(query))
 				results.push({
 					id: key, 
