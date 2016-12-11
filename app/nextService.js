@@ -109,6 +109,7 @@ angular.module('nextService', [])
                   var action;
                   var xtr;
                   var vni;
+                  var rlocs;
 
                   name = "EID " + i;
                   ipAddress = eids[i].address;
@@ -117,6 +118,7 @@ angular.module('nextService', [])
                   xtr = eids[i].xtr_id;
                   xtrIDs.push(xtr); //add xtr to xtrIDs list
                   vni = eids[i].vni;
+                  rlocs = eids[i].rlocs;
 
                   // push node into nodes list
                   topoData.nodes.push(
@@ -127,7 +129,8 @@ angular.module('nextService', [])
                         'type': type,
                         'action': action,
                         'xtr': xtr,
-                        'vni': vni
+                        'vni': vni,
+                        'rlocs': rlocs
 
                     })
                     id++;
@@ -153,6 +156,27 @@ angular.module('nextService', [])
                       xtrIDs.id.push(id);
                       id++;
                   }
+
+                  //Add RLOC as a new Node in case it doesn't exist
+                  for (var j = 0; j < rlocs.length; j++) {
+                     if(rlocIDs.name.indexOf(rlocs[j]) == -1) {
+                       var nameRLOC;
+                       var typeRLOC;
+
+                       nameRLOC = rlocs[j];
+                       typeRLOC = "RLOC";
+
+                       topoData.nodes.push(
+                         {
+                             'id': id,
+                             'name': nameRLOC,
+                             'type': typeRLOC
+                         })
+                       rlocIDs.name.push(nameRLOC);
+                       rlocIDs.id.push(id);
+                       id++;
+                     }
+                   }
                 }
 
                 // convert links from original format
@@ -161,16 +185,16 @@ angular.module('nextService', [])
                 for (var i = 0; i < id; i++) {
                   if(topoData.nodes[i].type == "EID") {
                     var xtr_node;
+                    var rlocs2 = [];
                     var sourceID;
                     var targetID;
 
                     xtr_node = topoData.nodes[i].xtr;
                     xtr_node = "XTR " + xtr_node;
+                    rlocs2 = topoData.nodes[i].rlocs;
 
                     for (var j = 0; j < xtrIDs.id.length; j++) {
                         if(xtr_node.indexOf(xtrIDs.name[j]) >= 0) {
-                          var sourceID;
-                          var targetID;
 
                           sourceID = topoData.nodes[i].id;
                           targetID = xtrIDs.id[j];
@@ -183,7 +207,24 @@ angular.module('nextService', [])
                                   id: id_link
                               })
                           id_link++;
-                      }
+
+                          for (var k = 0; k < rlocIDs.name.length; k++) {
+                            if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
+
+                             sourceID = xtrIDs.id[j];
+                             targetID = rlocIDs.id[k];
+
+                             // push link into links list
+                             topoData.links.push(
+                                 {
+                                     'source': sourceID,
+                                     'target': targetID,
+                                     id: id_link
+                                 })
+                             id_link++;
+                           }
+                         }
+                       }
                     }
                   }
                 }
