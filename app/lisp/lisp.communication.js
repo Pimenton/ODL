@@ -44,27 +44,6 @@ angular.module('lisp.communication', [])
       }
     };
 
-    serviceInstance.getJSON = function(jsonObj) {
-      //jsonObj has JSON response
-      var Json = jsonObj["mapping-database"]["virtual-network-identifier"];
-      var eids = jsonObj["mapping-database"]["virtual-network-identifier"][0]["mapping"];
-      for (var i = 0; i<eids.length; i++) {
-        var eidInfo = eids[i]["mapping-record"]["eid"];
-            var eid_uri =eids[i]["eid"];
-        var mappingRecord = eids[i]["mapping-record"];
-        var rlocs = mappingRecord["LocatorRecord"];
-        var listEidRloc = [];
-        for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
-          serviceInstance.addRlocToRlocList(rlocs[rlocIt]);
-          listEidRloc.push(rlocs[rlocIt]["locator-id"]);
-          serviceInstance.addRLOCToListRLOCLinktedToEID(rlocs[rlocIt],eid_uri);
-        }
-        EidRLOC[eids[i]["eid-uri"]] = listEidRloc;
-
-        var typeIP = eids[i]["eid-uri"].split(":")[0];
-      }
-    };
-
     serviceInstance.addRlocToRlocList = function(rloc){
       //check if rloc exists on listOfRlocs
       listOfRlocs[rloc["locator-id"]] = rloc;
@@ -73,8 +52,7 @@ angular.module('lisp.communication', [])
     serviceInstance.getRLOCsFromEID = function (eidUri)
     {
 
-      return Rlocs;
-
+      return EidRLOC[eidUri];
     };
 
 
@@ -108,13 +86,29 @@ angular.module('lisp.communication', [])
       RLOCLinktedToEID[rloc["locator-id"]] = aux;
     };
 
-    serviceInstance.getEIDRLOC = function ()
+    serviceInstance.getEIDsFromRLOC = function (addressType, addressIP)
     {
-      var keys = Object.keys(listOfRlocs);
-      for (var i = 0; i<keys.count; i++)
+      var EIDS = [];
+      for (var i=0; i<Json.length; i++)
       {
-        alert("entro");
+        var mappingOfVNI = Json["mapping"];
+        for (var j=0; j<mappingOfVNI.length;j++)
+        {
+          var locatorRecords = mappingOfVNI["LocatorRecord"];
+          for (var z=0; z<locatorRecords.length;z++)
+          {
+            if (locatorRecords[z]["rloc"]["address-type"] == addressType)
+            {
+              var typeIP = addresType.split(":")[1].split("-")[0];
+              if (locatorRecords[z]["rloc"][typeIP] == addressIP)
+              {
+                eids.push(mappingOfVNI[j]["eid-uri"])
+              }
+            }
+          }
+        }
       }
+      return eids;
     };
 
     // First function to call: gets all the lisp database content and stores it in the service
@@ -181,11 +175,17 @@ angular.module('lisp.communication', [])
     */
     serviceInstance.getEidsInVn = function(VnId)
     {
-      var eids = Json[VnId]["mapping"];
       var EIDinVN = [];
-      for (var i=0;i<eids.length;i++)
+      for (var i=0; i<Json.length; i++)
       {
-        EIDinVN.push(eids[i]["eid-uri"]);
+        if (Json[i]["vni"] == VnId)
+        {
+          var eids = Json[i]["mapping"];
+          for (var i=0;i<eids.length;i++)
+          {
+            EIDinVN.push(eids[i]["eid-uri"]);
+          }
+        }
       }
       return EIDinVN;
     };
@@ -227,15 +227,32 @@ angular.module('lisp.communication', [])
     {
       return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
     };
+    
+    serviceInstance.getRLOCs = function (vni, eid)
+    {
+      var rlocs = Json[vni]["mapping"][eid]["mapping-record"]["LocatorRecord"]
+      var rloc_iterator;
+      var rlocsOfEID;
+      for (rloc_iterator = 0; rloc_iterator < rlocs.length; ++rloc_iterator)
+      {
+        rlocsOfEID.push(rlocs[rloc_iterator]);
+      }
+      return rlocsOfEID;
+    };
 
     serviceInstance.getAllxtrids = function() {
-      var vni = [];
+      var vectorXTR = [];
       for (var i=0;i<Json.length;i++)
       {
-
+        var eids = Json[i]["mapping"];
+        for (var j = 0; j<eids.length; j++) 
+        {
+          vectorXTR[eids[j]["xtr-id"]] = vectorXTR[eids[j]["xtr-id"]].push(getRLOCs(i,j))
+          
+        }
       }
 
-      return XtrArray;
+      return vectorXTR;
     };
 
      serviceInstance.getXtridInfo = function(xtridAddress) {
