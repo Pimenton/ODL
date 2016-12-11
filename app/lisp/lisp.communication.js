@@ -153,11 +153,13 @@ angular.module('lisp.communication', [])
           for (var j = 0; j<eids.length; j++)
           {
             var eid_uri = eids[j]["eid-uri"];
+            var obj = new Object();
             if(eidaddress == getIP(eid_uri)){
-              EidInfo[vni].xtr_id = eids[j]["mapping-record"]["xtr-id"];
-              EidInfo[vni].address = serviceInstance.getIP(eid_uri);
-              EidInfo[vni].address_type = serviceInstance.getIPType(eid_uri);
-              EidInfo[vni].action = eids[j]["mapping-record"]["action"];
+              obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
+              obj.address = serviceInstance.getIP(eid_uri);
+              obj.address_type = serviceInstance.getIPType(eid_uri);
+              obj.action = eids[j]["mapping-record"]["action"];
+              EidInfo[vni] = obj;
             }
 
         }
