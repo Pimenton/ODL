@@ -211,7 +211,7 @@ angular.module('lisp.communication', [])
             var RLocAdr = [];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
             {
-              var typeIP = rlocs[rlocIt]["rloc"]["addres-type"].split(":")[1].split("-")[0];
+              var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
               RLocAdr.push(rlocs[rlocIt]["rloc"][typeIP]);
             }
             obj.rlocs = RLocAdr; 
