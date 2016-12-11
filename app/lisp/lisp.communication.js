@@ -146,6 +146,7 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getEidInfo = function(eidaddress){
       var EidInfo = {};
+      var obj = new Object();
       for (var i=0; i<Json.length; i++)
       {
           var vni = Json[i]["vni"];
@@ -153,18 +154,18 @@ angular.module('lisp.communication', [])
           for (var j = 0; j<eids.length; j++)
           {
             var eid_uri = eids[j]["eid-uri"];
-            var obj = new Object();
+            
             if(eidaddress == getIP(eid_uri)){
               obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
               obj.address = serviceInstance.getIP(eid_uri);
               obj.address_type = serviceInstance.getIPType(eid_uri);
               obj.action = eids[j]["mapping-record"]["action"];
               EidInfo[vni] = obj;
+              return EidInfo;
             }
 
         }
       }
-      return EidInfo;
     };
 
     serviceInstance.getAllVnIds = function() {
