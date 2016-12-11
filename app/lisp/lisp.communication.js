@@ -199,6 +199,7 @@ angular.module('lisp.communication', [])
       {
           var eids = Json[i]["mapping"];
           var vni = Json[i]["vni"]
+          var vectorEIds = [];
           for (var j = 0; j<eids.length; j++)
           {
             var obj = new Object();
