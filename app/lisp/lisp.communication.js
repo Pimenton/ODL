@@ -206,11 +206,12 @@ angular.module('lisp.communication', [])
             obj.address = eid_uri;
             obj.xtr_id  = xtr;
             var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
-            RLocAdr = [];
+            var RLocAdr = [];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
             {
               RLocAdr.push(rlocs[rlocIt]["rloc"]["ipv4"]);
             }
+            obj.rlocs = RLocAdr; 
             EidList.push(obj);
           }
         }
