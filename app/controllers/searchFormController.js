@@ -4,11 +4,12 @@
 	$scope.querySearch = function(query) {
 		if (!query) return [];
 
-		var eids = lispService.getAllEIDs();
+		var eids = lispService.getAllEids();
 		var results = [];
+		console.log(eids);
 		angular.forEach(eids, function(value, key) {
 			// Search by EID address (cuts the type of address at the beginning of the string)
-			if (key.substr(5).startsWith(query))
+			if (key.includes(query))
 				results.push({
 					id: key, 
 					rlocs: value,
@@ -16,25 +17,32 @@
 				});
 		});
 
-// TODO: fix when lispService function is implemented
-/*
 		var xtrids = lispService.getAllXtrids();
-		angular.forEach(xtrids, function(value, key) {
-			// Search by XTR-ID address (cuts the type of address at the beginning of the string)
-			if (key.substr(5).startsWith(query))
+		console.log(xtrids);
+		for (var i = 0; i < xtrids.length; i++) {
+			if (xtrids[i]["xtr_id"].includes(query))
 				results.push({
 					id: key, 
 					rlocs: value,
 					type: "xtr-id"
 				});
-		});
-*/
+		}
+		/*angular.forEach(xtrids, function(value, key) {
+			// Search by XTR-ID address (cuts the type of address at the beginning of the string)
+			if (key.includes(query))
+				results.push({
+					id: key, 
+					rlocs: value,
+					type: "xtr-id"
+				});
+		});*/
+
 		var rlocs = lispService.getAllRLOCs();
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address
 			var found = false;
 			if (value.rloc.hasOwnProperty("ipv4")) {
-			 	if (value.rloc.ipv4.startsWith(query)) {
+			 	if (value.rloc.ipv4.includes(query)) {
 					found = true;
 					results.push({
 						id: key,
@@ -43,7 +51,7 @@
 					});
 				}
 			} else {
-				if (value.rloc.ipv6.startsWith(query)) {
+				if (value.rloc.ipv6.includes(query)) {
 					found = true;
 					results.push({
 						id: key,
@@ -64,7 +72,6 @@
 			}
 		});
 
-		//return [{number: 1},{number: 2},{number: 3},{number: 45}];
 		return results;
 	}; 	
 
