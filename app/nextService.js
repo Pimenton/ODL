@@ -108,6 +108,7 @@ angular.module('nextService', [])
                   var type;
                   var action;
                   var xtr;
+                  var vni;
 
                   name = "EID " + i;
                   ipAddress = eids[i].address;
@@ -115,6 +116,7 @@ angular.module('nextService', [])
                   action = "discard";
                   xtr = eids[i].xtr_id;
                   xtrIDs.push(xtr); //add xtr to xtrIDs list
+                  vni = eids[i].vni;
 
                   // push node into nodes list
                   topoData.nodes.push(
@@ -124,7 +126,8 @@ angular.module('nextService', [])
                         'address': ipAddress,
                         'type': type,
                         'action': action,
-                        'xtr': xtr
+                        'xtr': xtr,
+                        'vni': vni
 
                     })
                     id++;
