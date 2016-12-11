@@ -13,6 +13,7 @@ angular.module('nextService', [])
 
     serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
+      var id_link = 0; //to accumulate the value of the links
       var rlocIDs = []; //to accumulate rlocs data
       rlocIDs.name = []; //rlocs names
       rlocIDs.id = []; //rlocs ids
@@ -59,7 +60,7 @@ angular.module('nextService', [])
                  },
                  events: {
                      clickNode: '{#showNodeInfo}',
-                     topologyGenerated: '{#horizontal}',
+                     topologyGenerated: '{#generated}',
                      ready: '{#registerIcon}'
                  },
                },
@@ -180,8 +181,6 @@ angular.module('nextService', [])
                 }
 
                 // convert links from original format
-                var id_link = 0;
-
                 for (var i = 0; i < id; i++) {
                   if(topoData.nodes[i].type == "EID") {
                     var xtr_node;
@@ -204,6 +203,7 @@ angular.module('nextService', [])
                               {
                                   'source': sourceID,
                                   'target': targetID,
+                                  'type': "eid-xtr",
                                   id: id_link
                               })
                           id_link++;
@@ -219,6 +219,7 @@ angular.module('nextService', [])
                                  {
                                      'source': sourceID,
                                      'target': targetID,
+                                     'type': "xtr-rloc",
                                      id: id_link
                                  })
                              id_link++;
@@ -226,6 +227,25 @@ angular.module('nextService', [])
                          }
                        }
                     }
+
+                    for (var k = 0; k < rlocIDs.name.length; k++) {
+                      if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
+
+                       sourceID = topoData.nodes[i].id;
+                       targetID = rlocIDs.id[k];
+
+                       // push link into links list
+                       topoData.links.push(
+                           {
+                               'source': sourceID,
+                               'target': targetID,
+                               'type': "eid-rloc",
+                               id: id_link
+                           })
+                       id_link++;
+                     }
+                   }
+
                   }
                 }
 
@@ -273,15 +293,20 @@ angular.module('nextService', [])
                   else if(node.model()._data.type == "XTR") {
                     return links.target == node.model()._data.id;
                   }
+
+                  else if(node.model()._data.type == "RLOC") {
+                    return links.target == node.model()._data.id;
+                  }
                 });
                 //for each link we draw its path
                 for (var i = 0; i < links_id.length; i++) {
                     var link = [sender.getLink(links_id[i].id)];
-                    var path1 = new nx.graphic.Topology.Path({
-                              links: link,
-                              arrow: 'cap'
-                          });
-                    pathLayer.addPath(path1);
+                    //PENDING if(link.model()._data.type != "eid-rloc") {
+                      var path1 = new nx.graphic.Topology.Path({
+                                links: link,
+                                arrow: 'cap'
+                            });
+                      pathLayer.addPath(path1);
                 }
 
                 // Show tooltip
@@ -290,7 +315,9 @@ angular.module('nextService', [])
             attach: function(args) {
                 this.inherited(args);
             },
-            horizontal: function(sender, node) {
+            generated: function(sender, node) {
+
+              //MAKES AN HORIZONTAL LAYOUT
               var layout = sender.getLayout('hierarchicalLayout');
               layout.direction('vertical');
               layout.sortOrder(['EID', 'XTR', 'RLOC']);
@@ -298,6 +325,17 @@ angular.module('nextService', [])
                 return model._data.type;
               });
               sender.activateLayout('hierarchicalLayout');
+
+              //HIDES the links EID-RLOC
+              var links = sender.getLayer('links').links();
+              console.log(links);
+              for (var i = 0; i < id_link; i++) {
+                var link = links[i];
+                if(link.model()._data.type == "eid-rloc") {
+                  link.enable(false);
+                  link.update();
+                }
+              }
             },
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
