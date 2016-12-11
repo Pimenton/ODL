@@ -72,7 +72,9 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getRLOCsFromEID = function (eidUri)
     {
-      return EidRLOC[eidUri];
+
+      return Rlocs;
+
     };
 
 
@@ -194,16 +196,24 @@ angular.module('lisp.communication', [])
       for (var i=0; i<Json.length; i++)
       {
           var eids = Json[i]["mapping"];
+          var vni = Json[i]["vni"]
           for (var j = 0; j<eids.length; j++)
           {
             var obj = new Object();
             var eid_uri = eids[j]["eid-uri"];
             var xtr = eids[j]["mapping-record"]["xtr-id"];
+            obj.vni = vni;
             obj.address = eid_uri;
             obj.xtr_id  = xtr;
+            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
+            RLocAdr = [];
+            for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
+            {
+              RLocAdr.push(rlocs[rlocIt]["rloc"]["ipv4"]);
+            }
             EidList.push(obj);
+          }
         }
-      }
       return EidList;
     };
 
