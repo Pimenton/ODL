@@ -25,7 +25,8 @@
 			if (xtrids[i]["xtr_id"].includes(query))
 				results.push({
 					id: xtrids[i]["xtr_id"], 
-					rlocs: value,
+					nrlocs: xtrids[i]["rlocs"].length,
+					neids: xtrids[i]["eids"].length,
 					type: "xtr-id"
 				});
 		}

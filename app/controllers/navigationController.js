@@ -20,9 +20,22 @@ angular.module('navigationController', [])
  		$timeout(function() {
  			$scope.openSideMenu();
  			// Call lisp module to get the eid information
- 			$scope.eid = lispService.getEidInfo(eidaddress);
+ 			$scope.eidVn = lispService.getEidInfo(eidaddress);
  			$scope.detailMenuState = "eid";
+ 			$scope.detailVnIds = [];
+ 			angular.forEach($scope.eidVn, function(key, value) {
+ 				$scope.detailVnIds.push(key);
+ 			});
+ 			if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
+ 				$scope.eid = $scope.eidVn[$scope.selectedVn];
+ 			} else {
+ 				$scope.eid = $scope.eidVn[$scope.detailVnIds[0]];
+ 			}
 	 	});
+ 	};
+
+ 	$scope.selectDetailVn = function(selectedDetailVnId) {
+ 		$scope.eid = $scope.eidVn[selectedDetailVnId];
  	};
 
  	$scope.showXtrDetails = function(xtrid) {
@@ -49,6 +62,7 @@ angular.module('navigationController', [])
  	}
 
  	$scope.selectVn = function(vnId) {
+ 		$scope.selectedVn = vnId;
 		nextService.selectVirtualNetwork(vnId);
  	}
 

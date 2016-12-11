@@ -154,7 +154,7 @@ angular.module('lisp.communication', [])
           {
             var eid_uri = eids[j]["eid-uri"];
             var obj = new Object();
-            if(eidaddress == getIP(eid_uri)){
+            if(eidaddress == serviceInstance.getIP(eid_uri)){
               obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
               obj.address = serviceInstance.getIP(eid_uri);
               obj.address_type = serviceInstance.getIPType(eid_uri);
@@ -255,11 +255,6 @@ angular.module('lisp.communication', [])
       }
 
       return vectorXTR;
-    };
-
-     serviceInstance.getXtridInfo = function(xtridAddress) {
-         //info per definir
-      return Info;
     };
 
     serviceInstance.getAllRlocs = function() {
