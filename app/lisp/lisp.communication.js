@@ -265,23 +265,21 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getAllxtrids = function() {
-      var vectorXTR = {};
+       var vectorXTR = {};
       for (var i=0; i<Json.length; i++)
       {
         var eids = Json[i]["mapping"];
         for (var j=0; j<eids.length; j++) 
         {
-          var xtrInfo_aux = vectorXTR[eids[j]["xtr-id"]];
-          if (xtrInfo_aux == undefined)
-          {
-            xtrInfo_aux = [];
-            xtrInfo_aux.push(getRLOCs(i,j));
-            vectorXTR[eids[j]["xtr-id"]] = xtrInfo_aux;
+          var obj = {};
+          var xtrInfo_id = eids[j]["mapping-record"]["xtr-id"];
+          if(typeof vectorXTR[xtrInfo_id] != "undefined") obj = vectorXTR[xtrInfo_id];
+          var rlocs = getRLOCs(i,j);
+          for(var k=0;k<rlocs.length;k++){
+          var address = rlocs[k]["rloc"][rlocs[k]["rloc"]["address-type"].split(":")[1].split("-")[0]];
+          obj[rlocs[k]["locator-id"]]= address; 
           }
-          else 
-          {
-            vectorXTR[eids[j]["xtr-id"]].push(getRLOCs(i,j));
-          }
+          vectorXTR[xtrInfo_id] = obj;
         }
       }
       return vectorXTR;
