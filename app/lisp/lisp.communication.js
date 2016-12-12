@@ -301,11 +301,13 @@ angular.module('lisp.communication', [])
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++)
           {
-            var rlocs = mappingRecord["LocatorRecord"];
+            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               RlocId = rlocs[rlocIt]["locator-id"];
-              RlocIp = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
-              ListRlocs[RlocId].address = RlocIp;
+              RlocIp = rlocs[rlocIt]["rloc"][rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0]];
+              var obj = new Object;
+              obj.address= RlocIp;
+              ListRlocs[RlocId]= obj;
 
           }
         }
