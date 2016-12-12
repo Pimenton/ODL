@@ -49,10 +49,30 @@ angular.module('lisp.communication', [])
       listOfRlocs[rloc["locator-id"]] = rloc;
     };
 
-    serviceInstance.getRLOCsFromEID = function (eidUri)
+    serviceInstance.getRLOCsFromEID = function (eidaddress)
     {
+    	var EidInfo = {};
+    	for (var i=0; i<Json.length; i++)
+      {
+          var vni = Json[i]["vni"];
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++)
+          {
+            var eid_uri = eids[j]["eid-uri"];
+            var obj = [];
+            if(eidaddress == getIP(eid_uri)){
+              var rlocs = eids[j]["mapping-record"]["LocatorRecord"]
+              for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
+          	  {
+          	  	var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
+              	obj.push(rlocs[rlocIt]["rloc"][typeIP]);
+              }
+              EidInfo[vni] = obj;
+            }
 
-      return EidRLOC[eidUri];
+        }
+      }
+      return EidInfo;
     };
 
 
