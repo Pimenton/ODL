@@ -118,8 +118,8 @@ angular.module('nextService', [])
                   var vni;
                   var rlocs;
 
-                  name = "EID " + i;
                   ipAddress = eids[i].address;
+                  name = "EID " + i;
                   type = "EID";
                   action = "discard";
                   xtr = eids[i].xtr_id;
@@ -172,7 +172,7 @@ angular.module('nextService', [])
                        var typeRLOC;
                        var exit_bucle = false;
 
-                       //obtain RLOC's name
+                       //obtain locatorID from ipAddress
                        for (var k = 0; k < Object.keys(rlocs_info).length && !exit_bucle; k++) {
                          //when it finds the ipAddress translates it to its locatorID
                          if (rlocs[j] == rlocs_info[Object.keys(rlocs_info)[k]].address) {
@@ -317,7 +317,7 @@ angular.module('nextService', [])
                 var links_id = links.filter(function(links){
                   //if its an EID it compares with the SOURCE
                   if(node.model()._data.type == "EID") {
-                    return links.source == node.model()._data.id;
+                    return (links.source == node.model()._data.id && links.type != "eid-xtr");
                   }
                   //if its an XTR it compares with the TARGET
                   else if(node.model()._data.type == "XTR") {
@@ -325,7 +325,7 @@ angular.module('nextService', [])
                   }
 
                   else if(node.model()._data.type == "RLOC") {
-                    return links.target == node.model()._data.id;
+                    return (links.target == node.model()._data.id && links.type != "xtr-rloc");
                   }
                 });
                 //for each link we draw its path
@@ -338,7 +338,6 @@ angular.module('nextService', [])
                             });
                       pathLayer.addPath(path1);
                 }
-
                 // Show tooltip
                 //topo._tooltipManager.openNodeTooltip(node);
             },
@@ -346,7 +345,6 @@ angular.module('nextService', [])
                 this.inherited(args);
             },
             generated: function(sender, node) {
-
               //MAKES AN HORIZONTAL LAYOUT
               var layout = sender.getLayout('hierarchicalLayout');
               layout.direction('vertical');
@@ -356,7 +354,7 @@ angular.module('nextService', [])
               });
               sender.activateLayout('hierarchicalLayout');
 
-              //HIDES the links EID-RLOC
+              //DISABLES the links EID-RLOC
               var links = sender.getLayer('links').links();
               //console.log(links);
               for (var i = 0; i < id_link; i++) {
