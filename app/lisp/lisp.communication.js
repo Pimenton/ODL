@@ -334,6 +334,11 @@ angular.module('lisp.communication', [])
       return obj;
     };
 
+    serviceInstance.getIPTypeOfRLOC = function(rlocAddressType)
+    {
+      return rlocAddressType.split(":")[1].split("-")[0];
+    };
+
     serviceInstance.getXTRInfo = function(action, xtrId)
     {
       var xtrInfo = [];
