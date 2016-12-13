@@ -233,7 +233,7 @@ angular.module('nextService', [])
                        }
                     }
 
-                    for (var k = 0; k < rlocIDs.name.length; k++) {
+                    /*for (var k = 0; k < rlocIDs.name.length; k++) {
                       if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
 
                        sourceID = topoData.nodes[i].id;
@@ -249,7 +249,7 @@ angular.module('nextService', [])
                            })
                        id_link++;
                      }
-                   }
+                   }*/
 
                   }
                 }
@@ -358,10 +358,12 @@ angular.module('nextService', [])
                   return datanode.id == node["_data-id"];
                 };
                 var datanode = topoData.nodes.find(isNode);
-
-                allNodes[datanode["type"]][datanode["address"]] = {};
-                allNodes[datanode["type"]][datanode["address"]]["datanode"] = datanode;
-                allNodes[datanode["type"]][datanode["address"]]["toponode"] = node;
+    
+                var id = datanode["name"];
+                if (datanode["type"] == "EID") id = datanode["address"];
+                allNodes[datanode["type"]][id] = {};
+                allNodes[datanode["type"]][id]["datanode"] = datanode;
+                allNodes[datanode["type"]][id]["toponode"] = node;
               }, true);
 
               topo.zoomByNodes(topo.getNodes());
@@ -394,19 +396,56 @@ angular.module('nextService', [])
 
               topo.zoomByNodes(topo.getNodes());
             },
-            highlightEids: function(eidsInVn) {
+            highlightEidWithZoom: function(eidaddress, vnId) {
+              var topo = this.view('topology');
+              var nodes = [];
+              this.highlightEid(eidaddress, vnId, nodes);
+              topo.zoomByNodes(nodes);
+            },
+            highlightEid: function(eidaddress, vnId, highlightedNodes) {
+              var topo = this.view('topology');
 
-                //highlight single node or nodes
-                var topo = this.view('topology');
-                var nodeLayer = topo.getLayer('nodes');
-                var nodes = [];
-                nx.each(eidsInVn, function(eidInVn){
-                  var dataid = allNodes["EID"][eidInVn]["toponode"]["_data-id"];
-                  var node = topo.getNode(dataid);
-                  nodes.push(node);
-                  topo.highlightRelatedNode(node);
+              var dataid = allNodes["EID"][eidaddress]["toponode"]["_data-id"];
+              var eidNode = topo.getNode(dataid);
+
+              var nodeLayer = topo.getLayer('nodes');
+              var linksLayer = topo.getLayer('links');
+              nodeLayer.highlightedElements().add(eidNode);
+              highlightedNodes.push(eidNode);
+
+              var eidaddress = topoData["nodes"][eidNode["_data-id"]]["address"];
+              var rlocsFromEid = lispService.getRLOCsFromEID(lispService.getIP(eidaddress))[vnId];
+
+              eidNode.eachConnectedNode(function(xtrNode) {
+              nodeLayer.highlightedElements().add(xtrNode);
+              highlightedNodes.push(xtrNode);
+
+                xtrNode.eachConnectedNode(function(connectedNode) {
+                  
+                  var dataid = connectedNode["_data-id"];
+                  var object = topoData["nodes"][dataid];
+                  if (object["type"] == "RLOC" && rlocsFromEid.includes(object["name"])){
+                    nodeLayer.highlightedElements().add(connectedNode);
+                    highlightedNodes.push(connectedNode);
+                  }
+
                 }, true);
-                topo.zoomByNodes(nodes);
+
+              }, true);
+            },
+            highlightEids: function(eidsInVn, vnId) {
+
+              //highlight single node or nodes
+              var topo = this.view('topology');
+              var nodeLayer = topo.getLayer('nodes');
+              var highlightedNodes = [];
+              var holder = this;
+              nx.each(eidsInVn, function(eidInVn){
+                var nodes = [];
+                holder.highlightEid(eidInVn, vnId, nodes);
+                highlightedNodes.push(nodes);
+              }, true);
+              topo.zoomByNodes(highlightedNodes);
 
                 // IF WE WANT THE GROUP LAYER TO SHOW UP
                 /*var groupsLayer = topo.getLayer('groups');
@@ -416,11 +455,8 @@ angular.module('nextService', [])
                     label: 'Polygon'
                     // color: '#f00'
                 });*/
-            },
-            highlightEid: function(eidadress, vnId) {
-
             }
-         }
+          }
       });
 
       //attach topology to document
@@ -439,13 +475,21 @@ angular.module('nextService', [])
         topology.hideAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
         //topology.showEids(eidsInVn);
-        topology.highlightEids(eidsInVn);
+        topology.highlightEids(eidsInVn, vnId);
       }
     };
 
     serviceInstance.centerOnNode = function(nodeId, nodeType) {
       topology.centerOnNodeType(nodeId, nodeType);
     };
+
+    serviceInstance.highlightEid = function(eidaddress, vnId) {
+      topology.hideAll();
+      topology.highlightEidWithZoom(eidaddress, vnId);
+    }
+
+    serviceInstance.showAll = function() {
+    }
 
     return serviceInstance;
 }]);

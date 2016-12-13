@@ -38,7 +38,8 @@ angular.module('navigationController', [])
  				$scope.eid = $scope.eidVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
- 			nextService.centerOnNode(eidaddress, "EID");
+ 			//nextService.centerOnNode(eidaddress, "EID");
+ 			nextService.highlightEid(eidaddress, $scope.selectedDetailVnId);
 	 	});
  	};
 
@@ -54,7 +55,6 @@ angular.module('navigationController', [])
 	 		};
  			$scope.xtr["eids"]  = lispService.getXTRInfo("EID",xtrid);
  			$scope.xtr["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
- 			console.log($scope.xtr["eids"]);
  	 		$scope.detailMenuState = "xtr";
  			nextService.centerOnNode(xtr, "XTR");
  	 	});
@@ -63,7 +63,8 @@ angular.module('navigationController', [])
  	$scope.showRlocDetails = function(rlocid) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
- 			$scope.rloc = lispService.getRlocInfo(rlocid);
+ 			$scope.rloc = lispService.getRlocInfo("ISP2");
+ 			console.log($scope.rloc);
  			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc.address), lispService.getIP($scope.rloc.address));
  	 		$scope.detailMenuState = "rloc";
  			nextService.centerOnNode(rlocid, "RLOC");

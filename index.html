@@ -29,7 +29,7 @@
             <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
             </ng-include>
 
-            <div id="selectVnBox" layout="row" flex layout-align="start center" >
+            <div id="selectVnBox" layout="row" flex layout-align="start center">
                 <label layout-align="center center">Select Virtual Network</label>
                 <md-card class="card" md-whiteframe="1" class="inCard">
                     <md-select ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
@@ -40,7 +40,7 @@
             </div>
             <span flex></span>
 
-            <div layout-align="center center" layout="row">
+            <div ng-if="false" layout-align="center center" layout="row">
                 <md-switch ng-model="view.state" aria-label="View Switch">
                     Switch views
                 </md-switch>
