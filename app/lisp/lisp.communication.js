@@ -316,17 +316,17 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getRlocInfo = function (RLOC_ID)
     {
-      var obj = new Object();
+     var obj = new Object();
       for (var i=0; i<Json.length; i++)
       {
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++)
           {
-            var rlocs = mappingRecord["LocatorRecord"];
+            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               if(RLOC_ID == rlocs[rlocIt]["locator-id"]){
                 obj.id = rlocs[rlocIt]["locator-id"];
-                obj.address = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
+                obj.address = rlocs[rlocIt]["rloc"][rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0]];
                 obj.weight = rlocs[rlocIt]["weight"];
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
