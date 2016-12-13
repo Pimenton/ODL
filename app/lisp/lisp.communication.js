@@ -49,10 +49,30 @@ angular.module('lisp.communication', [])
       listOfRlocs[rloc["locator-id"]] = rloc;
     };
 
-    serviceInstance.getRLOCsFromEID = function (eidUri)
+    serviceInstance.getRLOCsFromEID = function (eidaddress)
     {
+    	var EidInfo = {};
+    	for (var i=0; i<Json.length; i++)
+      {
+          var vni = Json[i]["vni"];
+          var eids = Json[i]["mapping"];
+          for (var j = 0; j<eids.length; j++)
+          {
+            var eid_uri = eids[j]["eid-uri"];
+            var obj = [];
+            if(eidaddress == getIP(eid_uri)){
+              var rlocs = eids[j]["mapping-record"]["LocatorRecord"]
+              for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
+          	  {
+          	  	var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
+              	obj.push(rlocs[rlocIt]["rloc"][typeIP]);
+              }
+              EidInfo[vni] = obj;
+            }
 
-      return EidRLOC[eidUri];
+        }
+      }
+      return EidInfo;
     };
 
 
@@ -245,23 +265,21 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getAllxtrids = function() {
-      var vectorXTR = {};
+       var vectorXTR = {};
       for (var i=0; i<Json.length; i++)
       {
         var eids = Json[i]["mapping"];
         for (var j=0; j<eids.length; j++) 
         {
-          var xtrInfo_aux = vectorXTR[eids[j]["xtr-id"]];
-          if (xtrInfo_aux == undefined)
-          {
-            xtrInfo_aux = [];
-            xtrInfo_aux.push(serviceInstance.getRLOCs(i,j));
-            vectorXTR[eids[j]["xtr-id"]] = xtrInfo_aux;
+          var obj = {};
+          var xtrInfo_id = eids[j]["mapping-record"]["xtr-id"];
+          if(typeof vectorXTR[xtrInfo_id] != "undefined") obj = vectorXTR[xtrInfo_id];
+          var rlocs = getRLOCs(i,j);
+          for(var k=0;k<rlocs.length;k++){
+          var address = rlocs[k]["rloc"][rlocs[k]["rloc"]["address-type"].split(":")[1].split("-")[0]];
+          obj[rlocs[k]["locator-id"]]= address; 
           }
-          else 
-          {
-            vectorXTR[eids[j]["xtr-id"]].push(serviceInstance.getRLOCs(i,j));
-          }
+          vectorXTR[xtrInfo_id] = obj;
         }
       }
       return vectorXTR;
@@ -276,11 +294,13 @@ angular.module('lisp.communication', [])
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++)
           {
-            var rlocs = mappingRecord["LocatorRecord"];
+            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               RlocId = rlocs[rlocIt]["locator-id"];
-              RlocIp = rlocs[rlocIt]["rloc"][serviceInstance.getIPType(rlocs[rlocIt]["rloc"]["address-type"])];
-              ListRlocs[RlocId].address = RlocIp;
+              RlocIp = rlocs[rlocIt]["rloc"][rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0]];
+              var obj = new Object;
+              obj.address= RlocIp;
+              ListRlocs[RlocId]= obj;
 
           }
         }
