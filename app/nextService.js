@@ -143,11 +143,9 @@ angular.module('nextService', [])
                   //If it's a new XTR
                   if(xtrIDs.name.indexOf("XTR " + xtr) == -1) {
                       var nameXTR;
-                      var ipAddressXTR;
                       var typeXTR;
 
                       nameXTR = "XTR " + xtr;
-                      ipAddressXTR = "X.X.X.X";
                       typeXTR = "XTR";
 
                       // push node into nodes list
@@ -155,7 +153,6 @@ angular.module('nextService', [])
                         {
                             'id': id,
                             'name': nameXTR,
-                            'address': ipAddressXTR,
                             'type': typeXTR
                         })
                       xtrIDs.name.push(nameXTR);
