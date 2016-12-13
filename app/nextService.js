@@ -364,7 +364,7 @@ angular.module('nextService', [])
                   link.color("#FFFFFF");
                 }
                 else {
-                  link.width(2);
+                  //link.width(2);
                 }
                 link.update();
               }
