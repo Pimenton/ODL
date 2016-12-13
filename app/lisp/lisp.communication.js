@@ -321,7 +321,8 @@ angular.module('lisp.communication', [])
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               if(RLOC_ID == rlocs[rlocIt]["locator-id"]){
                 obj.id = rlocs[rlocIt]["locator-id"];
-                obj.address = rlocs[rlocIt]["rloc"][rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0]];
+                obj.address_type = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
+                obj.address = rlocs[rlocIt]["rloc"][obj.address_type];
                 obj.weight = rlocs[rlocIt]["weight"];
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
