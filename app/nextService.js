@@ -285,11 +285,13 @@ angular.module('nextService', [])
             },
             centerOnNodeType: function (nodeId, type) {
                 var topo = this.view('topology');
-                var isNode = function(node) {
-                    return (node.address == nodeId && node.type == type) || (node.name == nodeId && node.type == type);
-                };
-                var node = topoData.nodes.find(isNode);
-                this.centerOnNode(topo.getNode(node.id));
+                //var isNode = function(node) {
+                //    return (node.address == nodeId && node.type == type) || (node.name == nodeId && node.type == type);
+                //};
+                //var node = topoData.nodes.find(isNode);
+                var node = allNodes[type][nodeId];
+
+                this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
             },
             showNodeInfo: function (sender, node) {
                 var topo = this.view('topology');
@@ -377,6 +379,7 @@ angular.module('nextService', [])
 
                 var id = datanode["name"];
                 if (datanode["type"] == "EID") id = datanode["address"];
+                if (datanode["type"] == "XTR") id = datanode["xtrid"];
                 allNodes[datanode["type"]][id] = {};
                 allNodes[datanode["type"]][id]["datanode"] = datanode;
                 allNodes[datanode["type"]][id]["toponode"] = node;
@@ -433,7 +436,7 @@ angular.module('nextService', [])
                 link.update();
               }, true);
             },
-            showAll: function() {
+            showAll: function(zoom) {
               var topo = this.view('topology');
               var nodesLayer = topo.getLayer('nodes');
               nodesLayer.highlightedElements().addRange(topo.getNodes());
@@ -446,7 +449,7 @@ angular.module('nextService', [])
               //linksLayer.highlightedElements().addRange(nx.util.values(links));
               linksLayer.highlightLinks(links);
 
-              topo.zoomByNodes(topo.getNodes());
+              if (zoom) topo.zoomByNodes(topo.getNodes());
 
               var pathLayer = topo.getLayer("paths");
               pathLayer.clear();
@@ -528,10 +531,10 @@ angular.module('nextService', [])
     };
 
     // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
-    serviceInstance.selectVirtualNetwork = function(vnId) {
+    serviceInstance.selectVirtualNetwork = function(vnId, zoom) {
       if (vnId == "all") {
         topology.enableAll();
-        topology.showAll();
+        topology.showAll(zoom);
       } else {
         topology.hideAll();
         topology.disableAll();

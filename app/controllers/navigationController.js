@@ -39,7 +39,6 @@ angular.module('navigationController', [])
  				$scope.eid = $scope.eidVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
- 			//nextService.centerOnNode(eidaddress, "EID");
  			nextService.highlightEid(eidaddress, $scope.selectedDetailVnId);
 	 	});
  	};
@@ -52,7 +51,7 @@ angular.module('navigationController', [])
 		$timeout(function() {
 	 		$scope.openSideMenu();
 	 		$scope.xtr = {
-	 			"address": xtrid
+	 			"xtrid": xtrid
 	 		};
  			$scope.xtr["eids"]  = lispService.getXTRInfo("EID",xtrid);
  			$scope.xtr["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
@@ -66,8 +65,9 @@ angular.module('navigationController', [])
 		$timeout(function() {
 	 		$scope.openSideMenu();
  			$scope.rloc = lispService.getRlocInfo(rlocid);
- 			console.log($scope.rloc);
+
  			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc["address_type"]), lispService.getIP($scope.rloc.address));
+ 			$scope.rloc["eids"] = eidsFromRloc;
  	 		$scope.detailMenuState = "rloc";
  			nextService.centerOnNode(rlocid, "RLOC");
  	 	});
@@ -80,10 +80,16 @@ angular.module('navigationController', [])
  		return lispService.getAllVnIds();
  	}
 
+ 	$scope.unselectVn = function() {
+ 		$scope.selectedVn = "all";
+ 		$scope.selectedVnId = "all";
+		nextService.selectVirtualNetwork("all", false);
+ 	}
+
  	$scope.selectVn = function(vnId) {
  		$scope.closeSideMenu();
  		$scope.selectedVn = vnId;
-		nextService.selectVirtualNetwork(vnId);
+		nextService.selectVirtualNetwork(vnId, true);
  	}
 
  	var showObjectInfo = function(object) {
@@ -117,7 +123,5 @@ angular.module('navigationController', [])
 			$scope.connectionError = true;
 		}
 	);
-
-	//$scope.showEi("");
 
 }])

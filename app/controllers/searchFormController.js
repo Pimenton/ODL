@@ -1,5 +1,5 @@
  angular.module('searchFormController', [])
-.controller('searchFormController', ['$scope', 'lispService', function($scope, lispService) {
+.controller('searchFormController', ['$scope', 'lispService', 'nextService', function($scope, lispService, nextService) {
 	
 	$scope.querySearch = function(query) {
 		if (!query) return [];
@@ -65,9 +65,7 @@
 	$scope.selectedItemChange = function(item) {
 		if (!item) return;
 
- 		$scope.selectedVnId = "all";
- 		console.log($scope.selectedVnId);
-		//nextService.selectVirtualNetwork("all");
+		$scope.unselectVn();
 
 		if (item.type == "eid") $scope.showEidDetails(item.id);
 		else if (item.type == "xtr") $scope.showXtrDetails(item.id);

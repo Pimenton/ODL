@@ -6,7 +6,7 @@
 	    <h2 flex>
   			<span>{{detailMenuState | uppercase}} details</span>
 		</h2>
-		<div ng-if="detailMenuState == 'eid'" layout="row" layout-align="end center" >
+		<div ng-if="detailMenuState == 'eid' || detailMenuState=='xtr'" layout="row" layout-align="end center" >
             <label layout-align="center center">VN</label>
             <md-card class="card" md-whiteframe="1"	>
                 <md-select id="selectDetailVn" ng-model="selectedDetailVnId" ng-change="selectDetailVn(selectedDetailVnId)" class="selectBox md-no-underline" > 

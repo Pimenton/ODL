@@ -391,7 +391,7 @@ angular.module('lisp.communication', [])
                   }
               }
             }
-            console.log(rlocsList);
+
             for (var rloc_itList = 0; rloc_itList < rlocsList.length; rloc_itList++)
             {
               var RLOC_EID = new Object();
