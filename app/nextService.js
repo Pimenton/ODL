@@ -233,7 +233,7 @@ angular.module('nextService', [])
                        }
                     }
 
-                    /*for (var k = 0; k < rlocIDs.name.length; k++) {
+                    for (var k = 0; k < rlocIDs.name.length; k++) {
                       if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
 
                        sourceID = topoData.nodes[i].id;
@@ -249,7 +249,7 @@ angular.module('nextService', [])
                            })
                        id_link++;
                      }
-                   }*/
+                   }
 
                   }
                 }
@@ -343,13 +343,16 @@ angular.module('nextService', [])
 
               //HIDES the links EID-RLOC
               var links = sender.getLayer('links').links();
-              console.log(links);
+              //console.log(links);
               for (var i = 0; i < id_link; i++) {
                 var link = links[i];
                 if(link.model()._data.type == "eid-rloc") {
                   link.enable(false);
-                  link.update();
                 }
+                else {
+                  link.width(2);
+                }
+                link.update();
               }
 
               var topo = this.view('topology');
@@ -358,7 +361,7 @@ angular.module('nextService', [])
                   return datanode.id == node["_data-id"];
                 };
                 var datanode = topoData.nodes.find(isNode);
-    
+
                 var id = datanode["name"];
                 if (datanode["type"] == "EID") id = datanode["address"];
                 allNodes[datanode["type"]][id] = {};
@@ -421,7 +424,7 @@ angular.module('nextService', [])
               highlightedNodes.push(xtrNode);
 
                 xtrNode.eachConnectedNode(function(connectedNode) {
-                  
+
                   var dataid = connectedNode["_data-id"];
                   var object = topoData["nodes"][dataid];
                   if (object["type"] == "RLOC" && rlocsFromEid.includes(object["name"])){
