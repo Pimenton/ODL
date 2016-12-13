@@ -326,12 +326,17 @@ angular.module('lisp.communication', [])
                 obj.weight = rlocs[rlocIt]["weight"];
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
-                xtr_id = eids[j]["mapping-record"]["xtr-id"];
+                obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
             }
           }
         }
       }
       return obj;
+    };
+
+    serviceInstance.getIPTypeOfRLOC = function(rlocAddressType)
+    {
+      return rlocAddressType.split(":")[1].split("-")[0];
     };
 
     serviceInstance.getXTRInfo = function(action, xtrId)
