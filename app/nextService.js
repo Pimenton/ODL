@@ -245,7 +245,7 @@ angular.module('nextService', [])
                          }
                        }
                     }
-/*
+
                     for (var k = 0; k < rlocIDs.ip.length; k++) {
                       if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
 
@@ -263,7 +263,7 @@ angular.module('nextService', [])
                        id_link++;
                      }
                    }
-*/
+
                   }
                 }
 
@@ -377,13 +377,11 @@ angular.module('nextService', [])
 
                 var id = datanode["name"];
                 if (datanode["type"] == "EID") id = datanode["address"];
-                if (datanode["type"] == "XTR") id = datanode["xtrid"];
                 allNodes[datanode["type"]][id] = {};
                 allNodes[datanode["type"]][id]["datanode"] = datanode;
                 allNodes[datanode["type"]][id]["toponode"] = node;
               }, true);
 
-              topo.zoomByNodes(topo.getNodes());
             },
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
@@ -547,8 +545,8 @@ angular.module('nextService', [])
     };
 
     serviceInstance.highlightEid = function(eidaddress, vnId) {
-      topology.hideAll();
-      topology.highlightEidWithZoom(eidaddress, vnId);
+      //topology.hideAll();
+      //topology.highlightEidWithZoom(eidaddress, vnId);
     }
 
     return serviceInstance;
