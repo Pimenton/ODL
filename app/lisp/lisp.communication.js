@@ -337,9 +337,10 @@ angular.module('lisp.communication', [])
     serviceInstance.getXTRInfo = function(action, xtrId)
     {
       var xtrInfo = [];
-      var obj = new Object();
       for (var i=0; i<Json.length; i++)
       {
+        var obj = new Object();
+
         obj.vni = Json[i]["vni"];
         obj.info = []
         var eids = Json[i]["mapping"];
@@ -353,9 +354,9 @@ angular.module('lisp.communication', [])
               {
                 var EID_RLOCS = new Object();
                 EID_RLOCS.eid = eids[j]["eid-uri"];
-                EID_RLOCS.rlocs = [];
+                EID_RLOCS.rlocs = serviceInstance.getRLOCs(i, j);
                 var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
-                obj.info.push(getRLOCs(i, j))
+                obj.info.push(EID_RLOCS);
                 /*for (var rlocIt=0; rlocIt<rlocs.length; rlocIt++)
                 {
                   EID_RLOCS.rlocs.push(rlocs[rlocIt]["rloc"][getIPTypeOfRLOC(rlocs[rlocIt]["rloc"]["address-type"])])
@@ -368,38 +369,37 @@ angular.module('lisp.communication', [])
             break;
           case "RLOC":
             var dictionaryRLOC = {}
+            var rlocsList = [];
             for (var j = 0; j<eids.length; j++)
             {
               var xtr = eids[j]["mapping-record"]["xtr-id"];
               if (xtr == xtrId)
               {
-                var RLOC_EID = new Object();
-                RLOC_EID.rloc = ""
-                dictionaryRLOC["hola"] = "yes"
+                
                 var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
                 for (var rlocIt=0; rlocIt<rlocs.length; rlocIt++)
                 {
-                  var rlocIP = String(rlocs[rlocIt]["rloc"][getIPTypeOfRLOC(rlocs[rlocIt]["rloc"]["address-type"])]);
-                  if (dictionaryRLOC[rlocIP] == undefined) dictionaryRLOC[rlocIP] = eids[j]["eid-uri"];
-                  else dictionaryRLOC[rlocIP] = dictionaryRLOC[rlocIP].concat(push(eids[j]["eid-uri"]));
-
-                  //dictionaryRLOC[rlocs[rlocIt]["rloc"][getIPTypeOfRLOC(rlocs[rlocIt]["rloc"]["address-type"])]].push(eids[j]["eid-uri"])
-                }
+                  var rlocIP = String(rlocs[rlocIt]["rloc"][serviceInstance.getIPTypeOfRLOC(rlocs[rlocIt]["rloc"]["address-type"])]);
+                  if (rlocsList.indexOf(rlocIP) == -1) rlocsList.push(rlocIP);
+                  if (dictionaryRLOC[rlocIP] == undefined) dictionaryRLOC[rlocIP] = []
+                  dictionaryRLOC[rlocIP].push(eids[j]["eid-uri"]);
+                  }
               }
             }
-            for (var dictionaryIt = 0; dictionaryIt < dictionaryRLOC.length; dictionaryIt++)
+            console.log(rlocsList);
+            for (var rloc_itList = 0; rloc_itList < rlocsList.length; rloc_itList++)
             {
-              var rloc = dictionaryRLOC[dictionaryIt]
+              var RLOC_EID = new Object();
+              RLOC_EID.rloc = rlocsList[rloc_itList]
+              RLOC_EID.info = dictionaryRLOC[rlocsList[rloc_itList]];
+              obj.info.push(RLOC_EID)
             }
-
             break;
         }
         xtrInfo[i] = obj;
       }
-
       return xtrInfo;
     };
-
 
     return serviceInstance;
   }])
