@@ -61,11 +61,13 @@ angular.module('navigationController', [])
  	 		$scope.detailMenuState = "xtr";
  	 		$scope.detailVnIds = [];
  	 		for (var i = 0; i < $scope.xtrVn["eids"].length; i++) {
- 	 			var vnId = $scope.xtrVn["eids"][i]["vni"];
- 	 			$scope.detailVnIds.push(vnId);
- 	 			$scope.xtrVn[vnId] = {};
- 	 			$scope.xtrVn[vnId]["eids"] = $scope.xtrVn["eids"][i]["info"];
- 	 			$scope.xtrVn[vnId]["rlocs"] = $scope.xtrVn["rlocs"][i]["info"];
+ 	 			if ($scope.xtrVn["eids"][i]["info"].length != 0 && $scope.xtrVn["rlocs"][i]["info"].length != 0) {
+	 	 			var vnId = $scope.xtrVn["eids"][i]["vni"];
+	 	 			$scope.detailVnIds.push(vnId);
+	 	 			$scope.xtrVn[vnId] = {};
+	 	 			$scope.xtrVn[vnId]["eids"] = $scope.xtrVn["eids"][i]["info"];
+	 	 			$scope.xtrVn[vnId]["rlocs"] = $scope.xtrVn["rlocs"][i]["info"];
+ 	 			}
  	 		}
  			if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
  				$scope.xtr["info"] = $scope.xtrVn[$scope.selectedVn];
@@ -74,7 +76,9 @@ angular.module('navigationController', [])
  				$scope.xtr["info"] = $scope.xtrVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
-
+ 			console.log($scope.xtr);
+ 			console.log($scope.xtrVn);
+ 			console.log($scope.detailVnIds);
  			nextService.centerOnNode(xtrid, "XTR");
  	 	});
  	};
