@@ -326,7 +326,7 @@ angular.module('lisp.communication', [])
                 obj.weight = rlocs[rlocIt]["weight"];
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
-                xtr_id = eids[j]["mapping-record"]["xtr-id"];
+                obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
             }
           }
         }
