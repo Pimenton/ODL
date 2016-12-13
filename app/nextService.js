@@ -147,7 +147,7 @@ angular.module('nextService', [])
                       var typeXTR;
 
                       nameXTR = "XTR " + xtr;
-                      ipAddressXTR = "X.X.X.X";
+                      ipAddressXTR = xtr;
                       typeXTR = "XTR";
 
                       // push node into nodes list
@@ -373,6 +373,21 @@ angular.module('nextService', [])
               //register icon to instance
               topo.registerIcon("port", "./app/port.png",42,42);
             },
+            disableAll: function() {
+              var topo = this.view('topology');
+              var nodesLayer = topo.getLayer('nodes');
+
+              nodesLayer.eachNode(function(node) {
+                node.enable(false);  
+              }, true);
+
+              var linksLayer = topo.getLayer('links');
+              linksLayer.eachLink(function(link) {
+                link.enable(false);  
+                link.update();
+              }, true);
+
+            },
             hideAll: function() {
               var topo = this.view('topology');
               var nodesLayer = topo.getLayer('nodes');
@@ -380,7 +395,27 @@ angular.module('nextService', [])
 
               var linksLayer = topo.getLayer('links');
               linksLayer.highlightedElements().clear();
+              linksLayer.eachLink(function(link) {
+                //link.enable(true);
+                link.update();
+              }, true);
 
+              var pathLayer = topo.getLayer("paths");
+              pathLayer.clear();
+            },
+            enableAll: function() {
+              var topo = this.view('topology');
+
+              var nodesLayer = topo.getLayer('nodes');
+              nodesLayer.eachNode(function(node) {
+                node.enable(true);  
+              }, true);
+
+              var linksLayer = topo.getLayer('links');
+              linksLayer.eachLink(function(link) {
+                link.enable(true);
+                link.update();
+              }, true);
             },
             showAll: function() {
               var topo = this.view('topology');
@@ -392,9 +427,13 @@ angular.module('nextService', [])
               linksLayer.eachLink(function(link) {
                 links.push(link);
               }, true);
-              linksLayer.highlightedElements().addRange(links);
+              //linksLayer.highlightedElements().addRange(nx.util.values(links));
+              linksLayer.highlightLinks(links);
 
               topo.zoomByNodes(topo.getNodes());
+
+              var pathLayer = topo.getLayer("paths");
+              pathLayer.clear();
             },
             highlightEidWithZoom: function(eidaddress, vnId) {
               var topo = this.view('topology');
@@ -411,6 +450,7 @@ angular.module('nextService', [])
               var nodeLayer = topo.getLayer('nodes');
               var linksLayer = topo.getLayer('links');
               nodeLayer.highlightedElements().add(eidNode);
+              eidNode.enable(true);
               highlightedNodes.push(eidNode);
 
               var eidaddress = topoData["nodes"][eidNode["_data-id"]]["address"];
@@ -418,6 +458,7 @@ angular.module('nextService', [])
 
               eidNode.eachConnectedNode(function(xtrNode) {
               nodeLayer.highlightedElements().add(xtrNode);
+              xtrNode.enable(true);
               highlightedNodes.push(xtrNode);
 
                 xtrNode.eachConnectedNode(function(connectedNode) {
@@ -426,6 +467,7 @@ angular.module('nextService', [])
                   var object = topoData["nodes"][dataid];
                   if (object["type"] == "RLOC" && rlocsFromEid.includes(object["name"])){
                     nodeLayer.highlightedElements().add(connectedNode);
+                    connectedNode.enable(true);
                     highlightedNodes.push(connectedNode);
                   }
 
@@ -438,12 +480,13 @@ angular.module('nextService', [])
               //highlight single node or nodes
               var topo = this.view('topology');
               var nodeLayer = topo.getLayer('nodes');
-              var highlightedNodes = [];
+              var highlightedNodes = [""];
+              highlightedNodes.concat(["a"]);
               var holder = this;
               nx.each(eidsInVn, function(eidInVn){
                 var nodes = [];
                 holder.highlightEid(eidInVn, vnId, nodes);
-                highlightedNodes.push(nodes);
+                highlightedNodes = highlightedNodes.concat(nodes);
               }, true);
               topo.zoomByNodes(highlightedNodes);
 
@@ -470,9 +513,12 @@ angular.module('nextService', [])
 
     // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
     serviceInstance.selectVirtualNetwork = function(vnId) {
-      if (vnId == "all") topology.showAll();
-      else {
+      if (vnId == "all") {
+        topology.enableAll();
+        topology.showAll();
+      } else {
         topology.hideAll();
+        topology.disableAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
         //topology.showEids(eidsInVn);
         topology.highlightEids(eidsInVn, vnId);

@@ -56,8 +56,9 @@ angular.module('navigationController', [])
 	 		};
  			$scope.xtr["eids"]  = lispService.getXTRInfo("EID",xtrid);
  			$scope.xtr["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
+ 			console.log($scope.xtr);
  	 		$scope.detailMenuState = "xtr";
- 			nextService.centerOnNode(xtr, "XTR");
+ 			nextService.centerOnNode(xtrid, "XTR");
  	 	});
  	};
 
@@ -100,6 +101,7 @@ angular.module('navigationController', [])
  	$scope.finishedLoading = false;
  	$scope.connectionError = false;
  	$scope.finishedLoadingDetail = true;
+ 	$scope.selectedVn = "all";
 
  	// Load data from lisp service, then replace loading indicator
 	lispService.initialize().then(

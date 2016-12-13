@@ -65,7 +65,12 @@
 	$scope.selectedItemChange = function(item) {
 		if (!item) return;
 
+ 		$scope.selectedVnId = "all";
+ 		console.log($scope.selectedVnId);
+		//nextService.selectVirtualNetwork("all");
+
 		if (item.type == "eid") $scope.showEidDetails(item.id);
+		else if (item.type == "xtr") $scope.showXtrDetails(item.id);
 		else $scope.showRlocDetails(item.id);
 	};
 
