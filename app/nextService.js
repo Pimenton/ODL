@@ -156,7 +156,7 @@ angular.module('nextService', [])
                         {
                             'id': id,
                             'name': nameXTR,
-                            'xtrid': xtr, 
+                            'xtrid': xtr,
                             'type': typeXTR
                         })
                       xtrIDs.name.push(nameXTR);
@@ -360,7 +360,8 @@ angular.module('nextService', [])
               for (var i = 0; i < id_link; i++) {
                 var link = links[i];
                 if(link.model()._data.type == "eid-rloc") {
-                  link.enable(false);
+                  //link.enable(false);
+                  link.color("#FFFFFF");
                 }
                 else {
                   link.width(2);
@@ -393,12 +394,12 @@ angular.module('nextService', [])
               var nodesLayer = topo.getLayer('nodes');
 
               nodesLayer.eachNode(function(node) {
-                node.enable(false);  
+                node.enable(false);
               }, true);
 
               var linksLayer = topo.getLayer('links');
               linksLayer.eachLink(function(link) {
-                link.enable(false);  
+                link.enable(false);
                 link.update();
               }, true);
 
@@ -423,7 +424,7 @@ angular.module('nextService', [])
 
               var nodesLayer = topo.getLayer('nodes');
               nodesLayer.eachNode(function(node) {
-                node.enable(true);  
+                node.enable(true);
               }, true);
 
               var linksLayer = topo.getLayer('links');
