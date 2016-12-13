@@ -3,9 +3,17 @@
 	    <md-button class="md-icon-button" aria-label="Close" ng-click="closeSideMenu()">
 			<i class="material-icons">&#xE5CD;</i>
         </md-button>
-	    <h2>
+	    <h2 flex>
   			<span>{{detailMenuState | uppercase}} details</span>
 		</h2>
+		<div ng-if="detailMenuState == 'eid'" layout="row" layout-align="end center" >
+            <label layout-align="center center">VN</label>
+            <md-card class="card" md-whiteframe="1"	>
+                <md-select id="selectDetailVn" ng-model="selectedDetailVnId" ng-change="selectDetailVn(selectedDetailVnId)" class="selectBox md-no-underline" > 
+                  <md-option ng-repeat="detailVnid in detailVnIds" ng-value="detailVnid">{{detailVnid}}</md-option>
+                </md-select>
+            </md-card>
+        </div>
 	</div>
 </md-toolbar>
 
@@ -13,7 +21,7 @@
 	<div ng-switch-when="eid" flex layout>
 		<ng-include src="'./app/templates/eidDetail.html'" flex layout layout-fill></ng-include>
 	</div>
-	<div ng-switch-when="xtrid" flex layout>
+	<div ng-switch-when="xtr" flex layout>
 		<ng-include src="'./app/templates/xtridDetail.html'" flex layout></ng-include>
 	</div>
 	<div ng-switch-default flex layout>

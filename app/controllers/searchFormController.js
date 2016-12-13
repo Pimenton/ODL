@@ -13,7 +13,7 @@
 				results.push({
 					id: eids[i]["adress"], 
 					nrlocs: eids[i]["rlocs"].length,
-					nxtr: eids[i]["xtr_ids"].length,
+					nxtr: eids[i]["xtr_id"].length,
 					type: "eid"
 				});
 		}
@@ -39,7 +39,7 @@
 				});
 		});*/
 
-		var rlocs = lispService.getAllRLOCs();
+		var rlocs = lispService.getAllRlocs();
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address
 			var found = false;

@@ -251,16 +251,11 @@ angular.module('nextService', [])
 
                 this.topologyData(topoData);
             },
-            showNodeInfo: function (sender, node) {
+            centerOnNode: function (node) {
                 // Center node on selection
-
                 var topo = this.view('topology');
                 var nodeBound = node.getBound();
                 var myBound = topo.stage().getContentBound();
-
-                //Remove previous drawn paths
-                var pathLayer = sender.getLayer("paths");
-                pathLayer.clear();
 
                 // This doesn't work when the sidebar is hidden
                 //var sideNavWidth = document.getElementById("sidebar").clientWidth;
@@ -269,6 +264,21 @@ angular.module('nextService', [])
                 var toolbarHeight = document.getElementById("toolbar").clientHeight;
                 myBound.top = nodeBound.top - (myBound.height)/2;
                 topo.zoomByBound(myBound);
+            },
+            centerOnNodeType: function (nodeId, type) {
+                var topo = this.view('topology');
+                var isNode = function(node) {
+                    return (node.address == nodeId && node.type == type) || (node.name == nodeId && node.type == type);
+                };
+                var node = topoData.nodes.find(isNode);
+                this.centerOnNode(topo.getNode(node.id));
+            },
+            showNodeInfo: function (sender, node) {
+                var topo = this.view('topology');
+
+                //Remove previous drawn paths
+                var pathLayer = sender.getLayer("paths");
+                pathLayer.clear();
 
                 nodeClickFunction(node.model()._data);
                 /*
@@ -395,9 +405,12 @@ angular.module('nextService', [])
       else {
         topology.hideAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
-        console.log(eidsInVn);
         topology.highlightEids(eidsInVn);
       }
+    };
+
+    serviceInstance.centerOnNode = function(nodeId, nodeType) {
+      topology.centerOnNodeType(nodeId, nodeType);
     };
 
     return serviceInstance;

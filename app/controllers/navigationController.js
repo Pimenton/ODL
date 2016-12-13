@@ -21,6 +21,7 @@ angular.module('navigationController', [])
  			$scope.openSideMenu();
  			// Call lisp module to get the eid information
  			$scope.eidVn = lispService.getEidInfo(eidaddress);
+ 			console.log($scope.eidVn);
  			$scope.detailMenuState = "eid";
  			$scope.detailVnIds = [];
  			angular.forEach($scope.eidVn, function(key, value) {
@@ -28,9 +29,12 @@ angular.module('navigationController', [])
  			});
  			if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
  				$scope.eid = $scope.eidVn[$scope.selectedVn];
+ 				$scope.selectedDetailVnId = $scope.selectedVn;
  			} else {
  				$scope.eid = $scope.eidVn[$scope.detailVnIds[0]];
+ 				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
+ 			nextService.centerOnNode(eidaddress, "EID");
 	 	});
  	};
 
@@ -42,7 +46,8 @@ angular.module('navigationController', [])
 		$timeout(function() {
 	 		$scope.openSideMenu();
  			$scope.xtrid = lispService.getXtridInfo(xtrid);
- 	 		$scope.detailMenuState = "xtrid";
+ 	 		$scope.detailMenuState = "xtr";
+ 			nextService.centerOnNode(xtrid, "XTR");
  	 	});
  	};
 
@@ -51,6 +56,7 @@ angular.module('navigationController', [])
 	 		$scope.openSideMenu();
  			$scope.rloc = lispService.getRlocInfo(rlocid);
  	 		$scope.detailMenuState = "rloc";
+ 			nextService.centerOnNode(rlocid, "RLOC");
  	 	});
  	};
 

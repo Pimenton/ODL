@@ -255,12 +255,12 @@ angular.module('lisp.communication', [])
           if (xtrInfo_aux == undefined)
           {
             xtrInfo_aux = [];
-            xtrInfo_aux.push(getRLOCs(i,j));
+            xtrInfo_aux.push(serviceInstance.getRLOCs(i,j));
             vectorXTR[eids[j]["xtr-id"]] = xtrInfo_aux;
           }
           else 
           {
-            vectorXTR[eids[j]["xtr-id"]].push(getRLOCs(i,j));
+            vectorXTR[eids[j]["xtr-id"]].push(serviceInstance.getRLOCs(i,j));
           }
         }
       }
