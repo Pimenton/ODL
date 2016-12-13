@@ -8,6 +8,7 @@ angular.module('nextService', [])
     // instantiate NeXt app
     var app = new nx.ui.Application();
     var eids;
+    var rlocs_info;
     var topology;
     var topoData = {};
     var allNodes = {
@@ -20,7 +21,7 @@ angular.module('nextService', [])
       var id = 0; //to accumulate the value of assigned ids
       var id_link = 0; //to accumulate the value of the links
       var rlocIDs = []; //to accumulate rlocs data
-      rlocIDs.name = []; //rlocs names
+      rlocIDs.ip = []; //rlocs names
       rlocIDs.id = []; //rlocs ids
       var xtrIDs = []; //to accumulate xtrs data
       xtrIDs.name = []; //xtrs names
@@ -100,6 +101,7 @@ angular.module('nextService', [])
             loadRemoteData: function() {
 
                 eids = lispService.getAllEids();
+                rlocs_info = lispService.getAllRlocs();
                 var length = Object.keys(eids).length;
 
                 //transform JSON data to NEXTUI format
@@ -143,11 +145,9 @@ angular.module('nextService', [])
                   //If it's a new XTR
                   if(xtrIDs.name.indexOf("XTR " + xtr) == -1) {
                       var nameXTR;
-                      var ipAddressXTR;
                       var typeXTR;
 
                       nameXTR = "XTR " + xtr;
-                      ipAddressXTR = "X.X.X.X";
                       typeXTR = "XTR";
 
                       // push node into nodes list
@@ -155,7 +155,6 @@ angular.module('nextService', [])
                         {
                             'id': id,
                             'name': nameXTR,
-                            'address': ipAddressXTR,
                             'type': typeXTR
                         })
                       xtrIDs.name.push(nameXTR);
@@ -165,20 +164,32 @@ angular.module('nextService', [])
 
                   //Add RLOC as a new Node in case it doesn't exist
                   for (var j = 0; j < rlocs.length; j++) {
-                     if(rlocIDs.name.indexOf(rlocs[j]) == -1) {
+                     if(rlocIDs.ip.indexOf(rlocs[j]) == -1) {
                        var nameRLOC;
+                       var ipAddressRLOC;
                        var typeRLOC;
+                       var exit_bucle = false;
 
-                       nameRLOC = rlocs[j];
+                       //obtain RLOC's name
+                       for (var k = 0; k < Object.keys(rlocs_info).length && !exit_bucle; k++) {
+                         //when it finds the ipAddress translates it to its locatorID
+                         if (rlocs[j] == rlocs_info[Object.keys(rlocs_info)[k]].address) {
+                           nameRLOC = Object.keys(rlocs_info)[k];
+                           exit_bucle = true;
+                         }
+                       }
+
+                       ipAddressRLOC = rlocs[j];
                        typeRLOC = "RLOC";
 
                        topoData.nodes.push(
                          {
                              'id': id,
                              'name': nameRLOC,
+                             'ipAddressRLOC': ipAddressRLOC,
                              'type': typeRLOC
                          })
-                       rlocIDs.name.push(nameRLOC);
+                       rlocIDs.ip.push(ipAddressRLOC);
                        rlocIDs.id.push(id);
                        id++;
                      }
@@ -213,8 +224,8 @@ angular.module('nextService', [])
                               })
                           id_link++;
 
-                          for (var k = 0; k < rlocIDs.name.length; k++) {
-                            if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
+                          for (var k = 0; k < rlocIDs.ip.length; k++) {
+                            if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
 
                              sourceID = xtrIDs.id[j];
                              targetID = rlocIDs.id[k];
@@ -233,8 +244,8 @@ angular.module('nextService', [])
                        }
                     }
 
-                    /*for (var k = 0; k < rlocIDs.name.length; k++) {
-                      if(rlocs2.indexOf(rlocIDs.name[k]) >= 0) {
+                    for (var k = 0; k < rlocIDs.ip.length; k++) {
+                      if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
 
                        sourceID = topoData.nodes[i].id;
                        targetID = rlocIDs.id[k];
@@ -249,7 +260,7 @@ angular.module('nextService', [])
                            })
                        id_link++;
                      }
-                   }*/
+                   }
 
                   }
                 }
@@ -343,13 +354,16 @@ angular.module('nextService', [])
 
               //HIDES the links EID-RLOC
               var links = sender.getLayer('links').links();
-              console.log(links);
+              //console.log(links);
               for (var i = 0; i < id_link; i++) {
                 var link = links[i];
                 if(link.model()._data.type == "eid-rloc") {
                   link.enable(false);
-                  link.update();
                 }
+                else {
+                  link.width(2);
+                }
+                link.update();
               }
 
               var topo = this.view('topology');
@@ -358,7 +372,7 @@ angular.module('nextService', [])
                   return datanode.id == node["_data-id"];
                 };
                 var datanode = topoData.nodes.find(isNode);
-    
+
                 var id = datanode["name"];
                 if (datanode["type"] == "EID") id = datanode["address"];
                 allNodes[datanode["type"]][id] = {};
@@ -421,7 +435,7 @@ angular.module('nextService', [])
               highlightedNodes.push(xtrNode);
 
                 xtrNode.eachConnectedNode(function(connectedNode) {
-                  
+
                   var dataid = connectedNode["_data-id"];
                   var object = topoData["nodes"][dataid];
                   if (object["type"] == "RLOC" && rlocsFromEid.includes(object["name"])){
