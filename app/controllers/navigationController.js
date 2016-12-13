@@ -20,12 +20,16 @@ angular.module('navigationController', [])
  		$timeout(function() {
  			$scope.openSideMenu();
  			// Call lisp module to get the eid information
- 			$scope.eidVn = lispService.getEidInfo(eidaddress);
- 			console.log($scope.eidVn);
+ 			var ipaddress = lispService.getIP(eidaddress);
+ 			$scope.eidVn = lispService.getEidInfo(ipaddress);
+ 			var rlocsFromEid = lispService.getRLOCsFromEID(ipaddress);
  			$scope.detailMenuState = "eid";
  			$scope.detailVnIds = [];
- 			angular.forEach($scope.eidVn, function(key, value) {
+ 			angular.forEach($scope.eidVn, function(value, key) {
  				$scope.detailVnIds.push(key);
+ 				// TODO: delete if getEidInfo returns a list of xtrids
+ 				$scope.eidVn[key]["xtrids"] = [$scope.eidVn[key]["xtr_id"]];
+ 				$scope.eidVn[key]["rlocs"] = rlocsFromEid[key];
  			});
  			if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
  				$scope.eid = $scope.eidVn[$scope.selectedVn];
@@ -45,9 +49,14 @@ angular.module('navigationController', [])
  	$scope.showXtrDetails = function(xtrid) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
- 			$scope.xtrid = lispService.getXtridInfo(xtrid);
+	 		$scope.xtr = {
+	 			"address": xtrid
+	 		};
+ 			$scope.xtr["eids"]  = lispService.getXTRInfo("EID",xtrid);
+ 			$scope.xtr["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
+ 			console.log($scope.xtr["eids"]);
  	 		$scope.detailMenuState = "xtr";
- 			nextService.centerOnNode(xtrid, "XTR");
+ 			nextService.centerOnNode(xtr, "XTR");
  	 	});
  	};
 
@@ -55,6 +64,7 @@ angular.module('navigationController', [])
 		$timeout(function() {
 	 		$scope.openSideMenu();
  			$scope.rloc = lispService.getRlocInfo(rlocid);
+ 			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc.address), lispService.getIP($scope.rloc.address));
  	 		$scope.detailMenuState = "rloc";
  			nextService.centerOnNode(rlocid, "RLOC");
  	 	});
@@ -68,6 +78,7 @@ angular.module('navigationController', [])
  	}
 
  	$scope.selectVn = function(vnId) {
+ 		$scope.closeSideMenu();
  		$scope.selectedVn = vnId;
 		nextService.selectVirtualNetwork(vnId);
  	}
@@ -75,8 +86,8 @@ angular.module('navigationController', [])
  	var showObjectInfo = function(object) {
  		if(object.type == "EID") {
         	$scope.showEidDetails(object.address);
-        } else if (object.type == "XTR-ID") {
-            $scope.showXtridDetails(object.address);
+        } else if (object.type == "XTR") {
+            $scope.showXtrDetails(object.address);
         } else if (object.type == "RLOC") {
             $scope.showRlocDetails(object.name);
         }

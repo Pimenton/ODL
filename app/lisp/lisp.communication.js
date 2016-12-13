@@ -60,7 +60,7 @@ angular.module('lisp.communication', [])
           {
             var eid_uri = eids[j]["eid-uri"];
             var obj = [];
-            if(eidaddress == getIP(eid_uri)){
+            if(eidaddress == serviceInstance.getIP(eid_uri)){
               var rlocs = eids[j]["mapping-record"]["LocatorRecord"]
               for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
           	  {
@@ -274,7 +274,7 @@ angular.module('lisp.communication', [])
           var obj = {};
           var xtrInfo_id = eids[j]["mapping-record"]["xtr-id"];
           if(typeof vectorXTR[xtrInfo_id] != "undefined") obj = vectorXTR[xtrInfo_id];
-          var rlocs = getRLOCs(i,j);
+          var rlocs = serviceInstance.getRLOCs(i,j);
           for(var k=0;k<rlocs.length;k++){
           var address = rlocs[k]["rloc"][rlocs[k]["rloc"]["address-type"].split(":")[1].split("-")[0]];
           obj[rlocs[k]["locator-id"]]= address; 
@@ -347,6 +347,7 @@ angular.module('lisp.communication', [])
           case "EID":
             for (var j = 0; j<eids.length; j++)
             {
+              console.log(eids);
               var rlocs = eids["mapping-record"]["LocatorRecord"];
               for (var rlocIt=0; rlocIt<rlocs.length; rlocIt++)
               {

@@ -30,7 +30,7 @@
             </ng-include>
 
             <div id="selectVnBox" layout="row" flex layout-align="start center" >
-                <label layout-align="center center">VN-id</label>
+                <label layout-align="center center">Select Virtual Network</label>
                 <md-card class="card" md-whiteframe="1" class="inCard">
                     <md-select ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
                       <md-option value="all">All</md-option>
@@ -48,10 +48,10 @@
 
         </md-toolbar>
 
-        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center" flex></md-progress-circular>
 
-        <div ng-if="connectionError">
-            Connection error
+        <div ng-if="connectionError" layout-align="center center" flex>
+            <span >Connection error</span>
         </div>
 
         <div id="topology-container" flex></div>

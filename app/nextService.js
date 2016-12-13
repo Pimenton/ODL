@@ -10,6 +10,11 @@ angular.module('nextService', [])
     var eids;
     var topology;
     var topoData = {};
+    var allNodes = {
+      "EID": {},
+      "XTR": {},
+      "RLOC": {}
+    }
 
     serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
@@ -95,7 +100,6 @@ angular.module('nextService', [])
             loadRemoteData: function() {
 
                 eids = lispService.getAllEids();
-                console.log(eids);
                 var length = Object.keys(eids).length;
 
                 //transform JSON data to NEXTUI format
@@ -135,6 +139,7 @@ angular.module('nextService', [])
 
                     })
                     id++;
+
                   //If it's a new XTR
                   if(xtrIDs.name.indexOf("XTR " + xtr) == -1) {
                       var nameXTR;
@@ -320,7 +325,7 @@ angular.module('nextService', [])
                 }
 
                 // Show tooltip
-                topo._tooltipManager.openNodeTooltip(node);
+                //topo._tooltipManager.openNodeTooltip(node);
             },
             attach: function(args) {
                 this.inherited(args);
@@ -346,6 +351,20 @@ angular.module('nextService', [])
                   link.update();
                 }
               }
+
+              var topo = this.view('topology');
+              topo.eachNode(function(node) {
+                  var isNode = function(datanode) {
+                  return datanode.id == node["_data-id"];
+                };
+                var datanode = topoData.nodes.find(isNode);
+
+                allNodes[datanode["type"]][datanode["address"]] = {};
+                allNodes[datanode["type"]][datanode["address"]]["datanode"] = datanode;
+                allNodes[datanode["type"]][datanode["address"]]["toponode"] = node;
+              }, true);
+
+              topo.zoomByNodes(topo.getNodes());
             },
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
@@ -354,29 +373,40 @@ angular.module('nextService', [])
             },
             hideAll: function() {
               var topo = this.view('topology');
-              topo.eachLayer(function(layer) {
-                layer.hide();
-              }, true);
+              var nodesLayer = topo.getLayer('nodes');
+              nodesLayer.highlightedElements().clear();
+
+              var linksLayer = topo.getLayer('links');
+              linksLayer.highlightedElements().clear();
+
             },
             showAll: function() {
               var topo = this.view('topology');
-              topo.eachLayer(function(layer) {
-                layer.show();
+              var nodesLayer = topo.getLayer('nodes');
+              nodesLayer.highlightedElements().addRange(topo.getNodes());
+
+              var linksLayer = topo.getLayer('links');
+              var links = [];
+              linksLayer.eachLink(function(link) {
+                links.push(link);
               }, true);
+              linksLayer.highlightedElements().addRange(links);
+
+              topo.zoomByNodes(topo.getNodes());
             },
             highlightEids: function(eidsInVn) {
+
                 //highlight single node or nodes
                 var topo = this.view('topology');
                 var nodeLayer = topo.getLayer('nodes');
                 var nodes = [];
                 nx.each(eidsInVn, function(eidInVn){
-                  var isNode = function(node) {
-                      return node.address == eidInVn;
-                  };
-                  var node = topoData.nodes.find(isNode);
-                  topo.highlightRelatedNode(topo.getNode(node.id));
+                  var dataid = allNodes["EID"][eidInVn]["toponode"]["_data-id"];
+                  var node = topo.getNode(dataid);
                   nodes.push(node);
+                  topo.highlightRelatedNode(node);
                 }, true);
+                topo.zoomByNodes(nodes);
 
                 // IF WE WANT THE GROUP LAYER TO SHOW UP
                 /*var groupsLayer = topo.getLayer('groups');
@@ -386,6 +416,9 @@ angular.module('nextService', [])
                     label: 'Polygon'
                     // color: '#f00'
                 });*/
+            },
+            highlightEid: function(eidadress, vnId) {
+
             }
          }
       });
@@ -405,6 +438,7 @@ angular.module('nextService', [])
       else {
         topology.hideAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
+        //topology.showEids(eidsInVn);
         topology.highlightEids(eidsInVn);
       }
     };

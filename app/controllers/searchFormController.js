@@ -6,12 +6,11 @@
 		var results = [];
 
 		var eids = lispService.getAllEids();
-		console.log(eids);
-		// Search by EID address (cuts the type of address at the beginning of the string)
+		// Search by EID address 
 		for (var i = 0; i < eids.length; i++) {
 			if (eids[i]["address"].includes(query))
 				results.push({
-					id: eids[i]["adress"], 
+					id: eids[i]["address"], 
 					nrlocs: eids[i]["rlocs"].length,
 					nxtr: eids[i]["xtr_id"].length,
 					type: "eid"
@@ -19,56 +18,36 @@
 		}
 
 		var xtrids = lispService.getAllxtrids();
-		console.log(xtrids);
-		// Search by XTR-ID address (cuts the type of address at the beginning of the string)
-		for (var i = 0; i < xtrids.length; i++) {
-			if (xtrids[i]["xtr_id"].includes(query))
-				results.push({
-					id: xtrids[i]["xtr_id"], 
-					nrlocs: xtrids[i]["rlocs"].length,
-					neids: xtrids[i]["eids"].length,
-					type: "xtr-id"
-				});
-		}
-		/*angular.forEach(xtrids, function(value, key) {
+		// Search by XTR-ID  
+		angular.forEach(xtrids, function(value, key) {
 			if (key.includes(query))
 				results.push({
 					id: key, 
 					rlocs: value,
-					type: "xtr-id"
+					type: "xtr"
 				});
-		});*/
+		});
 
 		var rlocs = lispService.getAllRlocs();
+		console.log(rlocs);
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address
 			var found = false;
-			if (value.rloc.hasOwnProperty("ipv4")) {
-			 	if (value.rloc.ipv4.includes(query)) {
-					found = true;
-					results.push({
+		 	if (value["address"].includes(query)) {
+		 		found = true;
+				results.push({
 						id: key,
-						address: value.rloc.ipv4,
+						address: value["address"],
 						type: "rloc"
 					});
-				}
-			} else {
-				if (value.rloc.ipv6.includes(query)) {
-					found = true;
-					results.push({
-						id: key,
-						address: value.rloc.ipv4,
-						type: "rloc"
-					});
-				}
 			}
-
+			
 			// Filter by RLOC locator-id
 			if (!found) {
-				if (key.startsWith(query))
+				if (key.includes(query))
 					results.push({
 						id: key,
-						address: value.rloc.ipv4,
+						address: value["address"],
 						type: "rloc"
 					});
 			}
