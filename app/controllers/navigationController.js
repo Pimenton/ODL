@@ -44,7 +44,8 @@ angular.module('navigationController', [])
  	};
 
  	$scope.selectDetailVn = function(selectedDetailVnId) {
- 		$scope.eid = $scope.eidVn[selectedDetailVnId];
+ 		if ($scope.detailMenuState == "eid") $scope.eid = $scope.eidVn[selectedDetailVnId];
+ 		else if ($scope.detailMenuState == "xtr") $scope.xtr["info"] = $scope.xtrVn[selectedDetailVnId];
  	};
 
  	$scope.showXtrDetails = function(xtrid) {
@@ -53,10 +54,27 @@ angular.module('navigationController', [])
 	 		$scope.xtr = {
 	 			"xtrid": xtrid
 	 		};
- 			$scope.xtr["eids"]  = lispService.getXTRInfo("EID",xtrid);
- 			$scope.xtr["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
- 			console.log($scope.xtr);
+	 		$scope.xtrVn = {};
+ 			$scope.xtrVn["eids"]  = lispService.getXTRInfo("EID",xtrid);
+ 			$scope.xtrVn["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
+ 			
  	 		$scope.detailMenuState = "xtr";
+ 	 		$scope.detailVnIds = [];
+ 	 		for (var i = 0; i < $scope.xtrVn["eids"].length; i++) {
+ 	 			var vnId = $scope.xtrVn["eids"][i]["vni"];
+ 	 			$scope.detailVnIds.push(vnId);
+ 	 			$scope.xtrVn[vnId] = {};
+ 	 			$scope.xtrVn[vnId]["eids"] = $scope.xtrVn["eids"][i]["info"];
+ 	 			$scope.xtrVn[vnId]["rlocs"] = $scope.xtrVn["rlocs"][i]["info"];
+ 	 		}
+ 			if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
+ 				$scope.xtr["info"] = $scope.xtrVn[$scope.selectedVn];
+ 				$scope.selectedDetailVnId = $scope.selectedVn;
+ 			} else {
+ 				$scope.xtr["info"] = $scope.xtrVn[$scope.detailVnIds[0]];
+ 				$scope.selectedDetailVnId = $scope.detailVnIds[0];
+ 			}
+
  			nextService.centerOnNode(xtrid, "XTR");
  	 	});
  	};

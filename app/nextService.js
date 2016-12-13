@@ -377,6 +377,7 @@ angular.module('nextService', [])
 
                 var id = datanode["name"];
                 if (datanode["type"] == "EID") id = datanode["address"];
+                else if (datanode["type"] == "XTR") id = datanode["xtrid"];
                 allNodes[datanode["type"]][id] = {};
                 allNodes[datanode["type"]][id]["datanode"] = datanode;
                 allNodes[datanode["type"]][id]["toponode"] = node;
