@@ -13,6 +13,7 @@ angular.module('navigationController', [])
  			.then(function(){
  				$scope.detailMenuState = "";
  			});
+		nextService.selectVirtualNetwork($scope.selectedVn);
  	};
 
  	// Show selected node details

@@ -488,8 +488,5 @@ angular.module('nextService', [])
       topology.highlightEidWithZoom(eidaddress, vnId);
     }
 
-    serviceInstance.showAll = function() {
-    }
-
     return serviceInstance;
 }]);
