@@ -65,7 +65,7 @@ angular.module('lisp.communication', [])
               for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
               {
                 var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
-                obj.push(rlocs[rlocIt]["rloc"][typeIP]);
+                obj.push(rlocs[rlocIt]["locator-id"]);
               }
               EidInfo[vni] = obj;
             }
@@ -108,13 +108,13 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getEIDsFromRLOC = function (addressType, addressIP)
     {
-      var EIDS = [];
+      var eids = [];
       for (var i=0; i<Json.length; i++)
       {
         var mappingOfVNI = Json[i]["mapping"];
         for (var j=0; j<mappingOfVNI.length;j++)
         {
-          var locatorRecords = mappingOfVNI["LocatorRecord"];
+          var locatorRecords = mappingOfVNI[j]["mapping-record"]["LocatorRecord"];
           for (var z=0; z<locatorRecords.length;z++)
           {
             if (locatorRecords[z]["rloc"]["address-type"] == addressType)

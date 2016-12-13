@@ -1,12 +1,12 @@
 <div layout="column" layout-fill>
 	<div class="detail" layout-padding>
-		Locator-id: {{rloc["locator-id"]}}
+		Locator-id: {{rloc["id"]}}
 	</div>
 	<div class="detail" layout-padding>
 		Xtr-id: <md-button class="md-raised" ng-click="showXTRDetails(rloc['xtrid'])" aria-label="description">{{rloc["xtrid"]}}</md-button>
 	</div>
 	<div class="detail" layout-padding>
-		Address: {{rloc.rloc.ipv4}}
+		Address: {{rloc["address"]}}
 	</div>
 	<div class="detail" layout-padding>
 	    <md-input-container>

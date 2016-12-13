@@ -156,6 +156,7 @@ angular.module('nextService', [])
                         {
                             'id': id,
                             'name': nameXTR,
+                            'xtrid': xtr, 
                             'type': typeXTR
                         })
                       xtrIDs.name.push(nameXTR);
@@ -244,7 +245,7 @@ angular.module('nextService', [])
                          }
                        }
                     }
-
+/*
                     for (var k = 0; k < rlocIDs.ip.length; k++) {
                       if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
 
@@ -262,7 +263,7 @@ angular.module('nextService', [])
                        id_link++;
                      }
                    }
-
+*/
                   }
                 }
 

@@ -65,9 +65,9 @@ angular.module('navigationController', [])
  	$scope.showRlocDetails = function(rlocid) {
 		$timeout(function() {
 	 		$scope.openSideMenu();
- 			$scope.rloc = lispService.getRlocInfo("ISP2");
+ 			$scope.rloc = lispService.getRlocInfo(rlocid);
  			console.log($scope.rloc);
- 			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc.address), lispService.getIP($scope.rloc.address));
+ 			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc["address_type"]), lispService.getIP($scope.rloc.address));
  	 		$scope.detailMenuState = "rloc";
  			nextService.centerOnNode(rlocid, "RLOC");
  	 	});
@@ -90,7 +90,7 @@ angular.module('navigationController', [])
  		if(object.type == "EID") {
         	$scope.showEidDetails(object.address);
         } else if (object.type == "XTR") {
-            $scope.showXtrDetails(object.address);
+            $scope.showXtrDetails(object.xtrid);
         } else if (object.type == "RLOC") {
             $scope.showRlocDetails(object.name);
         }
