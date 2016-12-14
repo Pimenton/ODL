@@ -106,7 +106,7 @@ angular.module('lisp.communication', [])
       RLOCLinktedToEID[rloc["locator-id"]] = aux;
     };
 
-    serviceInstance.getEIDsFromRLOC = function (addressType, addressIP)
+    serviceInstance.getEIDsFromRLOC = function(addressType, addressIP)
     {
       var eids = [];
       for (var i=0; i<Json.length; i++)
@@ -119,8 +119,7 @@ angular.module('lisp.communication', [])
           {
             if (locatorRecords[z]["rloc"]["address-type"] == addressType)
             {
-              var typeIP = addresType.split(":")[1].split("-")[0];
-              if (locatorRecords[z]["rloc"][typeIP] == addressIP)
+              if (locatorRecords[z]["rloc"][serviceInstance.getIPTypeOfRLOC(addressType)] == addressIP)
               {
                 eids.push(mappingOfVNI[j]["eid-uri"])
               }
