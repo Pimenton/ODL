@@ -88,7 +88,7 @@ angular.module('navigationController', [])
 	 		$scope.openSideMenu();
  			$scope.rloc = lispService.getRlocInfo(rlocid);
 
- 			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc["address_type"]), lispService.getIP($scope.rloc.address));
+ 			var eidsFromRloc = lispService.getEIDsFromRLOC(lispService.getIPType($scope.rloc["address_type"]), lispService.getIP($scope.rloc["address"]));
  			console.log(eidsFromRloc);
  			$scope.rloc["eids"] = eidsFromRloc;
  	 		$scope.detailMenuState = "rloc";
