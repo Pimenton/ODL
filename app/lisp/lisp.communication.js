@@ -113,7 +113,7 @@ angular.module('lisp.communication', [])
           var locatorRecords = mappingOfVNI[j]["mapping-record"]["LocatorRecord"];
           for (var z=0; z<locatorRecords.length;z++)
           {
-            if (getIPTypeOfRLOC(locatorRecords[z]["rloc"]["address-type"]) == addressType)
+            if (serviceInstance.getIPTypeOfRLOC(locatorRecords[z]["rloc"]["address-type"]) == addressType)
             {
               if (locatorRecords[z]["rloc"][addressType] == addressIP)
               {
