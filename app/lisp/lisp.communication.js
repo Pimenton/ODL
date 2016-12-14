@@ -75,14 +75,10 @@ angular.module('lisp.communication', [])
       return EidInfo;
     };
 
-
-
     serviceInstance.getAddressType = function (eidUri)
     {
       return "ietf-lisp-address-types:" + serviceInstance.getIPType(eidUri) + "-afi";
     };
-
-
 
     serviceInstance.getMappingEID = function (eidUri)
     {
@@ -117,9 +113,9 @@ angular.module('lisp.communication', [])
           var locatorRecords = mappingOfVNI[j]["mapping-record"]["LocatorRecord"];
           for (var z=0; z<locatorRecords.length;z++)
           {
-            if (locatorRecords[z]["rloc"]["address-type"] == addressType)
+            if (getIPTypeOfRLOC(locatorRecords[z]["rloc"]["address-type"]) == addressType)
             {
-              if (locatorRecords[z]["rloc"][serviceInstance.getIPTypeOfRLOC(addressType)] == addressIP)
+              if (locatorRecords[z]["rloc"][addressType] == addressIP)
               {
                 eids.push(mappingOfVNI[j]["eid-uri"])
               }
