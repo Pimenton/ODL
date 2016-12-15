@@ -26,6 +26,9 @@ angular.module('nextService', [])
       var xtrIDs = []; //to accumulate xtrs data
       xtrIDs.name = []; //xtrs names
       xtrIDs.id = []; //xtrs ids
+      var linksXtrRloc = []; //XTR-RLOC links info
+      linksXtrRloc.source = []; //XTR-RLOC link source id
+      linksXtrRloc.target = []; //XTR-RLOC link target id
 
       nx.define('MyTopology', nx.ui.Component, {
          view: {
@@ -212,7 +215,6 @@ angular.module('nextService', [])
 
                     for (var j = 0; j < xtrIDs.id.length; j++) {
                         if(xtr_node.indexOf(xtrIDs.name[j]) >= 0) {
-
                           sourceID = topoData.nodes[i].id;
                           targetID = xtrIDs.id[j];
 
@@ -232,15 +234,21 @@ angular.module('nextService', [])
                              sourceID = xtrIDs.id[j];
                              targetID = rlocIDs.id[k];
 
-                             // push link into links list
-                             topoData.links.push(
-                                 {
-                                     'source': sourceID,
-                                     'target': targetID,
-                                     'type': "xtr-rloc",
-                                     id: id_link
-                                 })
-                             id_link++;
+                             //if there's still no link between sourceID and targetID
+                             if (linksXtrRloc.source.indexOf(sourceID) == -1 ||
+                              linksXtrRloc.target.indexOf(targetID) == -1) {
+                               // push link into links list
+                               topoData.links.push(
+                                   {
+                                       'source': sourceID,
+                                       'target': targetID,
+                                       'type': "xtr-rloc",
+                                       id: id_link
+                                   })
+                               linksXtrRloc.source.push(sourceID);
+                               linksXtrRloc.target.push(targetID);
+                               id_link++;
+                             }
                            }
                          }
                        }
