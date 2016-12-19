@@ -170,6 +170,7 @@ angular.module('nextService', [])
                        var nameRLOC;
                        var ipAddressRLOC;
                        var typeRLOC;
+                       var weight;
                        var exit_bucle = false;
 
                        //obtain locatorID from ipAddress
@@ -177,6 +178,7 @@ angular.module('nextService', [])
                          //when it finds the ipAddress translates it to its locatorID
                          if (rlocs[j] == rlocs_info[Object.keys(rlocs_info)[k]].address) {
                            nameRLOC = Object.keys(rlocs_info)[k];
+                           weight = lispService.getRlocInfo(nameRLOC).weight;
                            exit_bucle = true;
                          }
                        }
@@ -189,6 +191,7 @@ angular.module('nextService', [])
                              'id': id,
                              'name': nameRLOC,
                              'ipAddressRLOC': ipAddressRLOC,
+                             'weight': weight,
                              'type': typeRLOC
                          })
                        rlocIDs.ip.push(ipAddressRLOC);
@@ -233,16 +236,14 @@ angular.module('nextService', [])
 
                              //we verify if the XTR-RLOC link already exists
                              var links = topoData.links;
-                             var sourceID2 = links.filter(function(links){
-                               return links.source == sourceID;
-                             });
-                             var targetID2 = links.filter(function(links){
-                               return links.target == targetID;
+                             var linkExists = links.filter(function(links){
+                               return links.source == sourceID &&
+                                links.target == targetID;
                              });
                              //if there's still no link between sourceID and targetID
-                             if (sourceID2.length == 0 ||
-                              targetID2.length == 0) {
+                             if (linkExists.length == 0) {
                                // push link into links list
+
                                topoData.links.push(
                                    {
                                        'source': sourceID,
@@ -254,7 +255,7 @@ angular.module('nextService', [])
                                id_link++;
                              }
                              else {
-
+                               topoData.links[linkExists[0].id].weight++;
                              }
                            }
                          }
@@ -378,8 +379,8 @@ angular.module('nextService', [])
                   //link.enable(false);
                   link.color("#FFFFFF");
                 }
-                else {
-                  //link.width(2);
+                else if(link.model()._data.type == "xtr-rloc") {
+                  link.width(link.model()._data.weight*2);
                 }
                 link.update();
               }
