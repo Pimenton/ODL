@@ -403,7 +403,7 @@ angular.module('nextService', [])
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
               //register icon to instance
-              topo.registerIcon("port", "./app/port.png",42,42);
+              topo.registerIcon("port", "./app/img/port.png",42,42);
             },
             disableAll: function() {
               var topo = this.view('topology');
