@@ -26,9 +26,6 @@ angular.module('nextService', [])
       var xtrIDs = []; //to accumulate xtrs data
       xtrIDs.name = []; //xtrs names
       xtrIDs.id = []; //xtrs ids
-      var linksXtrRloc = []; //XTR-RLOC links info
-      linksXtrRloc.source = []; //XTR-RLOC link source id
-      linksXtrRloc.target = []; //XTR-RLOC link target id
 
       nx.define('MyTopology', nx.ui.Component, {
          view: {
@@ -234,20 +231,30 @@ angular.module('nextService', [])
                              sourceID = xtrIDs.id[j];
                              targetID = rlocIDs.id[k];
 
+                             //we verify if the XTR-RLOC link already exists
+                             var links = topoData.links;
+                             var sourceID2 = links.filter(function(links){
+                               return links.source == sourceID;
+                             });
+                             var targetID2 = links.filter(function(links){
+                               return links.target == targetID;
+                             });
                              //if there's still no link between sourceID and targetID
-                             if (linksXtrRloc.source.indexOf(sourceID) == -1 ||
-                              linksXtrRloc.target.indexOf(targetID) == -1) {
+                             if (sourceID2.length == 0 ||
+                              targetID2.length == 0) {
                                // push link into links list
                                topoData.links.push(
                                    {
                                        'source': sourceID,
                                        'target': targetID,
                                        'type': "xtr-rloc",
+                                       'weight': 1,
                                        id: id_link
                                    })
-                               linksXtrRloc.source.push(sourceID);
-                               linksXtrRloc.target.push(targetID);
                                id_link++;
+                             }
+                             else {
+
                              }
                            }
                          }
@@ -391,7 +398,6 @@ angular.module('nextService', [])
                 allNodes[datanode["type"]][id]["datanode"] = datanode;
                 allNodes[datanode["type"]][id]["toponode"] = node;
               }, true);
-
             },
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
