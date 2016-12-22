@@ -104,8 +104,6 @@ angular.module('lisp.communication', [])
 
     serviceInstance.getEIDsFromRLOC = function(addressType, addressIP)
     {
-      console.log(addressType);
-      console.log(addressIP);
 
       var eids = [];
       for (var i=0; i<Json.length; i++)

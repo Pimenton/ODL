@@ -15,7 +15,8 @@ angular.module('nextService', [])
       "EID": {},
       "XTR": {},
       "RLOC": {}
-    }
+    };
+    var selectedVn = "all";
 
     serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
@@ -262,7 +263,7 @@ angular.module('nextService', [])
                        }
                     }
 
-                    for (var k = 0; k < rlocIDs.ip.length; k++) {
+                    /*for (var k = 0; k < rlocIDs.ip.length; k++) {
                       if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
 
                        sourceID = topoData.nodes[i].id;
@@ -278,7 +279,7 @@ angular.module('nextService', [])
                            })
                        id_link++;
                      }
-                   }
+                   }*/
 
                   }
                 }
@@ -301,10 +302,6 @@ angular.module('nextService', [])
             },
             centerOnNodeType: function (nodeId, type) {
                 var topo = this.view('topology');
-                //var isNode = function(node) {
-                //    return (node.address == nodeId && node.type == type) || (node.name == nodeId && node.type == type);
-                //};
-                //var node = topoData.nodes.find(isNode);
                 var node = allNodes[type][nodeId];
 
                 this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
@@ -312,48 +309,46 @@ angular.module('nextService', [])
             showNodeInfo: function (sender, node) {
                 var topo = this.view('topology');
 
-                //Remove previous drawn paths
-                var pathLayer = sender.getLayer("paths");
-                pathLayer.clear();
-
                 nodeClickFunction(node.model()._data);
-                /*
-                //SHOW NODE DETAILS ON THE SIDE BAR
-                if(node.model()._data.type == "EID") {
-                  $scope.showEidDetails(node.model()._data.address);
-                }
-                else if (node.model()._data.type == "RLOC") {
-                  $scope.showRlocDetails(node.model()._data.name);
-                } */
+/*
+                if (node.model()._data.type == "RLOC") {
+                  var rlocName = node.model()._data.name;
+                  this.highlightRlocWithZoom(rlocName, selectedVn);
+                } else {
 
-                //draw paths with all the links from node
-                var pathLayer = sender.getLayer("paths");
-                var links = topoData.links;
-                //get links that are connected to node
-                var links_id = links.filter(function(links){
-                  //if its an EID it compares with the SOURCE
-                  if(node.model()._data.type == "EID") {
-                    return (links.source == node.model()._data.id && links.type != "eid-xtr");
-                  }
-                  //if its an XTR it compares with the TARGET
-                  else if(node.model()._data.type == "XTR") {
-                    return links.target == node.model()._data.id;
-                  }
+                  //Remove previous drawn paths
+                  var pathLayer = sender.getLayer("paths");
+                  pathLayer.clear();
 
-                  else if(node.model()._data.type == "RLOC") {
-                    return (links.target == node.model()._data.id && links.type != "xtr-rloc");
+                  //draw paths with all the links from node
+                  var pathLayer = sender.getLayer("paths");
+                  var links = topoData.links;
+                  //get links that are connected to node
+                  var links_id = links.filter(function(links){
+                    //if its an EID it compares with the SOURCE
+                    //if(node.model()._data.type == "EID") {
+                    //  return (links.source == node.model()._data.id && links.type != "eid-xtr");
+                    //}
+                    //if its an XTR it compares with the TARGET
+                    if(node.model()._data.type == "XTR") {
+                      return links.target == node.model()._data.id;
+                    }
+
+                    //else if(node.model()._data.type == "RLOC") {
+                    //  return (links.target == node.model()._data.id && links.type != "xtr-rloc");
+                    //}
+                  });
+                  //for each link we draw its path
+                  for (var i = 0; i < links_id.length; i++) {
+                      var link = [sender.getLink(links_id[i].id)];
+                      //PENDING if(link.model()._data.type != "eid-rloc") {
+                        var path1 = new nx.graphic.Topology.Path({
+                                  links: link,
+                                  arrow: 'cap'
+                              });
+                        pathLayer.addPath(path1);
                   }
-                });
-                //for each link we draw its path
-                for (var i = 0; i < links_id.length; i++) {
-                    var link = [sender.getLink(links_id[i].id)];
-                    //PENDING if(link.model()._data.type != "eid-rloc") {
-                      var path1 = new nx.graphic.Topology.Path({
-                                links: link,
-                                arrow: 'cap'
-                            });
-                      pathLayer.addPath(path1);
-                }
+                }*/
                 // Show tooltip
                 //topo._tooltipManager.openNodeTooltip(node);
             },
@@ -481,19 +476,39 @@ angular.module('nextService', [])
 
               var nodeLayer = topo.getLayer('nodes');
               var linksLayer = topo.getLayer('links');
+              var pathLayer = topo.getLayer('paths');
+              pathLayer.clear();
+
               nodeLayer.highlightedElements().add(eidNode);
               eidNode.enable(true);
               highlightedNodes.push(eidNode);
 
               var eidaddress = topoData["nodes"][eidNode["_data-id"]]["address"];
-              var rlocsFromEid = lispService.getRLOCsFromEID(lispService.getIP(eidaddress))[vnId];
+              var rlocsFromEid;
+              var allRlocs = lispService.getRLOCsFromEID(lispService.getIP(eidaddress));
+              if (vnId == "all") {
+                angular.forEach(allRlocs, function(value, key) {
+                  rlocsFromEid = rlocsFromEid.concat(allRlocs);
+                });
+              } else {
+                rlocsFromEid = allRlocs[vnId];
+              }
 
-              eidNode.eachConnectedNode(function(xtrNode) {
-              nodeLayer.highlightedElements().add(xtrNode);
-              xtrNode.enable(true);
-              highlightedNodes.push(xtrNode);
+              eidNode.eachLink(function(link) {
+                var xtrNode = link.targetNode();
 
-                xtrNode.eachConnectedNode(function(connectedNode) {
+                nodeLayer.highlightedElements().add(xtrNode);
+                xtrNode.enable(true);
+                highlightedNodes.push(xtrNode);
+                
+                var path = new nx.graphic.Topology.Path({
+                                links: [link],
+                                arrow: 'cap'
+                            });
+                pathLayer.addPath(path);
+
+                xtrNode.eachLink(function(link2) {
+                  var connectedNode = link2.targetNode();
 
                   var dataid = connectedNode["_data-id"];
                   var object = topoData["nodes"][dataid];
@@ -501,6 +516,119 @@ angular.module('nextService', [])
                     nodeLayer.highlightedElements().add(connectedNode);
                     connectedNode.enable(true);
                     highlightedNodes.push(connectedNode);
+                    
+                    var path1 = new nx.graphic.Topology.Path({
+                                links: [link2],
+                                arrow: 'cap'
+                            });
+                    pathLayer.addPath(path1);
+                  }
+
+                }, true);
+
+              }, true);
+            },
+            highlightXtr: function(xtrid) {
+              var topo = this.view('topology');
+              //Remove previous drawn paths
+              var nodeLayer = topo.getLayer("nodes");
+              var pathLayer = topo.getLayer("paths");
+              pathLayer.clear();
+              var node = topo.getNode(allNodes["XTR"][xtrid]["toponode"]["_data-id"]);
+              node.eachLink(function(link) {
+                var path = new nx.graphic.Topology.Path({
+                              links: [link],
+                              arrow: 'cap'
+                          });
+                pathLayer.addPath(path);
+              }, true);
+               
+              nodeLayer.highlightedElements().add(node);
+              node.eachConnectedNode(function(connectedNode) {
+                nodeLayer.highlightedElements().add(connectedNode);
+              }, true);
+/*
+              //draw paths with all the links from node
+              var links = topoData.links;
+              //get links that are connected to node
+              var links_id = links.filter(function(links){
+                //if its an EID it compares with the SOURCE
+                //if(node.model()._data.type == "EID") {
+                //  return (links.source == node.model()._data.id && links.type != "eid-xtr");
+                //}
+                //if its an XTR it compares with the TARGET
+                if(node.model()._data.type == "XTR") {
+                  return links.target == node.model()._data.id;
+                }
+
+                //else if(node.model()._data.type == "RLOC") {
+                //  return (links.target == node.model()._data.id && links.type != "xtr-rloc");
+                //}
+              });
+              //for each link we draw its path
+              for (var i = 0; i < links_id.length; i++) {
+                  var link = [topo.getLink(links_id[i].id)];
+                  //PENDING if(link.model()._data.type != "eid-rloc") {
+                    var path1 = new nx.graphic.Topology.Path({
+                              links: link,
+                              arrow: 'cap'
+                          });
+                    pathLayer.addPath(path1);
+              }*/
+
+            },
+            highlightRlocWithZoom: function(rlocName, vnId) {
+              var topo = this.view('topology');
+              var nodes = [];
+              this.highlightRloc(rlocName, vnId, nodes);
+              topo.zoomByNodes(nodes);
+            },
+            highlightRloc: function(rlocName, vnId, highlightedNodes) {
+              var topo = this.view('topology');
+
+              var dataid = allNodes["RLOC"][rlocName]["toponode"]["_data-id"];
+              var rlocNode = topo.getNode(dataid);
+
+              var nodeLayer = topo.getLayer('nodes');
+              var linksLayer = topo.getLayer('links');
+              var pathLayer = topo.getLayer('paths');
+              pathLayer.clear();
+
+              nodeLayer.highlightedElements().add(rlocNode);
+              rlocNode.enable(true);
+              highlightedNodes.push(rlocNode);
+
+              var rlocInfo = lispService.getRlocInfo(rlocName);
+              var eidsFromRloc = lispService.getEIDsFromRLOC(rlocInfo["address_type"], rlocInfo["address"]);
+
+              rlocNode.eachLink(function(link) {
+                var xtrNode = link.sourceNode();
+
+                nodeLayer.highlightedElements().add(xtrNode);
+                xtrNode.enable(true);
+                highlightedNodes.push(xtrNode);
+                
+                var path = new nx.graphic.Topology.Path({
+                                links: [link],
+                                arrow: 'cap'
+                            });
+                pathLayer.addPath(path);
+
+                xtrNode.eachLink(function(link2) {
+                  var connectedNode = link2.sourceNode();
+
+                  var dataid = connectedNode["_data-id"];
+                  var object = topoData["nodes"][dataid];
+                  if (object["type"] == "EID" && eidsFromRloc.includes(object["address"])){
+                    nodeLayer.highlightedElements().add(connectedNode);
+                    connectedNode.enable(true);
+                    highlightedNodes.push(connectedNode);
+                    
+                    var path1 = new nx.graphic.Topology.Path({
+                                links: [link2],
+                                arrow: 'cap'
+                            });
+                    pathLayer.addPath(path1);
                   }
 
                 }, true);
@@ -512,8 +640,9 @@ angular.module('nextService', [])
               //highlight single node or nodes
               var topo = this.view('topology');
               var nodeLayer = topo.getLayer('nodes');
+              var pathLayer = topo.getLayer('paths');
+
               var highlightedNodes = [""];
-              highlightedNodes.concat(["a"]);
               var holder = this;
               nx.each(eidsInVn, function(eidInVn){
                 var nodes = [];
@@ -521,6 +650,8 @@ angular.module('nextService', [])
                 highlightedNodes = highlightedNodes.concat(nodes);
               }, true);
               topo.zoomByNodes(highlightedNodes);
+
+              pathLayer.clear();
 
                 // IF WE WANT THE GROUP LAYER TO SHOW UP
                 /*var groupsLayer = topo.getLayer('groups');
@@ -545,6 +676,7 @@ angular.module('nextService', [])
 
     // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
     serviceInstance.selectVirtualNetwork = function(vnId, zoom) {
+      selectedVn = vnId;
       if (vnId == "all") {
         topology.enableAll();
         topology.showAll(zoom);
@@ -557,13 +689,18 @@ angular.module('nextService', [])
       }
     };
 
-    serviceInstance.centerOnNode = function(nodeId, nodeType) {
-      topology.centerOnNodeType(nodeId, nodeType);
+    serviceInstance.selectNode = function(nodeId, nodeType) {
+      if (nodeType == "XTR"){
+        topology.centerOnNodeType(nodeId, nodeType);
+        topology.highlightXtr(nodeId);
+      } else if (nodeType == "RLOC") {
+        topology.highlightRlocWithZoom(nodeId, selectedVn);
+      }
     };
 
     serviceInstance.highlightEid = function(eidaddress, vnId) {
-      //topology.hideAll();
-      //topology.highlightEidWithZoom(eidaddress, vnId);
+      topology.hideAll();
+      topology.highlightEidWithZoom(eidaddress, vnId);
     }
 
     return serviceInstance;

@@ -76,10 +76,7 @@ angular.module('navigationController', [])
  				$scope.xtr["info"] = $scope.xtrVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
- 			console.log($scope.xtr);
- 			console.log($scope.xtrVn);
- 			console.log($scope.detailVnIds);
- 			nextService.centerOnNode(xtrid, "XTR");
+ 			nextService.selectNode(xtrid, "XTR");
  	 	});
  	};
 
@@ -89,10 +86,10 @@ angular.module('navigationController', [])
  			$scope.rloc = lispService.getRlocInfo(rlocid);
 
  			var eidsFromRloc = lispService.getEIDsFromRLOC($scope.rloc["address_type"], $scope.rloc["address"]);
- 			console.log(eidsFromRloc);
  			$scope.rloc["eids"] = eidsFromRloc;
  	 		$scope.detailMenuState = "rloc";
- 			nextService.centerOnNode(rlocid, "RLOC");
+ 	 		nextService.selectNode(rlocid, "RLOC");
+ 			//nextService.centerOnNode(rlocid, "RLOC");
  	 	});
  	};
 
