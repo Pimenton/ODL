@@ -142,7 +142,7 @@ angular.module('lisp.communication', [])
             }
         })
       .success(function(data) {
-
+        
         serviceInstance.getAllInfo(data);
         deferred.resolve();
 

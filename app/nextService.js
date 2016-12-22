@@ -16,7 +16,6 @@ angular.module('nextService', [])
       "XTR": {},
       "RLOC": {}
     };
-    var selectedVn = "all";
 
     serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
@@ -676,7 +675,6 @@ angular.module('nextService', [])
 
     // If vnId == "all", show all the eids in the lisp protocol. Otherwise, show only the specified virtual network
     serviceInstance.selectVirtualNetwork = function(vnId, zoom) {
-      selectedVn = vnId;
       if (vnId == "all") {
         topology.enableAll();
         topology.showAll(zoom);
@@ -689,19 +687,19 @@ angular.module('nextService', [])
       }
     };
 
-    serviceInstance.selectNode = function(nodeId, nodeType) {
-      if (nodeType == "XTR"){
+    serviceInstance.selectNode = function(nodeId, nodeType, vnId) {
+      if (nodeType == "EID") {
+        topology.hideAll();
+        topology.highlightEidWithZoom(nodeId, vnId);
+      } else if (nodeType == "XTR") {
         topology.centerOnNodeType(nodeId, nodeType);
         topology.highlightXtr(nodeId);
       } else if (nodeType == "RLOC") {
-        topology.highlightRlocWithZoom(nodeId, selectedVn);
+        topology.hideAll();
+        topology.highlightRlocWithZoom(nodeId, vnId);
       }
     };
 
-    serviceInstance.highlightEid = function(eidaddress, vnId) {
-      topology.hideAll();
-      topology.highlightEidWithZoom(eidaddress, vnId);
-    }
 
     return serviceInstance;
 }]);

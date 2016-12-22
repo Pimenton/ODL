@@ -39,7 +39,7 @@ angular.module('navigationController', [])
  				$scope.eid = $scope.eidVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
- 			nextService.highlightEid(eidaddress, $scope.selectedDetailVnId);
+ 			nextService.selectNode(eidaddress, "EID", $scope.selectedDetailVnId);
 	 	});
  	};
 
@@ -76,7 +76,7 @@ angular.module('navigationController', [])
  				$scope.xtr["info"] = $scope.xtrVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
- 			nextService.selectNode(xtrid, "XTR");
+ 			nextService.selectNode(xtrid, "XTR", $scope.selectedVn);
  	 	});
  	};
 
@@ -88,8 +88,7 @@ angular.module('navigationController', [])
  			var eidsFromRloc = lispService.getEIDsFromRLOC($scope.rloc["address_type"], $scope.rloc["address"]);
  			$scope.rloc["eids"] = eidsFromRloc;
  	 		$scope.detailMenuState = "rloc";
- 	 		nextService.selectNode(rlocid, "RLOC");
- 			//nextService.centerOnNode(rlocid, "RLOC");
+ 	 		nextService.selectNode(rlocid, "RLOC", $scope.selectedVn);
  	 	});
  	};
 
