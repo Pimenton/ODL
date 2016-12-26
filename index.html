@@ -24,23 +24,23 @@
 
       <div id="main" layout="column" layout-fill flex>
 
-        <md-toolbar layout="row" md-whiteframe="2">
+        <md-toolbar id="toolbar" layout="row" md-whiteframe="2">
 
             <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
             </ng-include>
 
-            <div id="selectVnBox" layout="row" flex layout-align="start center" >
-                <label layout-align="center center">VN-id</label>
+            <div id="selectVnBox" layout="row" flex layout-align="start center">
+                <label layout-align="center center">Select Virtual Network</label>
                 <md-card class="card" md-whiteframe="1" class="inCard">
-                <md-select id="selectVn" ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="md-no-underline" > 
-                  <md-option value="all">All</md-option>
-                  <md-option ng-repeat="vnid in getVnIds()" ng-value="vnid">{{vnid}}</md-option>
-                </md-select>
+                    <md-select ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
+                      <md-option value="all">All</md-option>
+                      <md-option ng-repeat="vnid in getVnIds()" ng-value="vnid">VN-id: {{vnid}}</md-option>
+                    </md-select>
                 </md-card>
             </div>
             <span flex></span>
 
-            <div layout-align="center center" layout="row">
+            <div ng-if="false" layout-align="center center" layout="row">
                 <md-switch ng-model="view.state" aria-label="View Switch">
                     Switch views
                 </md-switch>
@@ -48,17 +48,17 @@
 
         </md-toolbar>
 
-        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
+        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center" flex></md-progress-circular>
 
-        <div ng-if="connectionError">
-            Connection error
+        <div ng-if="connectionError" layout-align="center center" flex>
+            <span >Connection error</span>
         </div>
 
         <div id="topology-container" flex></div>
 
       </div>
 
-      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4" >
+      <md-sidenav id="sidebar" md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4" >
         <ng-include src="'./app/templates/detailMenu.html'" layout="column" layout-fill></ng-include>
       </md-sidenav>
 
@@ -73,6 +73,7 @@
 
     <script type="text/javascript" src="./app/data.js"></script>
     <script type="text/javascript" src="./app/app.js"></script>
+    <script type="text/javascript" src="./app/lisp/lispBDexample.js"></script>
 
 </body>
 </html>

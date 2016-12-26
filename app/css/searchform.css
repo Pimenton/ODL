@@ -1,9 +1,11 @@
- .autocomplete-custom-template li {
+
+.autocomplete-custom-template li {
   border-bottom: 1px solid #eee;
-  height: auto;
+  height: auto !important;
+  min-height: 48px !important;
   padding-top: 8px;
-  padding-bottom: 8px;
-  white-space: normal; }
+  white-space: normal; 
+}
 
   .autocomplete-custom-template .searchItem {
     padding-top: 8px;

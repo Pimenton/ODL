@@ -1,23 +1,32 @@
-<div layout="column" layout-padding layout-fill>
-	<div class="detail">
-	Address: {{eid.address}}
+<div layout="column" layout-fill>
+	<div layout="row" class="detail" layout-align="center center" layout-padding>
+		<span flex layout-align="center center">Address: {{eid.address}}</span>
 	</div>
-	<div class="detail">
-	Action: discard
+	<div layout="row" class="detail" layout-align="center center" layout-padding>
+		<span flex layout-align="center center">Action: {{eid.action}}</span>
 	</div>
 	<md-tabs md-border-bottom md-stretch-tabs="always" flex layout-fill>
-		<md-tab label="Connected XTR-IDs" layout-fill>
+		<md-tab label="XTRs" layout-fill>
 	    	<md-tab-content class="md-padding" flex layout-fill>
 	    		<md-content flex layout-fill>
-	      		<md-list flex layout-fill>
-	            	<md-list-item class="md-2-line" ng-repeat="xtrid in eid.xtrids" ng-click="null">
-						{{xtrid}}
-						<md-button class="md-warn md-icon-button md-raised md-secondary">
-							<i class="material-icons">&#xE872;</i>
-						</md-button>
-						<md-divider ng-if="!$last"></md-divider>
-					</md-list-item>
-				</md-list>
+		      		<md-list flex layout-fill>
+		            	<md-list-item class="md-2-line" ng-repeat="xtrid in eid.xtrids" ng-click="showXtrDetails(xtrid)">
+							{{xtrid}}
+							<md-divider ng-if="!$last"></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+			</md-tab-content>
+		</md-tab>
+		<md-tab label="RLOCs" layout-fill>
+	    	<md-tab-content class="md-padding" flex layout-fill>
+	    		<md-content flex layout-fill>
+		      		<md-list flex layout-fill>
+		            	<md-list-item class="md-2-line" ng-repeat="rloc in eid.rlocs" ng-click="showRlocDetails(rloc)">
+							{{rloc}}
+							<md-divider ng-if="!$last"></md-divider>
+						</md-list-item>
+					</md-list>
 				</md-content>
 			</md-tab-content>
 		</md-tab>

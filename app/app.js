@@ -9,12 +9,11 @@
       $httpProvider.defaults.useXDomain = true;
 
       // Define app theme
-      $mdThemingProvider.theme('default')
+      $mdThemingProvider.theme('lispTheme')
         .primaryPalette('indigo')
         .accentPalette('light-green');
+      $mdThemingProvider.setDefaultTheme('lispTheme');
+
     });
-
-
-
 
 })(nx);

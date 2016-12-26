@@ -1,70 +1,58 @@
  angular.module('searchFormController', [])
-.controller('searchFormController', ['$scope', 'lispService', function($scope, lispService) {
+.controller('searchFormController', ['$scope', 'lispService', 'nextService', function($scope, lispService, nextService) {
 	
 	$scope.querySearch = function(query) {
 		if (!query) return [];
-
-		var eids = lispService.getAllEIDs();
 		var results = [];
-		angular.forEach(eids, function(value, key) {
-			// Search by EID address (cuts the type of address at the beginning of the string)
-			if (key.substr(5).startsWith(query))
+
+		var eids = lispService.getAllEids();
+		// Search by EID address 
+		for (var i = 0; i < eids.length; i++) {
+			if (eids[i]["address"].includes(query))
 				results.push({
-					id: key, 
-					rlocs: value,
+					id: eids[i]["address"], 
+					nrlocs: eids[i]["rlocs"].length,
+					nxtr: eids[i]["xtr_id"].length,
 					type: "eid"
 				});
-		});
+		}
 
-// TODO: fix when lispService function is implemented
-/*
-		var xtrids = lispService.getAllXtrids();
+		var xtrids = lispService.getAllxtrids();
+		// Search by XTR-ID  
 		angular.forEach(xtrids, function(value, key) {
-			// Search by XTR-ID address (cuts the type of address at the beginning of the string)
-			if (key.substr(5).startsWith(query))
+			if (key.includes(query))
 				results.push({
 					id: key, 
 					rlocs: value,
-					type: "xtr-id"
+					type: "xtr"
 				});
 		});
-*/
-		var rlocs = lispService.getAllRLOCs();
+
+		var rlocs = lispService.getAllRlocs();
+		console.log(rlocs);
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address
 			var found = false;
-			if (value.rloc.hasOwnProperty("ipv4")) {
-			 	if (value.rloc.ipv4.startsWith(query)) {
-					found = true;
-					results.push({
+		 	if (value["address"].includes(query)) {
+		 		found = true;
+				results.push({
 						id: key,
-						address: value.rloc.ipv4,
+						address: value["address"],
 						type: "rloc"
 					});
-				}
-			} else {
-				if (value.rloc.ipv6.startsWith(query)) {
-					found = true;
-					results.push({
-						id: key,
-						address: value.rloc.ipv4,
-						type: "rloc"
-					});
-				}
 			}
-
+			
 			// Filter by RLOC locator-id
 			if (!found) {
-				if (key.startsWith(query))
+				if (key.includes(query))
 					results.push({
 						id: key,
-						address: value.rloc.ipv4,
+						address: value["address"],
 						type: "rloc"
 					});
 			}
 		});
 
-		//return [{number: 1},{number: 2},{number: 3},{number: 45}];
 		return results;
 	}; 	
 
@@ -77,7 +65,10 @@
 	$scope.selectedItemChange = function(item) {
 		if (!item) return;
 
+		$scope.unselectVn();
+
 		if (item.type == "eid") $scope.showEidDetails(item.id);
+		else if (item.type == "xtr") $scope.showXtrDetails(item.id);
 		else $scope.showRlocDetails(item.id);
 	};
 
