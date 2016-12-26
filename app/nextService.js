@@ -16,6 +16,7 @@ angular.module('nextService', [])
       "XTR": {},
       "RLOC": {}
     };
+    var initialSize = {};
 
     serviceInstance.initTopology = function(topologyContainer, nodeClickFunction) {
       var id = 0; //to accumulate the value of assigned ids
@@ -37,7 +38,7 @@ angular.module('nextService', [])
                  name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
-                   //padding: 235,
+                   //padding-right: 435,
                    adaptive: true,
                    // node config
                    nodeConfig: {
@@ -99,6 +100,9 @@ angular.module('nextService', [])
                 this.loadRemoteData();
             },
             loadRemoteData: function() {
+
+                var topo = this.view('topology');
+                //this.setStyle("paddingRight","10px");
 
                 eids = lispService.getAllEids();
                 rlocs_info = lispService.getAllRlocs();
@@ -261,25 +265,6 @@ angular.module('nextService', [])
                          }
                        }
                     }
-
-                    /*for (var k = 0; k < rlocIDs.ip.length; k++) {
-                      if(rlocs2.indexOf(rlocIDs.ip[k]) >= 0) {
-
-                       sourceID = topoData.nodes[i].id;
-                       targetID = rlocIDs.id[k];
-
-                       // push link into links list
-                       topoData.links.push(
-                           {
-                               'source': sourceID,
-                               'target': targetID,
-                               'type': "eid-rloc",
-                               id: id_link
-                           })
-                       id_link++;
-                     }
-                   }*/
-
                   }
                 }
 
@@ -306,50 +291,11 @@ angular.module('nextService', [])
                 this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
             },
             showNodeInfo: function (sender, node) {
-                var topo = this.view('topology');
-
                 nodeClickFunction(node.model()._data);
-/*
-                if (node.model()._data.type == "RLOC") {
-                  var rlocName = node.model()._data.name;
-                  this.highlightRlocWithZoom(rlocName, selectedVn);
-                } else {
-
-                  //Remove previous drawn paths
-                  var pathLayer = sender.getLayer("paths");
-                  pathLayer.clear();
-
-                  //draw paths with all the links from node
-                  var pathLayer = sender.getLayer("paths");
-                  var links = topoData.links;
-                  //get links that are connected to node
-                  var links_id = links.filter(function(links){
-                    //if its an EID it compares with the SOURCE
-                    //if(node.model()._data.type == "EID") {
-                    //  return (links.source == node.model()._data.id && links.type != "eid-xtr");
-                    //}
-                    //if its an XTR it compares with the TARGET
-                    if(node.model()._data.type == "XTR") {
-                      return links.target == node.model()._data.id;
-                    }
-
-                    //else if(node.model()._data.type == "RLOC") {
-                    //  return (links.target == node.model()._data.id && links.type != "xtr-rloc");
-                    //}
-                  });
-                  //for each link we draw its path
-                  for (var i = 0; i < links_id.length; i++) {
-                      var link = [sender.getLink(links_id[i].id)];
-                      //PENDING if(link.model()._data.type != "eid-rloc") {
-                        var path1 = new nx.graphic.Topology.Path({
-                                  links: link,
-                                  arrow: 'cap'
-                              });
-                        pathLayer.addPath(path1);
-                  }
-                }*/
-                // Show tooltip
-                //topo._tooltipManager.openNodeTooltip(node);
+            },
+            resizeSideNav: function(sideNavWidth) {
+              var topo = this.view('topology');
+              topo.resize(initialSize.width - sideNavWidth, initialSize.height);              
             },
             attach: function(args) {
                 this.inherited(args);
@@ -393,6 +339,9 @@ angular.module('nextService', [])
                 allNodes[datanode["type"]][id]["datanode"] = datanode;
                 allNodes[datanode["type"]][id]["toponode"] = node;
               }, true);
+
+              initialSize["height"] = topo._height;
+              initialSize["width"] = topo._width;
             },
             registerIcon: function(sender, event) {
               var topo = this.view('topology');
@@ -419,13 +368,10 @@ angular.module('nextService', [])
               var nodesLayer = topo.getLayer('nodes');
               nodesLayer.highlightedElements().clear();
 
+              // LINKS LAYER DOESN'T WORK
               var linksLayer = topo.getLayer('links');
               linksLayer.highlightedElements().clear();
-              linksLayer.eachLink(function(link) {
-                //link.enable(true);
-                link.update();
-              }, true);
-
+              
               var pathLayer = topo.getLayer("paths");
               pathLayer.clear();
             },
@@ -477,6 +423,7 @@ angular.module('nextService', [])
               var linksLayer = topo.getLayer('links');
               var pathLayer = topo.getLayer('paths');
               pathLayer.clear();
+              //linksLayer.highlightedElements().clear();
 
               nodeLayer.highlightedElements().add(eidNode);
               eidNode.enable(true);
@@ -494,11 +441,13 @@ angular.module('nextService', [])
               }
 
               eidNode.eachLink(function(link) {
+                link.enable(true);
                 var xtrNode = link.targetNode();
 
                 nodeLayer.highlightedElements().add(xtrNode);
                 xtrNode.enable(true);
                 highlightedNodes.push(xtrNode);
+                linksLayer.highlightedElements().add(link);
                 
                 var path = new nx.graphic.Topology.Path({
                                 links: [link],
@@ -507,6 +456,7 @@ angular.module('nextService', [])
                 pathLayer.addPath(path);
 
                 xtrNode.eachLink(function(link2) {
+                  link2.enable(true);
                   var connectedNode = link2.targetNode();
 
                   var dataid = connectedNode["_data-id"];
@@ -515,7 +465,8 @@ angular.module('nextService', [])
                     nodeLayer.highlightedElements().add(connectedNode);
                     connectedNode.enable(true);
                     highlightedNodes.push(connectedNode);
-                    
+                    linksLayer.highlightedElements().add(link2);
+                  
                     var path1 = new nx.graphic.Topology.Path({
                                 links: [link2],
                                 arrow: 'cap'
@@ -527,12 +478,14 @@ angular.module('nextService', [])
 
               }, true);
             },
-            highlightXtr: function(xtrid) {
+            highlightXtrWithZoom: function(xtrid) {
               var topo = this.view('topology');
               //Remove previous drawn paths
               var nodeLayer = topo.getLayer("nodes");
+              var linkLayer = topo.getLayer("links");
               var pathLayer = topo.getLayer("paths");
               pathLayer.clear();
+              linkLayer.highlightedElements().clear();
               var node = topo.getNode(allNodes["XTR"][xtrid]["toponode"]["_data-id"]);
               node.eachLink(function(link) {
                 var path = new nx.graphic.Topology.Path({
@@ -540,41 +493,17 @@ angular.module('nextService', [])
                               arrow: 'cap'
                           });
                 pathLayer.addPath(path);
+                linkLayer.highlightedElements().add(link);
               }, true);
                
               nodeLayer.highlightedElements().add(node);
+              var nodes = [];
               node.eachConnectedNode(function(connectedNode) {
                 nodeLayer.highlightedElements().add(connectedNode);
+                nodes.push(connectedNode);
               }, true);
-/*
-              //draw paths with all the links from node
-              var links = topoData.links;
-              //get links that are connected to node
-              var links_id = links.filter(function(links){
-                //if its an EID it compares with the SOURCE
-                //if(node.model()._data.type == "EID") {
-                //  return (links.source == node.model()._data.id && links.type != "eid-xtr");
-                //}
-                //if its an XTR it compares with the TARGET
-                if(node.model()._data.type == "XTR") {
-                  return links.target == node.model()._data.id;
-                }
 
-                //else if(node.model()._data.type == "RLOC") {
-                //  return (links.target == node.model()._data.id && links.type != "xtr-rloc");
-                //}
-              });
-              //for each link we draw its path
-              for (var i = 0; i < links_id.length; i++) {
-                  var link = [topo.getLink(links_id[i].id)];
-                  //PENDING if(link.model()._data.type != "eid-rloc") {
-                    var path1 = new nx.graphic.Topology.Path({
-                              links: link,
-                              arrow: 'cap'
-                          });
-                    pathLayer.addPath(path1);
-              }*/
-
+              topo.zoomByNodes(nodes);
             },
             highlightRlocWithZoom: function(rlocName, vnId) {
               var topo = this.view('topology');
@@ -592,6 +521,7 @@ angular.module('nextService', [])
               var linksLayer = topo.getLayer('links');
               var pathLayer = topo.getLayer('paths');
               pathLayer.clear();
+              linksLayer.highlightedElements().clear();
 
               nodeLayer.highlightedElements().add(rlocNode);
               rlocNode.enable(true);
@@ -601,12 +531,14 @@ angular.module('nextService', [])
               var eidsFromRloc = lispService.getEIDsFromRLOC(rlocInfo["address_type"], rlocInfo["address"]);
 
               rlocNode.eachLink(function(link) {
+                link.enable(true);
                 var xtrNode = link.sourceNode();
-
                 nodeLayer.highlightedElements().add(xtrNode);
                 xtrNode.enable(true);
                 highlightedNodes.push(xtrNode);
                 
+                linksLayer.highlightedElements().add(link);
+
                 var path = new nx.graphic.Topology.Path({
                                 links: [link],
                                 arrow: 'cap'
@@ -619,10 +551,12 @@ angular.module('nextService', [])
                   var dataid = connectedNode["_data-id"];
                   var object = topoData["nodes"][dataid];
                   if (object["type"] == "EID" && eidsFromRloc.includes(object["address"])){
+                    link2.enable(true);
                     nodeLayer.highlightedElements().add(connectedNode);
                     connectedNode.enable(true);
                     highlightedNodes.push(connectedNode);
-                    
+                    linksLayer.highlightedElements().add(link2);
+
                     var path1 = new nx.graphic.Topology.Path({
                                 links: [link2],
                                 arrow: 'cap'
@@ -645,6 +579,7 @@ angular.module('nextService', [])
               var holder = this;
               nx.each(eidsInVn, function(eidInVn){
                 var nodes = [];
+                var links = [];
                 holder.highlightEid(eidInVn, vnId, nodes);
                 highlightedNodes = highlightedNodes.concat(nodes);
               }, true);
@@ -682,7 +617,6 @@ angular.module('nextService', [])
         topology.hideAll();
         topology.disableAll();
         var eidsInVn = lispService.getEidsInVn(vnId);
-        //topology.showEids(eidsInVn);
         topology.highlightEids(eidsInVn, vnId);
       }
     };
@@ -692,14 +626,19 @@ angular.module('nextService', [])
         topology.hideAll();
         topology.highlightEidWithZoom(nodeId, vnId);
       } else if (nodeType == "XTR") {
-        topology.centerOnNodeType(nodeId, nodeType);
-        topology.highlightXtr(nodeId);
+        topology.hideAll();
+        topology.highlightXtrWithZoom(nodeId);
       } else if (nodeType == "RLOC") {
         topology.hideAll();
         topology.highlightRlocWithZoom(nodeId, vnId);
       }
     };
 
+    serviceInstance.toggledSideBar = function(open) {
+      var sideNavWidth = 0;
+      if (open) sideNavWidth = 320;// document.getElementById("sidebar").clientWidth;
+      topology.resizeSideNav(sideNavWidth);
+    };
 
     return serviceInstance;
 }]);

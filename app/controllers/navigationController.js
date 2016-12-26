@@ -4,16 +4,22 @@ angular.module('navigationController', [])
  	// SIDE MENU
 
  	$scope.openSideMenu = function() {
- 		$mdSidenav('right').open();
+ 		if (!$mdSidenav('right').isOpen()) {
+ 			$mdSidenav('right')
+ 				.open();
+ 			nextService.toggledSideBar(true);
+ 		}
  	};
 
  	$scope.closeSideMenu = function() {
- 		$mdSidenav('right')
- 			.close()
- 			.then(function(){
- 				$scope.detailMenuState = "";
- 			});
-		nextService.selectVirtualNetwork($scope.selectedVn);
+ 		if ($mdSidenav('right').isOpen())
+ 			$mdSidenav('right')
+ 				.close()
+ 				.then(function(){
+ 					$scope.detailMenuState = "";
+ 				});
+			nextService.selectVirtualNetwork($scope.selectedVn);
+    		nextService.toggledSideBar(false);
  	};
 
  	// Show selected node details
