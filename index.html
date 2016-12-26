@@ -20,49 +20,52 @@
 </head>
 <body ng-app="lispOverlayApp">
 
-    <div ng-controller="navigationController" layout="row" layout-fill flex="">
+    <div ng-controller="navigationController" layout="row" layout-fill>
 
-      <div id="main" layout="column" flex="" >
+      <div id="main" layout="column" layout-fill flex>
 
-        <md-toolbar layout="row" md-whiteframe="2">
+        <md-toolbar id="toolbar" layout="row" md-whiteframe="2">
 
             <ng-include src="'./app/templates/searchForm.html'" flex="30" layout-padding layout-align="center center">
             </ng-include>
 
-            <div layout-align="center center" layout="row">
+            <div id="selectVnBox" layout="row" flex layout-align="start center">
+                <label layout-align="center center">Select Virtual Network</label>
+                <md-card class="card" md-whiteframe="1" class="inCard">
+                    <md-select ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
+                      <md-option value="all">All</md-option>
+                      <md-option ng-repeat="vnid in getVnIds()" ng-value="vnid">VN-id: {{vnid}}</md-option>
+                    </md-select>
+                </md-card>
+            </div>
+            <span flex></span>
+
+            <div ng-if="false" layout-align="center center" layout="row">
                 <md-switch ng-model="view.state" aria-label="View Switch">
                     Switch views
                 </md-switch>
             </div>
-            
-            <span flex></span>
 
         </md-toolbar>
-           
-        <div ng-switch="showTopology">
-            <div ng-switch-when="false">
-                <div ng-switch="finishedLoading">
-                    <div ng-switch-when="false">
-                        <md-progress-circular ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center"></md-progress-circular>
-                    </div>
-                    <div ng-switch-default>
-                        Connection error
-                    </div>
-                </div>
-            </div>
-            <div ng-switch-default>
-                <div ng-controller="nextUIController" id="topology-container"></div>
-            </div>
+
+        <md-progress-circular ng-if="!finishedLoading" ng-disabled="finishedLoading" class="md-accent" md-diameter="60" layout-align="center center" flex></md-progress-circular>
+
+        <div ng-if="connectionError" layout-align="center center" flex>
+            <span >Connection error</span>
         </div>
+
+        <div id="topology-container" flex></div>
+
       </div>
 
-      <md-sidenav md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4">
-        <ng-include src="'./app/templates/detailMenu.html'"></ng-include>
+      <md-sidenav id="sidebar" md-component-id="right" class="md-sidenav-right" md-disable-backdrop md-whiteframe="4" >
+        <ng-include src="'./app/templates/detailMenu.html'" layout="column" layout-fill></ng-include>
       </md-sidenav>
 
     </div>
 
     <script type="text/javascript" src="./app/lisp/lisp.communication.js"></script>
+    <script type="text/javascript" src="./app/nextService.js"></script>
     <script type="text/javascript" src="./app/controllers/navigationController.js"></script>
     <script type="text/javascript" src="./app/controllers/searchFormController.js"></script>
     <script type="text/javascript" src="./app/controllers.js"></script>
@@ -70,6 +73,7 @@
 
     <script type="text/javascript" src="./app/data.js"></script>
     <script type="text/javascript" src="./app/app.js"></script>
+    <script type="text/javascript" src="./app/lisp/lispBDexample.js"></script>
 
 </body>
 </html>

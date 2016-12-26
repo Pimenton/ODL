@@ -1,5 +1,5 @@
 <form ng-submit="$event.preventDefault()" ng-controller="searchFormController">
-  <md-autocomplete
+  <md-autocomplete 
       md-selected-item="selectedItem"
       md-item-text="item.id"
       md-search-text="searchText"
@@ -7,10 +7,10 @@
       md-selected-item-change="selectedItemChange(item)"
       md-items="item in querySearch(searchText)"
       md-min-length="1"
-      placeholder="Search RLOC or EID"
+      placeholder="Search EID, XTR or RLOC"
       md-menu-class="autocomplete-custom-template">
-    <md-item-template>
-      <div layout="column">
+    <md-item-template class="inCard">
+      <div class="searchItem" layout="column" layout-fill>
         <div ng-switch="item.type">
           <div ng-switch-when="eid">
             <span class="item-title">

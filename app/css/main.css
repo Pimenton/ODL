@@ -4,9 +4,26 @@ body {
     height: 100%;
 }
 
-#topology-container {
-    width: 100%;
-    height: 100%;
+.selectBox {
+  display: block;
+  margin: 0 0 0 0;
+  height: 24px;
+}
+
+#selectVnBox {
+  margin: 0 0 0 8px;
+}
+
+.card {
+	padding: 8px;
+}
+
+.inCard {
+	font-size: 20px;
+}
+
+.topology-via-api {
+	height:100%;
 }
 
 .detail {
