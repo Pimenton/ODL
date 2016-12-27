@@ -9,17 +9,26 @@
 		Address: {{rloc["address"]}}
 	</div>
 	<div class="detail" layout-padding>
-	    <md-input-container>
-			<label>Priority</label>
-			<input ng-model="rloc.priority">
-			</md-input-container>
-	</div>
+		Priority: {{rloc["priority"]}}
+	    <!-- <md-input-container> -->
+			<!-- <label>Priority</label> -->
+<!-- 			<input ng-model="rloc.priority">
+		</md-input-container>
+ -->	</div>
 	<div class="detail" layout-padding>
-	    <md-input-container>
+		Weight: {{rloc["weight"]}}
+<!-- 	    <md-input-container>
 			<label>Weight</label>
 			<input ng-model="rloc.weight">
 		</md-input-container>
-	</div>
+ -->	</div>
+	<div class="detail" layout-padding>
+		Multicast-weight: {{rloc["multicastweight"]}}
+<!-- 	    <md-input-container>
+			<label>Weight</label>
+			<input ng-model="rloc.weight">
+		</md-input-container>
+ -->	</div>
 
 	<md-tabs md-border-bottom md-stretch-tabs="always" flex layout-fill>
 		<md-tab label="EIDs" layout-fill>

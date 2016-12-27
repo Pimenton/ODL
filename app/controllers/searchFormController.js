@@ -23,13 +23,12 @@
 			if (key.includes(query))
 				results.push({
 					id: key, 
-					rlocs: value,
+					nrlocs: Object.keys(value).length,
 					type: "xtr"
 				});
 		});
 
 		var rlocs = lispService.getAllRlocs();
-		console.log(rlocs);
 		angular.forEach(rlocs, function(value, key) {
 			// Filter by RLOC address
 			var found = false;

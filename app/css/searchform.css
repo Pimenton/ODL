@@ -17,7 +17,7 @@
 
  .autocomplete-custom-template .item-title,
  .autocomplete-custom-template .item-metadata {
-  display: block;
+  display: flex;
   line-height: 2; }
 
  .autocomplete-custom-template .item-title md-icon {

@@ -38,7 +38,6 @@ angular.module('nextService', [])
                  name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
-                   //padding-right: 435,
                    adaptive: true,
                    // node config
                    nodeConfig: {
@@ -80,7 +79,6 @@ angular.module('nextService', [])
                 value: function() {
                     return function(vertex) {
                         var name = vertex.get("name");
-                        //console.log(name);
                         if (name.startsWith("EID")) {
                             return 'cloud'
                         }
