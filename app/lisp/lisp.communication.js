@@ -173,6 +173,8 @@ angular.module('lisp.communication', [])
               obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
               obj.address = serviceInstance.getIP(eid_uri);
               obj.address_type = serviceInstance.getIPType(eid_uri);
+              obj.recordTtl = eids[j]["mapping-record"]["recordTtl"];
+              obj.authoritative = eids[j]["mapping-record"]["authoritative"];
               obj.action = eids[j]["mapping-record"]["action"];
               EidInfo[vni] = obj;
             }
@@ -319,6 +321,9 @@ angular.module('lisp.communication', [])
                 obj.address_type = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
                 obj.address = rlocs[rlocIt]["rloc"][obj.address_type];
                 obj.weight = rlocs[rlocIt]["weight"];
+                obj.routed = rlocs[rlocIt]["routed"];
+                obj.rlocProbed = rlocs[rlocIt]["rlocProbed"];
+                obj.localLocator = rlocs[rlocIt]["localLocator"];
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
                 obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
