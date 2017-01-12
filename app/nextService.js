@@ -289,7 +289,11 @@ angular.module('nextService', [])
                 this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
             },
             showNodeInfo: function (sender, node) {
-                nodeClickFunction(node.model()._data);
+              var topo = this.view('topology');
+              topo.selectedNodes().clear();
+
+              node.selected(true);
+              nodeClickFunction(node.model()._data);
             },
             resizeSideNav: function(sideNavWidth) {
               var topo = this.view('topology');
