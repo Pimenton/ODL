@@ -2,7 +2,7 @@
 Lisp Overlay - PAE CISCO TEAM
 -----------------------------------------------------------------------
 
-Frameworks instal·lats: NextUi, AngularJS, Bootstrap
+Frameworks instal·lats: NextUi, AngularJS, Angular Material
 
 ---
 
