@@ -19,3 +19,12 @@ De moment lisp.communication.js no està integrat a la web-app, no correrà el s
 Equip UI:
 
 El codi de la ui de l'aplicació anirà als altres documents dins de app/, a més de a index.html. Segurament haurem de fer templates amb html a altres bandes, ja crearem carpetes per a contenir-ho tot correctament.
+
+---
+
+Autors del projecte:
+
+OSCAR HERNANDEZ
+AITOR ARDILA
+GUILLEM CORDOBA
+SERGI SORIANO
