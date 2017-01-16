@@ -1,16 +1,16 @@
  angular.module('searchFormController', [])
-.controller('searchFormController', ['$scope', 'lispService', 'nextService', function($scope, lispService, nextService) {
-	
+.controller('searchFormController', ['$scope', 'lispService', function($scope, lispService) {
+
 	$scope.querySearch = function(query) {
 		if (!query) return [];
 		var results = [];
 
 		var eids = lispService.getAllEids();
-		// Search by EID address 
+		// Search by EID address
 		for (var i = 0; i < eids.length; i++) {
 			if (eids[i]["address"].includes(query))
 				results.push({
-					id: eids[i]["address"], 
+					id: eids[i]["address"],
 					nrlocs: eids[i]["rlocs"].length,
 					nxtr: eids[i]["xtr_id"].length,
 					type: "eid"
@@ -18,11 +18,11 @@
 		}
 
 		var xtrids = lispService.getAllxtrids();
-		// Search by XTR-ID  
+		// Search by XTR-ID
 		angular.forEach(xtrids, function(value, key) {
 			if (key.includes(query))
 				results.push({
-					id: key, 
+					id: key,
 					nrlocs: Object.keys(value).length,
 					type: "xtr"
 				});
@@ -40,7 +40,7 @@
 						type: "rloc"
 					});
 			}
-			
+
 			// Filter by RLOC locator-id
 			if (!found) {
 				if (key.includes(query))
@@ -53,7 +53,7 @@
 		});
 
 		return results;
-	}; 	
+	};
 
 	var filterItemByaddress = function(query) {
 		return function filteraddress(item) {

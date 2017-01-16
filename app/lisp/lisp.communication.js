@@ -200,9 +200,9 @@ angular.module('lisp.communication', [])
         if (Json[i]["vni"] == VnId)
         {
           var eids = Json[i]["mapping"];
-          for (var i=0;i<eids.length;i++)
+          for (var j=0;j<eids.length;j++)
           {
-            EIDinVN.push(eids[i]["eid-uri"]);
+            EIDinVN.push(eids[j]["eid-uri"]);
           }
         }
       }
@@ -232,7 +232,7 @@ angular.module('lisp.communication', [])
               var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
               RLocAdr.push(rlocs[rlocIt]["rloc"][typeIP]);
             }
-            obj.rlocs = RLocAdr; 
+            obj.rlocs = RLocAdr;
             EidList.push(obj);
           }
         }
@@ -248,7 +248,7 @@ angular.module('lisp.communication', [])
     {
       return eidUri.substring(eidUri.split(":")[0].length+1, eidUri.length);
     };
-    
+
     serviceInstance.getRLOCs = function (vni, eid)
     {
       var rlocs = Json[vni]["mapping"][eid]["mapping-record"]["LocatorRecord"]
@@ -266,7 +266,7 @@ angular.module('lisp.communication', [])
       for (var i=0; i<Json.length; i++)
       {
         var eids = Json[i]["mapping"];
-        for (var j=0; j<eids.length; j++) 
+        for (var j=0; j<eids.length; j++)
         {
           var obj = {};
           var xtrInfo_id = eids[j]["mapping-record"]["xtr-id"];
@@ -274,7 +274,7 @@ angular.module('lisp.communication', [])
           var rlocs = serviceInstance.getRLOCs(i,j);
           for(var k=0;k<rlocs.length;k++){
             var address = rlocs[k]["rloc"][rlocs[k]["rloc"]["address-type"].split(":")[1].split("-")[0]];
-            obj[rlocs[k]["locator-id"]]= address; 
+            obj[rlocs[k]["locator-id"]]= address;
           }
           vectorXTR[xtrInfo_id] = obj;
         }
@@ -370,7 +370,7 @@ angular.module('lisp.communication', [])
                /* }
                 obj.info.push(EID_RLOCS);*/
               }
-            }  
+            }
             break;
           case "RLOC":
             var dictionaryRLOC = {}
@@ -380,7 +380,7 @@ angular.module('lisp.communication', [])
               var xtr = eids[j]["mapping-record"]["xtr-id"];
               if (xtr == xtrId)
               {
-                
+
                 var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
                 for (var rlocIt=0; rlocIt<rlocs.length; rlocIt++)
                 {
