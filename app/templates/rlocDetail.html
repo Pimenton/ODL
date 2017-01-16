@@ -1,24 +1,42 @@
 <div layout="column" layout-fill>
-	<div class="detail" layout-padding>
-		Locator-id: {{rloc["id"]}}
+	<div class="detail" layout-padding layout-align="center center">
+		<span flex layout-align="center center">Locator-id: {{rloc["id"]}}</span>
 	</div>
 	<div class="detail" layout-padding>
-		xTR-id: <md-button class="md-raised" ng-click="showXtrDetails(rloc['xtr_id'])" aria-label="description">{{rloc["xtr_id"]}}</md-button>
+		<span flex layout-align="center center">xTR-id: <md-button class="md-raised" ng-click="showXtrDetails(rloc['xtr_id'])" aria-label="description">{{rloc["xtr_id"]}}</md-button></span>
 	</div>
 	<div class="detail" layout-padding>
-		Address: {{rloc["address"]}}
+		<span flex layout-align="center center">Address: {{rloc["address_type"]}}</span>
 	</div>
 	<div class="detail" layout-padding>
-	    <md-input-container>
-			<label>Priority</label>
-			<input ng-model="rloc.priority">
-			</md-input-container>
+		<span flex layout-align="center center">Address: {{rloc["address"]}}</span>
 	</div>
 	<div class="detail" layout-padding>
-	    <md-input-container>
+		<span flex layout-align="center center">Priority: {{rloc["priority"]}}</span>
+	    <!-- <md-input-container> -->
+			<!-- <label>Priority</label> -->
+<!-- 			<input ng-model="rloc.priority">
+		</md-input-container>
+ -->	</div>
+	<div class="detail" layout-padding>
+		<span flex layout-align="center center">Weight: {{rloc["weight"]}}</span>
+<!-- 	    <md-input-container>
 			<label>Weight</label>
 			<input ng-model="rloc.weight">
 		</md-input-container>
+ -->	</div>
+	<div class="detail" layout-padding>
+		<span flex layout-align="center center">Multicast-weight: {{rloc["multicastweight"]}}</span>
+<!-- 	    <md-input-container>
+			<label>Weight</label>
+			<input ng-model="rloc.weight">
+		</md-input-container>
+ -->	</div>
+	<div class="detail" layout-padding>
+		<span flex layout-align="center center">Local locator: {{rloc["localLocator"]}}</span>
+	</div>
+	<div class="detail" layout-padding>
+		<span flex layout-align="center center">Routed: {{rloc["routed"]}}</span>
 	</div>
 
 	<md-tabs md-border-bottom md-stretch-tabs="always" flex layout-fill>
