@@ -29,6 +29,7 @@ angular.module('navigationController', [])
  			// Call lisp module to get the eid information
  			var ipaddress = lispService.getIP(eidaddress);
  			$scope.eidVn = lispService.getEidInfo(ipaddress);
+
  			var rlocsFromEid = lispService.getRLOCsFromEID(ipaddress);
  			$scope.detailMenuState = "eid";
  			$scope.detailVnIds = [];
@@ -82,6 +83,8 @@ angular.module('navigationController', [])
  				$scope.xtr["info"] = $scope.xtrVn[$scope.detailVnIds[0]];
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
+
+ 			$scope.selectedEid = $scope.xtr.info.eids[0];
  			nextService.selectNode(xtrid, "XTR", $scope.selectedVn);
  	 	});
  	};

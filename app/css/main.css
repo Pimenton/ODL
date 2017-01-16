@@ -4,6 +4,12 @@ body {
     height: 100%;
 }
 
+.icon-img {
+  height: 18px;
+  width: 18px;
+  margin-right: 8px;
+}
+
 .selectBox {
   display: block;
   margin: 0 0 0 0;

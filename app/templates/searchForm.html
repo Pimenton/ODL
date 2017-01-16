@@ -13,24 +13,35 @@
       <div class="searchItem" layout="column" layout-fill>
         <div ng-switch="item.type">
           <div ng-switch-when="eid">
-            <span class="item-title">
-              <i class="material-icons md-dark md-18" layout-align="center start">&#xE2BD;</i>
-              <span> {{item.id}} </span>
-            </span>
+            <div class="item-title" layout="row" layout-align="start center">
+              <img class="icon-img" layout-align="center center" src="./app/img/cloud.png"></img>
+              <span> EID: {{item.id}} </span>
+            </div>
             <span class="item-metadata" layout="row">
               <span class="item-metastat">
-                Number of RLOCs: <strong>{{item.rlocs.length}}</strong>
+                Number of RLOCs: {{item.nrlocs}}
+              </span>
+            </span>
+          </div>
+          <div ng-switch-when="xtr">
+            <div class="item-title" layout="row" layout-align="start center">
+              <img class="icon-img" layout-align="center center" src="./app/img/router.png"></img>
+              <span> XTR: {{item.id}} </span>
+            </div>
+            <span class="item-metadata" layout="row">
+              <span class="item-metastat">
+                Number of RLOCs: {{item.nrlocs}}
               </span>
             </span>
           </div>
           <div ng-switch-default>
-            <span class="item-title">
-              <i class="material-icons md-dark md-18" layout-align="center start">&#xE328;</i>
-              <span> {{item.id}} </span>
-            </span>
+            <div class="item-title" layout="row" layout-align="start center">
+              <img class="icon-img" layout-align="center center" src="./app/img/port.png"></img>
+              <span> RLOC: {{item.id}} </span>
+            </div>
             <span class="item-metadata" layout="row">
               <span class="item-metastat">
-                Address: <strong>{{item.address}}</strong>
+                Address: {{item.address}}
               </span>
             </span>
           </div>

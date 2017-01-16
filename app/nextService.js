@@ -38,7 +38,6 @@ angular.module('nextService', [])
                  name: 'topology',
                  type: 'nx.graphic.Topology',
                  props: {
-                   //padding-right: 435,
                    adaptive: true,
                    // node config
                    nodeConfig: {
@@ -80,7 +79,6 @@ angular.module('nextService', [])
                 value: function() {
                     return function(vertex) {
                         var name = vertex.get("name");
-                        //console.log(name);
                         if (name.startsWith("EID")) {
                             return 'cloud'
                         }
@@ -291,7 +289,11 @@ angular.module('nextService', [])
                 this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
             },
             showNodeInfo: function (sender, node) {
-                nodeClickFunction(node.model()._data);
+              var topo = this.view('topology');
+              topo.selectedNodes().clear();
+
+              node.selected(true);
+              nodeClickFunction(node.model()._data);
             },
             resizeSideNav: function(sideNavWidth) {
               var topo = this.view('topology');
