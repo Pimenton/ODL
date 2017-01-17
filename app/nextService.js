@@ -289,15 +289,17 @@ angular.module('nextService', [])
                 this.centerOnNode(topo.getNode(node["toponode"]["_data-id"]));
             },
             showNodeInfo: function (sender, node) {
+              nodeClickFunction(node.model()._data);
+            },
+            showNodeCircle: function(node) {
               var topo = this.view('topology');
               topo.selectedNodes().clear();
 
               node.selected(true);
-              nodeClickFunction(node.model()._data);
             },
             resizeSideNav: function(sideNavWidth) {
               var topo = this.view('topology');
-              topo.resize(initialSize.width - sideNavWidth, initialSize.height);              
+              topo.resize(initialSize.width - sideNavWidth, initialSize.height);
             },
             attach: function(args) {
                 this.inherited(args);
@@ -373,9 +375,11 @@ angular.module('nextService', [])
               // LINKS LAYER DOESN'T WORK
               var linksLayer = topo.getLayer('links');
               linksLayer.highlightedElements().clear();
-              
+
               var pathLayer = topo.getLayer("paths");
               pathLayer.clear();
+              topo.selectedNodes().clear();
+
             },
             enableAll: function() {
               var topo = this.view('topology');
@@ -395,6 +399,7 @@ angular.module('nextService', [])
               var topo = this.view('topology');
               var nodesLayer = topo.getLayer('nodes');
               nodesLayer.highlightedElements().addRange(topo.getNodes());
+              topo.selectedNodes().clear();
 
               var linksLayer = topo.getLayer('links');
               var links = [];
@@ -420,6 +425,7 @@ angular.module('nextService', [])
 
               var dataid = allNodes["EID"][eidaddress]["toponode"]["_data-id"];
               var eidNode = topo.getNode(dataid);
+              this.showNodeCircle(eidNode);
 
               var nodeLayer = topo.getLayer('nodes');
               var linksLayer = topo.getLayer('links');
@@ -450,7 +456,7 @@ angular.module('nextService', [])
                 xtrNode.enable(true);
                 highlightedNodes.push(xtrNode);
                 linksLayer.highlightedElements().add(link);
-                
+
                 var path = new nx.graphic.Topology.Path({
                                 links: [link],
                                 arrow: 'cap'
@@ -468,7 +474,7 @@ angular.module('nextService', [])
                     connectedNode.enable(true);
                     highlightedNodes.push(connectedNode);
                     linksLayer.highlightedElements().add(link2);
-                  
+
                     var path1 = new nx.graphic.Topology.Path({
                                 links: [link2],
                                 arrow: 'cap'
@@ -489,6 +495,8 @@ angular.module('nextService', [])
               pathLayer.clear();
               linkLayer.highlightedElements().clear();
               var node = topo.getNode(allNodes["XTR"][xtrid]["toponode"]["_data-id"]);
+              this.showNodeCircle(node);
+
               node.eachLink(function(link) {
                 var path = new nx.graphic.Topology.Path({
                               links: [link],
@@ -497,7 +505,7 @@ angular.module('nextService', [])
                 pathLayer.addPath(path);
                 linkLayer.highlightedElements().add(link);
               }, true);
-               
+
               nodeLayer.highlightedElements().add(node);
               var nodes = [];
               node.eachConnectedNode(function(connectedNode) {
@@ -518,6 +526,7 @@ angular.module('nextService', [])
 
               var dataid = allNodes["RLOC"][rlocName]["toponode"]["_data-id"];
               var rlocNode = topo.getNode(dataid);
+              this.showNodeCircle(rlocNode);
 
               var nodeLayer = topo.getLayer('nodes');
               var linksLayer = topo.getLayer('links');
@@ -538,7 +547,7 @@ angular.module('nextService', [])
                 nodeLayer.highlightedElements().add(xtrNode);
                 xtrNode.enable(true);
                 highlightedNodes.push(xtrNode);
-                
+
                 linksLayer.highlightedElements().add(link);
 
                 var path = new nx.graphic.Topology.Path({
@@ -588,6 +597,7 @@ angular.module('nextService', [])
               topo.zoomByNodes(highlightedNodes);
 
               pathLayer.clear();
+              topo.selectedNodes().clear();
 
                 // IF WE WANT THE GROUP LAYER TO SHOW UP
                 /*var groupsLayer = topo.getLayer('groups');
