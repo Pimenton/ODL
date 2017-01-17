@@ -307,13 +307,17 @@ angular.module('lisp.communication', [])
     };
 
     serviceInstance.getRlocInfo = function (RLOC_ID)
-    {
-     var obj = new Object();
+     {
+    var mod = false;
+     var RlocInfo = {};
       for (var i=0; i<Json.length; i++)
       {
+          var tmp = {};
+          var vni = Json[i]["vni"];
           var eids = Json[i]["mapping"];
           for (var j = 0; j<eids.length; j++)
           {
+            var obj = new Object();
             var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
             for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++) {
               if(RLOC_ID == rlocs[rlocIt]["locator-id"]){
@@ -327,11 +331,21 @@ angular.module('lisp.communication', [])
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
                 obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
+                break;
             }
+            else obj = 0;
           }
+          if (obj != 0){ 
+            tmp[eids[j]["eid-uri"]] = obj;
+            mod = true;
+            }
         }
+        if (mod){
+          RlocInfo[vni] = tmp;
+          mod = false;
+          }
       }
-      return obj;
+      return RlocInfo;
     };
 
     serviceInstance.getIPTypeOfRLOC = function(rlocAddressType)
