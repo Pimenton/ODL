@@ -214,30 +214,71 @@ angular.module('lisp.communication', [])
       var EidList = [];
       for (var i=0; i<Json.length; i++)
       {
-          var eids = Json[i]["mapping"];
-          var vni = Json[i]["vni"]
-          var vectorEIds = [];
-          for (var j = 0; j<eids.length; j++)
+        var eids = Json[i]["mapping"];
+        var vni = Json[i]["vni"];
+        var vectorEIds = [];
+
+        for (var j = 0; j<eids.length; j++)
+        {
+          var eid_uri = eids[j]["eid-uri"];
+          var xtr = eids[j]["mapping-record"]["xtr-id"];
+
+          var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
+          var RLocAdr = [];
+
+          var eidVNI = new Object();
+          eidVNI.vni = vni;
+          eidVNI.xtr_id  = xtr;
+          eidVNI.rlocs = RLocAdr;
+
+          for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
+          {
+            var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
+            RLocAdr.push(rlocs[rlocIt]["rloc"][typeIP]);
+          }
+
+          if (existsEIDonEIDList(eid_uri, EidList))
+          {
+            var eidPosition = getPositionOfEIDOnlist(eid_uri, EidList);
+            var obj = EidList[eidPosition];
+            
+            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
+            //info.push(eidVNI);
+            obj.info.push(eidVNI);
+          }
+          else
           {
             var obj = new Object();
-            var eid_uri = eids[j]["eid-uri"];
-            var xtr = eids[j]["mapping-record"]["xtr-id"];
-            obj.vni = vni;
             obj.address = eid_uri;
-            obj.xtr_id  = xtr;
-            var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
-            var RLocAdr = [];
-            for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
-            {
-              var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
-              RLocAdr.push(rlocs[rlocIt]["rloc"][typeIP]);
-            }
-            obj.rlocs = RLocAdr;
+            obj.info = [];
+            
+            obj.info.push(eidVNI);
             EidList.push(obj);
           }
         }
+      }
       return EidList;
     };
+
+    serviceInstance.existsEIDonEIDList = function(eid_uri, EIDlist)
+    {
+      for (var i=0;i<EIDlist.length; ++i)
+      {
+        if (EIDlist[i].address == eid_uri)
+          return true;
+      }
+      return false;
+    };
+
+    serviceInstance.getPositionOfEIDOnlist = function(eid_uri, EIDlist)
+    {
+      for (var i=0;i<EIDlist.length; ++i)
+      {
+        if (EIDlist[i].address == eid_uri)
+          return i;
+      }
+      return -1;
+    }
 
     serviceInstance.getIPType = function (eidUri)
     {
