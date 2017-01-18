@@ -100,7 +100,8 @@ angular.module('nextService', [])
             loadRemoteData: function() {
 
                 var topo = this.view('topology');
-                //this.setStyle("paddingRight","10px");
+
+                topo.tooltipManager().activated(false);
 
                 eids = lispService.getAllEidsOld();
                 rlocs_info = lispService.getAllRlocs();

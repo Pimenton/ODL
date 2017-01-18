@@ -84,7 +84,7 @@ angular.module('navigationController', [])
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
 
- 			//$scope.selectedEid = $scope.xtr.info.eids[0];
+ 			$scope.selectedEid = $scope.xtr.info.eids[0];
  			nextService.selectNode(xtrid, "XTR", $scope.selectedVn);
  	 	});
  	};
