@@ -380,6 +380,7 @@ angular.module('lisp.communication', [])
     serviceInstance.getRlocInfo = function (RLOC_ID)
      {
     var mod = false;
+    var found = false;
      var RlocInfo = {};
       for (var i=0; i<Json.length; i++)
       {
@@ -402,11 +403,12 @@ angular.module('lisp.communication', [])
                 obj.priority = rlocs[rlocIt]["priority"];
                 obj.multicastweight = rlocs[rlocIt]["multicastWeight"];
                 obj.xtr_id = eids[j]["mapping-record"]["xtr-id"];
+                found = true;
                 break;
             }
-            else obj = 0;
+            else found = false;
           }
-          if (obj != 0){
+          if (found){
             tmp[eids[j]["eid-uri"]] = obj;
             mod = true;
             }
