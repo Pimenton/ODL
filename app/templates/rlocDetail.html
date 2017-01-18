@@ -2,44 +2,58 @@
 	<div class="detail" layout-padding layout-align="center center">
 		<span flex layout-align="center center">Locator-id: {{rloc["id"]}}</span>
 	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">xTR-id: <md-button class="md-raised" ng-click="showXtrDetails(rloc['xtr_id'])" aria-label="description">{{rloc["xtr_id"]}}</md-button></span>
-	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Address: {{rloc["address_type"]}}</span>
-	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Address: {{rloc["address"]}}</span>
-	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Priority: {{rloc["priority"]}}</span>
-	    <!-- <md-input-container> -->
-			<!-- <label>Priority</label> -->
-<!-- 			<input ng-model="rloc.priority">
-		</md-input-container>
- -->	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Weight: {{rloc["weight"]}}</span>
-<!-- 	    <md-input-container>
-			<label>Weight</label>
-			<input ng-model="rloc.weight">
-		</md-input-container>
- -->	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Multicast-weight: {{rloc["multicastweight"]}}</span>
-<!-- 	    <md-input-container>
-			<label>Weight</label>
-			<input ng-model="rloc.weight">
-		</md-input-container>
- -->	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Local locator: {{rloc["localLocator"]}}</span>
-	</div>
-	<div class="detail" layout-padding>
-		<span flex layout-align="center center">Routed: {{rloc["routed"]}}</span>
-	</div>
-
-	<md-tabs md-border-bottom md-stretch-tabs="always" flex layout-fill>
+	<md-card md-whiteframe="1" flex layout-padding layout="column">
+		<div layout="row" class="detail" layout-padding layout-align="center center">
+				<label layout-align="center center">EID</label>
+				<md-card class="card" md-whiteframe="1"	flex >
+						<md-select id="selectEid" ng-model="selectedEid" class="selectBox md-no-underline" placeholder="Select EID">
+							<md-option ng-repeat="(eid, value) in rloc[selectedDetailVnId]" ng-value="eid">{{eid}}</md-option>
+						</md-select>
+				</md-card>
+		</div>
+		<md-divider class="divider"></md-divider>
+		<div class="detail" layout-padding>
+			<span flex layout-align="center center">xTR-id: <md-button class="md-raised" ng-click="showXtrDetails(rloc[selectedDetailVnId][selectedEid]['xtr_id'])" aria-label="description">{{rloc[selectedDetailVnId][selectedEid]["xtr_id"]}}</md-button></span>
+		</div>
+		<div class="detail" layout-padding>
+			<span flex layout-align="center center">Address type: {{rloc[selectedDetailVnId][selectedEid]["address_type"]}}</span>
+		</div>
+		<div class="detail" layout-padding>
+			<span flex layout-align="center center">Address: {{rloc[selectedDetailVnId][selectedEid]["address"]}}</span>
+		</div>
+		<div layout="row" layout-padding>
+			<div flex>
+				<span flex layout-align="center center">Priority: {{rloc[selectedDetailVnId][selectedEid]["priority"]}}</span>
+			</div>
+			<div>
+				<span flex layout-align="center center">Weight: {{rloc[selectedDetailVnId][selectedEid]["weight"]}}</span>
+			</div>
+		</div>
+		<div class="detail" layout-padding>
+			<span flex layout-align="center center">Multicast-weight: {{rloc[selectedDetailVnId][selectedEid]["multicastweight"]}}</span>
+		</div>
+		<div layout="row" layout-padding>
+			<div class="detail" flex>
+				<span flex layout-align="center center">Local locator: {{rloc[selectedDetailVnId][selectedEid]["localLocator"]}}</span>
+			</div>
+			<div class="detail">
+				<span flex layout-align="center center">Routed: {{rloc[selectedDetailVnId][selectedEid]["routed"]}}</span>
+			</div>
+		</div>
+	</md-card>
+	<!-- <md-tabs md-border-bottom md-stretch-tabs="always" flex layout-fill>
+		<md-tab label="XTRs" layout-fill>
+				<md-tab-content class="md-padding" flex layout-fill>
+					<md-content flex layout-fill>
+							<md-list flex layout-fill>
+									<md-list-item class="md-2-line" ng-repeat="xtrid in rloc.xtrids" ng-click="showXtrDetails(xtrid)">
+							{{xtrid}}
+							<md-divider ng-if="!$last"></md-divider>
+						</md-list-item>
+					</md-list>
+				</md-content>
+			</md-tab-content>
+		</md-tab>
 		<md-tab label="EIDs" layout-fill>
 	    	<md-tab-content class="md-padding" flex layout-fill>
 	    		<md-content flex layout-fill>
@@ -52,6 +66,6 @@
 				</md-content>
 			</md-tab-content>
 		</md-tab>
-	</md-tabs>
- 
+	</md-tabs> -->
+
  </div>

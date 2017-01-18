@@ -32,7 +32,7 @@
             <div id="selectVnBox" layout="row" flex layout-align="start center">
                 <label layout-align="center center">Select Virtual Network</label>
                 <md-card class="card" md-whiteframe="1" class="inCard">
-                    <md-select ng-model="selectedVnId" ng-change="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
+                    <md-select ng-model="selectedVnId" md-on-close="selectVn(selectedVnId)" placeholder="All" class="selectBox md-no-underline" > 
                       <md-option value="all">All</md-option>
                       <md-option ng-repeat="vnid in getVnIds()" ng-value="vnid">VN-id: {{vnid}}</md-option>
                     </md-select>

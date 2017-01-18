@@ -5,7 +5,7 @@
 	<div layout="row" class="detail" layout-padding layout-align="center center">
 	    <label layout-align="center center">EID</label>
 	    <md-card class="card" md-whiteframe="1"	flex >
-	        <md-select id="selectEid" ng-model="selectedEid" class="selectBox md-no-underline" > 
+	        <md-select id="selectEid" ng-model="selectedEid" class="selectBox md-no-underline" placeholder="Select Eid" > 
 	          <md-option ng-repeat="eid in xtr.info.eids" ng-value="eid">{{eid['eid']}}</md-option>
 	        </md-select>
 	    </md-card>

@@ -6,14 +6,14 @@
 	    <h2 flex>
   			<span>{{detailMenuState | uppercase}} details</span>
 		</h2>
-		<div ng-if="detailMenuState == 'eid' || detailMenuState=='xtr'" layout="row" layout-align="end center" >
-            <label layout-align="center center">VN</label>
-            <md-card class="card" md-whiteframe="1"	>
-                <md-select id="selectDetailVn" ng-model="selectedDetailVnId" ng-change="selectDetailVn(selectedDetailVnId)" class="selectBox md-no-underline" > 
-                  <md-option ng-repeat="detailVnid in detailVnIds" ng-value="detailVnid">{{detailVnid}}</md-option>
-                </md-select>
-            </md-card>
-        </div>
+		<!-- <div ng-if="detailMenuState == 'eid' || detailMenuState=='xtr'" layout="row" layout-align="end center" > -->
+        <label layout-align="center center">VN</label>
+        <md-card class="card" md-whiteframe="1"	>
+            <md-select id="selectDetailVn" ng-model="selectedDetailVnId" ng-change="selectDetailVn(selectedDetailVnId)" class="selectBox md-no-underline" >
+              <md-option ng-repeat="detailVnid in detailVnIds" ng-value="detailVnid">{{detailVnid}}</md-option>
+            </md-select>
+        </md-card>
+    <!-- </div> -->
 	</div>
 </md-toolbar>
 

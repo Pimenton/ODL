@@ -64,7 +64,7 @@ angular.module('navigationController', [])
 	 		$scope.xtrVn = {};
  			$scope.xtrVn["eids"]  = lispService.getXTRInfo("EID",xtrid);
  			$scope.xtrVn["rlocs"]  = lispService.getXTRInfo("RLOC",xtrid);
- 			
+
  	 		$scope.detailMenuState = "xtr";
  	 		$scope.detailVnIds = [];
  	 		for (var i = 0; i < $scope.xtrVn["eids"].length; i++) {
@@ -84,7 +84,7 @@ angular.module('navigationController', [])
  				$scope.selectedDetailVnId = $scope.detailVnIds[0];
  			}
 
- 			$scope.selectedEid = $scope.xtr.info.eids[0];
+ 			//$scope.selectedEid = $scope.xtr.info.eids[0];
  			nextService.selectNode(xtrid, "XTR", $scope.selectedVn);
  	 	});
  	};
@@ -94,9 +94,19 @@ angular.module('navigationController', [])
 	 		$scope.openSideMenu();
  			$scope.rloc = lispService.getRlocInfo(rlocid);
 
- 			var eidsFromRloc = lispService.getEIDsFromRLOC($scope.rloc["address_type"], $scope.rloc["address"]);
- 			$scope.rloc["eids"] = eidsFromRloc;
  	 		$scope.detailMenuState = "rloc";
+      $scope.detailVnIds = [];
+      $scope.detailVnIds = Object.keys($scope.rloc);
+
+      if ($scope.selectedVn && $scope.detailVnIds.includes($scope.selectedVn)) {
+        $scope.selectedDetailVnId = $scope.selectedVn;
+      } else {
+        $scope.selectedDetailVnId = $scope.detailVnIds[0];
+      }
+      //var eidsFromRloc = lispService.getEIDsFromRLOC($scope.rloc["address_type"], $scope.rloc["address"]);
+      //$scope.rloc["eids"] = eidsFromRloc;
+      $scope.rloc["id"] = rlocid;
+
  	 		nextService.selectNode(rlocid, "RLOC", $scope.selectedVn);
  	 	});
  	};

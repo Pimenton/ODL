@@ -102,9 +102,9 @@ angular.module('nextService', [])
                 var topo = this.view('topology');
                 //this.setStyle("paddingRight","10px");
 
-                eids = lispService.getAllEids();
+                eids = lispService.getAllEidsOld();
                 rlocs_info = lispService.getAllRlocs();
-                var length = Object.keys(eids).length;
+                var length = eids.length;
 
                 //transform JSON data to NEXTUI format
                 topoData.nodes = [];
@@ -123,7 +123,6 @@ angular.module('nextService', [])
                   ipAddress = eids[i].address;
                   name = "EID " + i;
                   type = "EID";
-                  action = "discard";
                   xtr = eids[i].xtr_id;
                   xtrIDs.push(xtr); //add xtr to xtrIDs list
                   vni = eids[i].vni;
@@ -136,7 +135,6 @@ angular.module('nextService', [])
                         'name': name,
                         'address': ipAddress,
                         'type': type,
-                        'action': action,
                         'xtr': xtr,
                         'vni': vni,
                         'rlocs': rlocs
@@ -539,7 +537,12 @@ angular.module('nextService', [])
               highlightedNodes.push(rlocNode);
 
               var rlocInfo = lispService.getRlocInfo(rlocName);
-              var eidsFromRloc = lispService.getEIDsFromRLOC(rlocInfo["address_type"], rlocInfo["address"]);
+
+              var eidsFromRloc = [];
+              angular.forEach(rlocInfo,function(value, key){
+                var eids = Object.keys(value);
+                eidsFromRloc = eidsFromRloc.concat(eids);
+              });
 
               rlocNode.eachLink(function(link) {
                 link.enable(true);

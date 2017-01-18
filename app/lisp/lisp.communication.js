@@ -209,6 +209,36 @@ angular.module('lisp.communication', [])
       return EIDinVN;
     };
 
+    serviceInstance.getAllEidsOld = function() {
+  var EidList = [];
+  for (var i=0; i<Json.length; i++)
+  {
+      var eids = Json[i]["mapping"];
+      var vni = Json[i]["vni"]
+      var vectorEIds = [];
+      for (var j = 0; j<eids.length; j++)
+      {
+        var obj = new Object();
+        var eid_uri = eids[j]["eid-uri"];
+        var xtr = eids[j]["mapping-record"]["xtr-id"];
+        obj.vni = vni;
+        obj.address = eid_uri;
+        obj.xtr_id  = xtr;
+        var rlocs = eids[j]["mapping-record"]["LocatorRecord"];
+        var RLocAdr = [];
+        for (var rlocIt = 0; rlocIt <rlocs.length; rlocIt++)
+        {
+          var typeIP = rlocs[rlocIt]["rloc"]["address-type"].split(":")[1].split("-")[0];
+          RLocAdr.push(rlocs[rlocIt]["rloc"][typeIP]);
+        }
+        obj.rlocs = RLocAdr;
+        EidList.push(obj);
+      }
+    }
+  return EidList;
+};
+
+
     serviceInstance.getAllEids = function()
     {
       var EidList = [];
@@ -251,7 +281,7 @@ angular.module('lisp.communication', [])
             var obj = new Object();
             obj.address = eid_uri;
             obj.info = [];
-            
+
             obj.info.push(eidVNI);
             EidList.push(obj);
           }
@@ -260,7 +290,7 @@ angular.module('lisp.communication', [])
       return EidList;
     };
 
-    serviceInstance.existsEIDonEIDList = function(eid_uri, EIDlist)
+    var existsEIDonEIDList = function(eid_uri, EIDlist)
     {
       for (var i=0;i<EIDlist.length; ++i)
       {
@@ -270,7 +300,7 @@ angular.module('lisp.communication', [])
       return false;
     };
 
-    serviceInstance.getPositionOfEIDOnlist = function(eid_uri, EIDlist)
+    var getPositionOfEIDOnlist = function(eid_uri, EIDlist)
     {
       for (var i=0;i<EIDlist.length; ++i)
       {
@@ -376,7 +406,7 @@ angular.module('lisp.communication', [])
             }
             else obj = 0;
           }
-          if (obj != 0){ 
+          if (obj != 0){
             tmp[eids[j]["eid-uri"]] = obj;
             mod = true;
             }

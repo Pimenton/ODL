@@ -35,6 +35,10 @@ body {
 .detail {
 }
 
+.divider{
+  margin-top: 16px;
+}
+
 .detail md-input-container {
     margin-bottom: 0px;
 }

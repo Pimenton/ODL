@@ -6,15 +6,21 @@
 		var results = [];
 
 		var eids = lispService.getAllEids();
+
 		// Search by EID address
 		for (var i = 0; i < eids.length; i++) {
-			if (eids[i]["address"].includes(query))
-				results.push({
+			if (eids[i]["address"].includes(query)) {
+        var nrlocs = 0;
+        for (var j = 0; j < eids[i]["info"].length; j++) {
+          nrlocs = nrlocs + eids[i]["info"][j]["rlocs"].length;
+        }
+        results.push({
 					id: eids[i]["address"],
-					nrlocs: eids[i]["rlocs"].length,
-					nxtr: eids[i]["xtr_id"].length,
+					nrlocs: nrlocs,
+					nxtr: eids[i]["info"].length,
 					type: "eid"
 				});
+      }
 		}
 
 		var xtrids = lispService.getAllxtrids();
