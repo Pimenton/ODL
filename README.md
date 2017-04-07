@@ -17,7 +17,7 @@ SERGI SORIANO
 
 ### App URL
 
-Our app is available from here: http://odl1.cba.upc.edu:8082/
+Our app is available from here: http://odl1.cba.upc.edu:8082/ (not available anymore)
 
 -----------------------------------------------------------------------
 
